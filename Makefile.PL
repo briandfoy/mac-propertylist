@@ -1,21 +1,25 @@
 # $Id$
 use ExtUtils::MakeMaker;
 
-sub ExtUtils::MM_Any::test_via_harness 	 
-	{ 	 
-	my($self, $perl, $tests) = @_; 	 
-  	 
-    return qq|\t$perl "-MTest::Manifest" | . 	 
-		qq|"-e" "run_t_manifest(\$(TEST_VERBOSE), '\$(INST_LIB)', | . 	 
-		qq|'\$(INST_ARCHLIB)')"\n|; 	 
-	}
+eval "use Test::Manifest";
 
+unless( $@ )
+	{
+	*ExtUtils::MM_Any::test_via_harness = sub	 
+		{ 	 
+		my($self, $perl, $tests) = @_; 	 
+		 
+		return qq|\t$perl "-MTest::Manifest" | . 	 
+			qq|"-e" "run_t_manifest(\$(TEST_VERBOSE), '\$(INST_LIB)', | . 	 
+			qq|'\$(INST_ARCHLIB)')"\n|; 	 
+		}
+	}
+	
 WriteMakefile
 	(
 	'NAME'	         => 'Mac::PropertyList',
 	'VERSION_FROM'   => 'lib/PropertyList.pm',
 	'PREREQ_PM' => { 
-		'Test::Manifest'   => '0.9',
 		'MIME::Base64'     => '0',
 		'Test::More'       => '0',
 		},
