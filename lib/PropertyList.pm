@@ -6,7 +6,7 @@ use vars qw($ERROR $XML_head $XML_foot $VERSION);
 
 use Carp qw(croak);
 
-$VERSION = 0.51
+$VERSION = 0.51;
 
 =head1 NAME
 
