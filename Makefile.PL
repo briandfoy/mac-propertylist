@@ -16,6 +16,7 @@ WriteMakefile
     'VERSION_FROM'   => 'lib/PropertyList.pm',
 	'PREREQ_PM' => { 
 		'File::Find::Rule' => '0',
+		'MIME::Base64'     => '0',
 		'Test::Manifest'   => '0.91',
 		'Test::More'       => '0',
 		'Test::Pod'        => '0.9',
