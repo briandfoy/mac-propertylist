@@ -9,7 +9,7 @@ my $tests = do {
 WriteMakefile
 	(
     'NAME'	    => 'Mac::PropertyList',
-    'VERSION'   => '0.06',
+    'VERSION'   => '0.06_01',
 	'PREREQ_PM' => { 
 		File::Find::Rule => 0,
 		Test::More       => 0,
