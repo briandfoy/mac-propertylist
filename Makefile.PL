@@ -4,6 +4,7 @@ use ExtUtils::MakeMaker;
 my @Tests = map { "t/$_" } qw(
 load.t
 parse.t
+write.t
 );
 
 WriteMakefile
