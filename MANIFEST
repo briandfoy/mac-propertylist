@@ -16,3 +16,4 @@ t/plists.t
 t/pod.t
 t/time.t
 t/write.t
+META.yml                                 Module meta-data (added by MakeMaker)
