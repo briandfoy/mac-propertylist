@@ -14,6 +14,5 @@ t/load.t
 t/parse.t
 t/plists.t
 t/pod.t
-t/test_manifest
 t/time.t
 t/write.t
