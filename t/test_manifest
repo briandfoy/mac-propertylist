@@ -1,6 +1,7 @@
 # $Id$
 load.t
 pod.t
+pod_coverage.t
 import.t
 scalar.t
 container.t

@@ -603,7 +603,7 @@ for help figuring out the recursion for nested structures.
 
 =head1 AUTHOR
 
-brian d foy, C<< <bdfoy@cpan.org> >>
+Copyright 2002-2005, brian d foy, C<< <bdfoy@cpan.org> >>
 
 =head1 SEE ALSO
 
