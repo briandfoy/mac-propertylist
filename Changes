@@ -3,6 +3,11 @@
 	* Removed requirements on Test::Manifest and Test::Pod
 	* Fixed warnings that show up under -w
 
+0.9 - Thu Sep  2 20:15:28 2004
+* fixed from with Time::HiRes tests
+* cleaned up distribution
+* No need to upgrade if you have the previous version (0.11)
+
 0.51 - Tue Feb  3 16:39:39 2004
     * Refactored the module to get rid of goofy data structure---if you
     peeked behind-the-scenes this will bite you
