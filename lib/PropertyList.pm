@@ -4,7 +4,7 @@ use strict;
 
 use vars qw($ERROR $XML_head $XML_foot $VERSION);
 
-$VERSION = 0.09;
+$VERSION = 0.10;
 
 =head1 NAME
 
