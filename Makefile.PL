@@ -1,23 +1,26 @@
 # $Id$
 use ExtUtils::MakeMaker;
 
-use Test::Manifest qw(get_t_files);
-
+my $tests = do {
+	local @ARGV = qw(t/test_manifest);
+	my $data = join " ", map {chomp; "t/$_" } <>;
+	};
+	
 WriteMakefile
 	(
     'NAME'	    => 'Mac::PropertyList',
-    'VERSION'   => '0.04',
+    'VERSION'   => '0.05',
 	'PREREQ_PM' => { 
-		'Test::Manifest' => undef,
-		'Test::More'     => undef,
-		'Test::Pod'      => undef,
-		'Text::Balanced' => undef 
+		File::Find::Rule => 0,
+		Test::More       => 0,
+		Test::Pod        => 0,
+		Time::HiRes      => 0,
 		},
     'PM'        => {
         'lib/PropertyList.pm'     => '$(INST_LIBDIR)/PropertyList.pm',
         },
     
     depend => { Makefile => "t/test_manifest" },
-    test   => { TESTS => scalar get_t_files() },
+    test   => { TESTS => $tests },
 	);
 
