@@ -9,9 +9,10 @@ BEGIN {
 		} File::Find::Rule->file()->name( '*.pm' )->in( 'blib/lib' );
 	}
 
+use Test::Builder;
 use Test::More tests => scalar @classes;
-	
+
 foreach my $class ( @classes )
 	{
-	use_ok( $class );
+	use_ok( $class ) or Test::Builder->BAILOUT();
 	}

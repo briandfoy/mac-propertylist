@@ -60,7 +60,6 @@ HERE
 
 my $plist = Mac::PropertyList::parse_plist( $array );
 
-<<<<<<< parse.t
 isa_ok( $plist, 'HASH' );
 ok( exists $plist->{type} );
 is( $plist->{type}, 'array' );
