@@ -4,5 +4,7 @@ DTDs/PropertyList-1.0.dtd
 MANIFEST
 Makefile.PL
 lib/PropertyList.pm
+t/test_manifest
 t/load.t
 t/parse.t
+t/write.t

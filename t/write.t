@@ -1,11 +1,7 @@
 # $Id$
-BEGIN { $| = 1; print "1..4\n"; }
-END   {print "not ok\n" unless $loaded;}
+use Test::More tests => 3;
 
-# Test it loads
 use Mac::PropertyList;
-$loaded = 1;
-print "ok\n";
 
 my $array =<<"HERE";
 <?xml version="1.0" encoding="UTF-8"?>
@@ -63,29 +59,15 @@ HERE
 
 foreach my $start ( ( $array, $dict ) )
 	{
-	eval {
-		my $plist = Mac::PropertyList::parse_plist( $start );
-	
-		my $string = Mac::PropertyList::plist_as_string( $plist );
-		
-		print STDERR "\n$string\n" if $ENV{DEBUG};
+	my $plist  = Mac::PropertyList::parse_plist( $start );
+	my $string = Mac::PropertyList::plist_as_string( $plist );
 
-		die "Array ending string is not the same as starting string!"
-			unless $start eq $string;
-		};
-	print STDERR $@ if $@;
-	print $@ ? 'not ' : '', "ok\n";
+	ok( $string eq $start );
 	}
 
-eval {
-	my $plist = Mac::PropertyList::parse_plist( $nested_dict );
+my $plist = Mac::PropertyList::parse_plist( $nested_dict );
+my $string = Mac::PropertyList::plist_as_string( $plist );
 
-	my $string = Mac::PropertyList::plist_as_string( $plist );
-	
-	print STDERR "\n$string\n" if $ENV{DEBUG};
+print STDERR "\n$string\n" if $ENV{DEBUG};
 
-	die "Array ending string is not the same as starting string!"
-		unless( $nested_dict eq $string or $nested_dict_alt eq $string );
-	};
-print STDERR $@ if $@;
-print $@ ? 'not ' : '', "ok\n";
+ok( $string eq $nested_dict or $string eq $nested_dict_alt, "Nested dict" );
