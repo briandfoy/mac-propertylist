@@ -12,6 +12,7 @@ use Mac::PropertyList;
 
 foreach my $file ( @plists )
 	{
+	print STDERR "Working on $file\n" if $ENV{PLIST_DEBUG} > 1;
 	unless( open FILE, $file )
 		{
 		ok( 0, "Could not open $file" );
