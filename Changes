@@ -3,6 +3,10 @@
 	* Removed requirements on Test::Manifest and Test::Pod
 	* Fixed warnings that show up under -w
 
+0.95 - Fri Mar 11 22:45:21 2005
+	* Added POD coverage tests, fixed issues
+	* no code changes: no need to upgrade
+
 0.95 - Thu Dec  2 03:23:26 2004
 	* added Exporter support so you can import the functions, just
 	like the examples showed.  Nothing is imported without you asking
