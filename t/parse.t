@@ -101,7 +101,7 @@ foreach my $string ( ( $string0_9, $string1_0 ) )
 	is( $plist->{value}, 'This is it', 'value is right for string'           );
 	}
 	
-my $plist = Mac::PropertyList::parse_plist( $nested_dict );
+$plist = Mac::PropertyList::parse_plist( $nested_dict );
 
 isa_ok( $plist, 'HASH'            );
 ok( exists $plist->{type},  'type key exists for nested dict'          );

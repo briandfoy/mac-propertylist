@@ -119,7 +119,7 @@ what the real deal looks like.
 
 =cut
 
-my $Debug = $ENV{PLIST_DEBUG};
+my $Debug = $ENV{PLIST_DEBUG} || 0;
 
 $XML_head =<<"XML";
 <?xml version="1.0" encoding="UTF-8"?>
