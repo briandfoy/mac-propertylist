@@ -11,5 +11,8 @@ else
 	{
 	plan tests => 1;
 
-	pod_coverage_ok( "Mac::PropertyList" );      
+	pod_coverage_ok( "Mac::PropertyList", {
+		trustme => [ qr/^read_/ ],
+		},
+		);      
 	}

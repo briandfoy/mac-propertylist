@@ -351,6 +351,13 @@ sub read_data
 	return Mac::PropertyList::data->new( $string );
 	}
 
+=item plist_as_string
+
+Turn the plist data structure into the plist string, which
+is the form the Mac likes to see it in.
+
+=cut
+
 sub plist_as_string
 	{
 	my $object = shift;
