@@ -12,8 +12,14 @@ use Mac::PropertyList;
 
 foreach my $file ( @plists )
 	{
-	local @ARGV = ($file);
-	my $data = do { local $/; <> };
+	unless( open FILE, $file )
+		{
+		ok( 0, "Could not open $file" );
+		}
+		
+	my $data = do { local $/; <FILE> };
+	close FILE;
+
 	my $b = length $data;
 
 	my $time1 = [ gettimeofday ];
