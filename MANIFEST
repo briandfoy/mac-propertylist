@@ -1,4 +1,6 @@
 # $Id$
+DTDs/PropertyList-0.9.dtd
+DTDs/PropertyList-1.0.dtd
 MANIFEST
 Makefile.PL
 lib/PropertyList.pm
