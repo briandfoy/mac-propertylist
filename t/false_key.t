@@ -1,12 +1,10 @@
 # $Id$
+
+use Test::More tests => 3;
+
 BEGIN {
-	use File::Find::Rule;
-	@plists = File::Find::Rule->file()->name( '*.plist' )->in( 'plists' );
-	}
-
-use Test::More tests => scalar @plists;
-
-use Mac::PropertyList;
+    use_ok( 'Mac::PropertyList' );
+}
 
 my $good_dict =<<"HERE";
 <?xml version="1.0" encoding="UTF-8"?>
@@ -40,9 +38,8 @@ ok( $ok, "Zero and space are valid key values" );
 TODO: {
     local $TODO = "Doesn't work, but poor Andy doesn't know why.";
 
-my $ok = eval {
+    my $ok = eval {
 	my $plist = Mac::PropertyList::parse_plist( $good_dict );
 	};
-like( $@, qr/key not defined/, "Empty key causes parse_plist to die" );
-
+    like( $@, qr/key not defined/, "Empty key causes parse_plist to die" );
 }
