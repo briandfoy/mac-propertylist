@@ -1,0 +1,7 @@
+# $Id$
+blib/
+Makefile$
+Makefile.old
+pm_to_blib
+MANIFEST.SKIP
+MANIFEST.bak

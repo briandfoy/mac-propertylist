@@ -1,0 +1,5 @@
+# $Id$
+MANIFEST
+Makefile.PL
+lib/PropertyList.pm
+t/load.t
