@@ -2,10 +2,19 @@
 package Mac::PropertyList;
 use strict;
 
-use vars qw($ERROR $XML_head $XML_foot $VERSION);
+use vars qw($ERROR $XML_head $XML_foot $VERSION @EXPORT_OK %EXPORT_TAGS);
 use Carp qw(croak);
 
-$VERSION = 0.90;
+use base qw(Exporter);
+
+@EXPORT_OK = qw( parse_plist plist_as_string create_from_hash
+	create_from_array );
+
+%EXPORT_TAGS = (
+	'all' => \@EXPORT_OK,
+	);
+	
+$VERSION = 0.95;
 
 =head1 NAME
 
@@ -31,12 +40,15 @@ This module is a low-level interface to the Mac OS X
 Property List (plist) format.  You probably shouldn't use this
 in applications---build interfaces on top of this so
 you don't have to put all the heinous multi-level object
-stuff where people can see it.
+stuff where people have to look at it.
 
 You can parse a plist file and get back a data structure.
 You can take that data structure and get back the plist
 as XML.  If you want to change the structure inbetween
 that's your business. :)
+
+You don't need to be on Mac OS X to use this.  It simply
+parses and manipulates a text format that Mac OS X uses.
 
 =head2 The Property List format
 
@@ -131,6 +143,13 @@ my $Options = {ignore => ['<true/>', '<false/>']};
 
 =head1 FUNCTIONS
 
+These functions are available for individual or group import. Nothing
+will be imported unless you ask for it.
+
+	use Mac::PropertyList qw( parse_plist );
+
+	use Mac::PropertyList qw( :all );
+	
 =over 4
 
 =item parse_plist( TEXT )

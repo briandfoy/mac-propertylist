@@ -1,6 +1,7 @@
 # $Id$
 load.t
 pod.t
+import.t
 scalar.t
 container.t
 array.t
