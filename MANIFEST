@@ -1,10 +1,18 @@
 # $Id$
+Changes
 DTDs/PropertyList-0.9.dtd
 DTDs/PropertyList-1.0.dtd
 MANIFEST
 Makefile.PL
 lib/PropertyList.pm
-t/test_manifest
+plists/com.apple.iPhoto.plist
+plists/com.apple.iTunes.plist
+plists/com.apple.systempreferences.plist
+plists/com.unsanity.windowshadex.plist
 t/load.t
 t/parse.t
+t/plists.t
+t/pod.t
+t/test_manifest
+t/time.t
 t/write.t
