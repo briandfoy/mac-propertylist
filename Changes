@@ -1,0 +1,5 @@
+# $Id$
+
+0.5 - Wed Sep  4 20:27:09 CDT 2002
+	+ dumped Text::Balanced and took some parsing shortcuts to save
+	on parsing time (which was abysmal).
