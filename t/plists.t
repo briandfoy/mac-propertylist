@@ -1,12 +1,11 @@
 # $Id$
-BEGIN {
-	use File::Find::Rule;
-	@plists = File::Find::Rule->file()->name( '*.plist' )->in( 'plists' );
-	}
+BEGIN { @plists = <plists/*.plist>; }
 
-use Test::Builder;
-use Test::More tests => scalar @plists;
-use Time::HiRes qw(tv_interval gettimeofday);
+use Test::More;
+eval "use Time::HiRes";
+
+if( $@ ) { plan skip_all => "Needs Time::HiRes to time parsing" }
+else     { plan tests => scalar @plists }
 
 use Mac::PropertyList;
 
@@ -25,11 +24,11 @@ foreach my $file ( @plists )
 
 	my $b = length $data;
 
-	my $time1 = [ gettimeofday ];
+	my $time1 = [ Time::HiRes::gettimeofday ];
 	my $plist = Mac::PropertyList::parse_plist( $data );
-	my $time2 = [ gettimeofday ];
+	my $time2 = [ Time::HiRes::gettimeofday ];
 
-	my $elapsed = tv_interval( $time1, $time2 );
+	my $elapsed = Time::HiRes::tv_interval( $time1, $time2 );
 	diag( "$file [$b bytes] parsed in $elapsed seconds" );
 
 	isa_ok( $plist, 'HASH' );
