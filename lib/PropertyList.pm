@@ -257,9 +257,9 @@ sub plist_as_string
 	{
 	my $ref = shift;
 	
-	carp "plist_as_string is unimplemented";
+	require Carp;
 	
-	return $string;
+	carp( "plist_as_string is unimplemented" );
 	}
 	
 sub _string { "<$_[0]>$_[1]</$_[0]>" }
