@@ -7,5 +7,5 @@ array.t
 dict.t
 parse.t
 write.t
-#plists.t
+plists.t
 false_key.t
