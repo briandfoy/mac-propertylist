@@ -1,6 +1,0 @@
-load.t
-pod.t
-parse.t
-write.t
-plists.t
-false_kay.t
