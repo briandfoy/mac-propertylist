@@ -3,6 +3,11 @@
 	* Removed requirements on Test::Manifest and Test::Pod
 	* Fixed warnings that show up under -w
 
+1.21 - Fri Mar 11 22:49:28 2005
+	* Added POD coverage tests
+	* Bumped version past the 1.0 barrier
+	* No code changes: no need to upgrade
+
 0.95 - Fri Mar 11 22:45:21 2005
 	* Added POD coverage tests, fixed issues
 	* no code changes: no need to upgrade
