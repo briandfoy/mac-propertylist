@@ -17,3 +17,6 @@
 	* still need to figure out how to do this without reading in the entire
 	file
 
+0.09 - Fri Jan 31 11:20:53 2003
+	* fixed bug in which a dicct key named "0" would kill the program
+
