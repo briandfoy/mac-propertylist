@@ -2,7 +2,9 @@
 package Mac::PropertyList;
 use strict;
 
-use vars qw($ERROR $XML_head $XML_foot);
+use vars qw($ERROR $XML_head $XML_foot $VERSION);
+
+$VERSION = 0.07;
 
 =head1 NAME
 
@@ -12,9 +14,11 @@ Mac::PropertyList - work with Mac plists at a low level
 
 	use Mac::PropertyList;
 	
-	my $data = parse_plist( $text );
+	my $data  = parse_plist( $text );
 
-	my $text = plist_as_string( $data );
+	my $text  = plist_as_string( $data );
+	
+	my $plist = create_from_hash( \%hash );
 	
 =head1 DESCRIPTION
 
@@ -114,6 +118,16 @@ my $Debug = $ENV{PLIST_DEBUG};
 
 use Text::Balanced qw(gen_extract_tagged extract_tagged);
 
+$XML_head =<<"XML";
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+XML
+
+$XML_foot =<<"XML";
+</plist>
+XML
+
 my %Readers = (
 	"<dict>"    => \&read_dict,
 	"<string>"  => \&read_string,
@@ -205,6 +219,44 @@ sub parse_plist
 		};		
 
 	return $plist;
+	}
+
+=item create_from_hash( HASH_REF )
+
+Create a plist dictionary from the hash reference.
+
+The values of the hash can only be simple scalars---not
+references.  Reference values are silently ignored.
+
+Returns a string representing the hash in the plist format.
+
+=cut
+
+sub create_from_hash
+	{
+	my $hash  = shift;
+	
+	return unless UNIVERSAL::isa( $hash, 'HASH' );
+	
+	my $string = "$XML_head<dict>\n";
+	
+	foreach my $key ( keys %$hash )
+		{
+		my( $type, $value ) = ( 'string', $hash->{$key} );
+		
+		next if ref $value;
+		
+		my $bit  = _string( 'key', $key ) . "\n";
+		   $bit .= $Writers{$type}->( $value ) . "\n";
+		
+		$bit =~ s/^/\t/gm;
+		
+		$string .= $bit;
+		}
+	
+	$string .= "</dict>\n$XML_foot";
+	
+	return $string;		
 	}
 
 sub _hash { { type => $_[0], value => $_[1] } }
@@ -307,16 +359,6 @@ sub read_data
 	return _hash( 'data', $string );
 	}
 
-$XML_head =<<"XML";
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-XML
-
-$XML_foot =<<"XML";
-</plist>
-XML
-
 sub plist_as_string
 	{
 	my $hash = shift;
@@ -399,11 +441,19 @@ sub write_dict
 
 =back
 
+=head1 SOURCE AVAILABILITY
+
+This source is part of a SourceForge project which always has the
+latest sources in CVS, as well as all of the previous releases.
+
+	https://sourceforge.net/projects/brian-d-foy/
+	
+If, for some reason, I disappear from the world, one of the other
+members of the project can shepherd this module appropriately.
+
 =head1 TO DO
 
 * actually test the write_* stuff
-
-* provided
 
 =head1 BUGS
 
@@ -423,7 +473,7 @@ files:
 
 =head1 AUTHOR
 
-brian d foy, E<lt>brian d foyE<gt>
+brian d foy, E<lt>bdfoy@cpan.orgE<gt>
 
 =head1 SEE ALSO
 
