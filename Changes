@@ -3,6 +3,11 @@
 	* Removed requirements on Test::Manifest and Test::Pod
 	* Fixed warnings that show up under -w
 
+0.95 - Thu Dec  2 03:23:26 2004
+	* added Exporter support so you can import the functions, just
+	like the examples showed.  Nothing is imported without you asking
+	for it.
+
 0.9 - Thu Sep  2 20:15:28 2004
 * fixed from with Time::HiRes tests
 * cleaned up distribution
