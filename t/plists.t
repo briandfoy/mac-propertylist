@@ -24,9 +24,9 @@ foreach my $file ( @plists )
 
 	my $b = length $data;
 
-	my $time1 = [ Time::HiRes::gettimeofday ];
+	my $time1 = [ Time::HiRes::gettimeofday() ];
 	my $plist = Mac::PropertyList::parse_plist( $data );
-	my $time2 = [ Time::HiRes::gettimeofday ];
+	my $time2 = [ Time::HiRes::gettimeofday() ];
 
 	my $elapsed = Time::HiRes::tv_interval( $time1, $time2 );
 	diag( "$file [$b bytes] parsed in $elapsed seconds" );
