@@ -1,5 +1,5 @@
 # $Id$
-BEGIN { $| = 1; print "1..5\n"; }
+BEGIN { $| = 1; print "1..6\n"; }
 END   {print "not ok\n" unless $loaded;}
 
 # Test it loads
@@ -29,8 +29,16 @@ my $dict =<<"HERE";
 </plist>
 HERE
 
-my $string =<<"HERE";
+my $string1_0 =<<"HERE";
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<string>This is it</string>
+</plist>
+HERE
+
+my $string0_9 =<<"HERE";
+<?xml version="0.9" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <string>This is it</string>
@@ -107,21 +115,24 @@ eval {
 print STDERR $@ if $@;
 print $@ ? 'not ' : '', "ok\n";
 
-eval {
-	my $plist = Mac::PropertyList::parse_plist( $string );
-
-	die "Plist structure isn't a hash [$plist]"
-		unless( UNIVERSAL::isa( $plist, 'HASH' ) );
-	die "Plist doesn't have 'type' key" unless exists $plist->{type};
-	die "Plist 'type' key is not 'string' [$$plist{type}]" 
-		unless $plist->{type} eq 'string';
-	die "Plist has wrong 'value' key [$$plist{value}]" 
-		unless $plist->{value} eq 'This is it';
+foreach my $string ( ( $string0_9, $string1_0 ) )
+	{
+	eval {
+		my $plist = Mac::PropertyList::parse_plist( $string );
 	
-	};
-print STDERR $@ if $@;
-print $@ ? 'not ' : '', "ok\n";
-
+		die "Plist structure isn't a hash [$plist]"
+			unless( UNIVERSAL::isa( $plist, 'HASH' ) );
+		die "Plist doesn't have 'type' key" unless exists $plist->{type};
+		die "Plist 'type' key is not 'string' [$$plist{type}]" 
+			unless $plist->{type} eq 'string';
+		die "Plist has wrong 'value' key [$$plist{value}]" 
+			unless $plist->{value} eq 'This is it';
+		
+		};
+	print STDERR $@ if $@;
+	print $@ ? 'not ' : '', "ok\n";
+	}
+	
 eval {
 	my $plist = Mac::PropertyList::parse_plist( $nested_dict );
 

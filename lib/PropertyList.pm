@@ -161,8 +161,9 @@ sub parse_plist
 	$text =~ s|<true/>|<true>true</true>|g;
 	$text =~ s|<false/>|<false>false</false>|g;
 
+	# we can handle either 0.9 or 1.0
 	my @plist = extract_tagged( $text, 
-		'<plist version="1.0">', "</plist>",
+		'<plist version="\d.\d">', "</plist>",
 		 '(?s)<\?xml.*(?=<plist.*?>)', $Options );
 
 	if( $@ )
@@ -193,7 +194,6 @@ sub read_string  { _hash( 'string',  $_[0] ) }
 sub read_integer { _hash( 'integer', $_[0] ) }
 sub read_date    { _hash( 'date',    $_[0] ) }
 sub read_real    { _hash( 'real',    $_[0] ) }
-sub read_float   { _hash( 'float',   $_[0] ) }
 sub read_true    { _hash( 'true',    $_[0] ) }
 sub read_false   { _hash( 'false',   $_[0] ) }
 
@@ -268,7 +268,6 @@ sub write_string  { _string( 'string',  $_[0] ) }
 sub write_integer { _string( 'integer', $_[0] ) }
 sub write_date    { _string( 'date',    $_[0] ) }
 sub write_real    { _string( 'real',    $_[0] ) }
-sub write_float   { _string( 'float',   $_[0] ) }
 sub write_true    { "<true/>" }
 sub write_false   { "<false/>" }
 
