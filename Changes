@@ -1,8 +1,12 @@
 # $Id$
 
-0.6 - Mon Sep  9 13:49:23 EDT 2002
+0.07 - Tue Nov 12 16:41:03 CST 2002
+	+ added create_from_hash
+	+ cleaned up other parts of the distribution
+	
+0.06 - Mon Sep  9 13:49:23 EDT 2002
 	+ some parsing fixes for the shortcuts
 	
-0.5 - Wed Sep  4 20:27:09 CDT 2002
+0.05 - Wed Sep  4 20:27:09 CDT 2002
 	+ dumped Text::Balanced and took some parsing shortcuts to save
 	on parsing time (which was abysmal).
