@@ -1,14 +1,15 @@
-# $Id$
 Changes
 DTDs/PropertyList-0.9.dtd
 DTDs/PropertyList-1.0.dtd
 MANIFEST
 Makefile.PL
+hacks/plist.pl
 lib/PropertyList.pm
 plists/com.apple.iPhoto.plist
 plists/com.apple.iTunes.plist
 plists/com.apple.systempreferences.plist
 plists/com.unsanity.windowshadex.plist
+t/false_key.t
 t/load.t
 t/parse.t
 t/plists.t

@@ -4,7 +4,7 @@ use strict;
 
 use vars qw($ERROR $XML_head $XML_foot $VERSION);
 
-$VERSION = 0.08;
+$VERSION = 0.09;
 
 =head1 NAME
 
@@ -48,6 +48,11 @@ This problem is the major design hinderance in this
 module.  A smart XML format would have made things
 much easier.
 
+If the parse_plist encounters an empty key tag in a dict
+structure (i.e. C<< <key></key> >> ) the function dies.
+This is a misfeature which I want to correct in future
+versions.
+
 =head2 The Mac::PropertyList data structure
 
 A plist can have one or more of any of the plist
@@ -71,9 +76,9 @@ The structure for the date, data, integer, float, and
 real look the same.
 
 The plist objects true and false are wierd since in
-the XML they are empty elements.  Mac::PropertyList
-makes them look not-empty.  This may seem wierd, but
-it saved hours of work in the implementation.
+the XML they are empty elements, but in this data
+structure Mac::Property list pretends they are not
+so it can avoid a special case.
 
 	{
 	type  => 'true',
@@ -115,8 +120,6 @@ what the real deal looks like.
 =cut
 
 my $Debug = $ENV{PLIST_DEBUG};
-
-use Text::Balanced qw(gen_extract_tagged extract_tagged);
 
 $XML_head =<<"XML";
 <?xml version="1.0" encoding="UTF-8"?>
@@ -165,23 +168,6 @@ Parse the XML plist in TEXT and return the Mac::PropertyList
 data structure.
 
 =cut
-
-sub _strip_leading_space
-	{
-	my $ref = shift;
-
-	$$ref =~ s/^\s*//;
-	}
-
-sub _get_next_tag
-	{
-	my $ref = shift;
-	_strip_leading_space($ref);
-
-	my( $tag ) = $$ref =~ m/^(<.*?>)/g;
-
-	return $tag;
-	}
 
 sub parse_plist
 	{
@@ -236,16 +222,6 @@ sub create_from_hash
 
 sub _hash { { type => $_[0], value => $_[1] } }
 
-sub _read_tag
-	{
-	my $tag = shift;
-	my $ref = shift;
-
-	$$ref = s|\s*<$tag>(.*?)</$tag>\s*||g;
-
-	return $Readers{"<$tag>"}->($1);
-	}
-
 sub read_string  { _hash( 'string',  $_[0] ) }
 sub read_integer { _hash( 'integer', $_[0] ) }
 sub read_date    { _hash( 'date',    $_[0] ) }
@@ -260,10 +236,10 @@ sub read_next
 	my $value = do {
 		my $tag;
 		my $value;
-		if( $$ref =~ s[^\s* < (string|date|real|integer|data) > 
+		if( $$ref =~ s[^\s* < (string|date|real|integer|data) >
 			\s*(.*?)\s* </\1> ][]sx )
 			{
-			print STDERR "read_next: Found value type [$1] with value [$2]\n" 
+			print STDERR "read_next: Found value type [$1] with value [$2]\n"
 				if $Debug > 1;
 			$Readers{$1}->( $2 );
 			}
@@ -272,7 +248,7 @@ sub read_next
 			print STDERR "\$1 is [$1]\n" if $Debug > 1;
 			$Readers{$1}->( $ref );
 			}
-		# these next two are some wierd cases i found in the iPhoto Preferences
+		# these next two are some wierd cases i found in the iPhoto Prefs
 		elsif( $$ref =~ s[^\s* < dict / > ][]x )
 			{
 			return _hash( 'dict', {} );
@@ -301,7 +277,7 @@ sub read_dict
 		{
 		$$ref =~ s[^\s*<key>(.*?)</key>][]s;
 		print STDERR "read_dict: key is [$1]\n" if $Debug > 1;
-		die "Could not read key!" unless $1;
+		die "Could not read key!" unless defined $1;
 		my $key = $1;
 		$hash{ $key } = read_next( $ref );
 		}
@@ -435,6 +411,12 @@ for help figuring out the recursion for nested structures.
 =head1 TO DO
 
 * actually test the write_* stuff
+
+* the read_dict method dies() if the key is not defined.  i do
+not like to die from functions.
+
+* do this from a filehandle or a scalar reference instead of a scalar
+	+ generate closures to handle the work.
 
 =head1 AUTHOR
 
