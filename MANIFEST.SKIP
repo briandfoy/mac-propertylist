@@ -1,5 +1,9 @@
 # $Id$
+CVS/
 blib/
+.DS_Store
+.cvsignore
+.tar.gz$
 Makefile$
 Makefile.old
 pm_to_blib
