@@ -7,3 +7,4 @@ blib
 .lwpcookies
 blibdirs
 META.yml
+*.ts
