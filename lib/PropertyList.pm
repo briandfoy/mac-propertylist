@@ -110,7 +110,7 @@ what the real deal looks like.
 		
 =cut
 
-my $Debug = 1;
+my $Debug = $ENV{PLIST_DEBUG};
 
 use Text::Balanced qw(gen_extract_tagged extract_tagged);
 
@@ -133,7 +133,6 @@ my %Writers = (
 	"date"    => \&write_date,
 	"real"    => \&write_real,
 	"integer" => \&write_integer,
-	"string"  => \&write_string,
 	"array"   => \&write_array,
 	"data"    => \&write_data,
 	"true"    => \&write_true,
@@ -141,7 +140,6 @@ my %Writers = (
 	);
 
 my $Options = {ignore => ['<true/>', '<false/>']};
-my $Key = gen_extract_tagged(  "<key>", "</key>", undef, $Options );
 
 =head1 FUNCTIONS
 
@@ -154,6 +152,23 @@ data structure.
 
 =cut
 
+sub _strip_leading_space
+	{
+	my $ref = shift;
+	
+	$$ref =~ s/^\s*//;	
+	}
+	
+sub _get_next_tag
+	{
+	my $ref = shift;
+	_strip_leading_space($ref);
+	
+	my( $tag ) = $$ref =~ m/^(<.*?>)/g;
+	
+	return $tag;
+	}
+	
 sub parse_plist
 	{
 	my $text = shift;
@@ -162,34 +177,48 @@ sub parse_plist
 	$text =~ s|<false/>|<false>false</false>|g;
 
 	# we can handle either 0.9 or 1.0
-	my @plist = extract_tagged( $text, 
-		'<plist version="\d.\d">', "</plist>",
-		 '(?s)<\?xml.*(?=<plist.*?>)', $Options );
-
-	if( $@ )
-		{
-		$ERROR = "Could not extract plist!\n" . $@->{error};
-		return;
-		}
-
-	my @object = extract_tagged( $plist[4], 
-		undef, undef, undef, $Options );
+	$text =~ s|^<\?xml.*?>\s*<!DOC.*>\s*<plist.*?>\s*||;
+	$text =~ s|\s*</plist>\s*$||;
 	
-	unless( exists $Readers{$object[3]} )
-		{
-		$ERROR = "Not a plist object [$object[3]]!";
-		return;
-		}
-
-	print STDERR "Found $object[3]\n" if $Debug > 1;
-	
-	my $plist = $Readers{$object[3]}->($object[4]);
+	my $plist = do {
+		if( $text =~ s/^\s*<(array|dict)>\s*// )
+			{
+			my $type = $1;
+			$text =~ s|\s*</$type>\s*$||;
+			$Readers{"<$type>"}->( \$text );
+			}
+		else
+			{
+			my @object = extract_tagged( $text, 
+				undef, undef, undef, $Options );
+			
+			unless( exists $Readers{$object[3]} )
+				{
+				$ERROR = "Not a plist object [$object[3]]!";
+				return;
+				}
+				
+			print STDERR "Found $object[3]\n" if $Debug > 1;
+			
+			$Readers{$object[3]}->($object[4]);
+			}
+		};		
 
 	return $plist;
 	}
 
 sub _hash { { type => $_[0], value => $_[1] } }
 
+sub _read_tag
+	{
+	my $tag = shift;
+	my $ref = shift;
+	
+	$$ref = s|\s*<$tag>(.*?)</$tag>\s*||g;
+	
+	return $Readers{"<$tag>"}->($1);
+	}
+	
 sub read_string  { _hash( 'string',  $_[0] ) }
 sub read_integer { _hash( 'integer', $_[0] ) }
 sub read_date    { _hash( 'date',    $_[0] ) }
@@ -197,40 +226,71 @@ sub read_real    { _hash( 'real',    $_[0] ) }
 sub read_true    { _hash( 'true',    $_[0] ) }
 sub read_false   { _hash( 'false',   $_[0] ) }
 
+sub read_next
+	{
+	my $ref = shift;
+	
+	my $value = do {
+		my $tag;
+		my $value;
+		if( $$ref =~ m[^\s*<(string|date|real|integer|data|true|false)>\s*(.*?)\s*</\1>]s )
+			{
+			$tag   = $1;
+			$value = $2;
+			print STDERR "read_next: Found value type $1\n" if $Debug > 1;
+			$$ref =~ s|\s*<$tag>\s*(.*?)\s*</$tag>\s*||s;
+			_print_next_bit( $ref ) if $Debug > 1;
+			$Readers{"<$tag>"}->($value);
+			}
+		elsif( $$ref =~ m[^\s*<(dict|array)>(.*?)</\1>]s and $tag = $1 and $value = $2 and $value !~ m/<$tag>/ )
+			{
+			print STDERR "dict: Found value type $1 without nested $1\n" if $Debug > 1;
+			$$ref =~ s|\s*<$tag>\s*(.*?)\s*</$tag>\s*||s;
+			_print_next_bit( $ref ) if $Debug > 1;
+			$Readers{"<$tag>"}->(\$value);
+			}
+		};
+
+	}
+	
 sub read_dict
 	{
-	my $data = shift;
+	my $ref = shift;
 	print STDERR "Processing dict\n" if $Debug > 1;
 	
 	my %hash;
 	
-	while(1)
+	while( $$ref =~ s|^\s*<key>(.*?)</key>\s*||s )
 		{
-		my @key = $Key->($data);
-		last if $@;
-		print STDERR "Found key with value [$key[4]]\n" if $Debug > 1;
-		my @object = extract_tagged( $data, undef, undef, undef, $Options );
-		print STDERR "Found object [$object[3]]\n" if $Debug > 1;
-		my $value = $Readers{$object[3]}->($object[4]);
-			
-		$hash{$key[4]} = $value;
+		my $key = $1;
+						
+		$hash{$key} = read_next( $ref );
 		}
 		
 	return _hash( 'dict', \%hash );
 	}
 
+sub _print_next_bit
+	{
+	my $ref = shift;
+	my $sub = (caller(1))[3];
+	$sub =~ s/.*:://;
+	
+	print STDERR "$sub: Next bit is [" . substr( $$ref, 0, 10 ) . "]\n";
+	}
+	
 sub read_array
 	{
-	my $array = shift;
+	my $ref = shift;
+	
+	print STDERR "Processing array\n" if $Debug > 1;
 	
 	my @array = ();
 
-	while(1)
+	while( $$ref )
 		{
-		my @object = extract_tagged( $array, undef, undef, undef, $Options );
-		last if $@;
-		my $value = $Readers{$object[3]}->($object[4]);
-		push @array, $value;
+		_print_next_bit( $ref ) if $Debug > 1;
+		push @array, read_next( $ref )
 		}
 		
 	return _hash( 'array', \@array );
@@ -246,12 +306,6 @@ sub read_data
 
 	return _hash( 'data', $string );
 	}
-
-=item write_plist( PLIST_HASH )
-
-UNIMPLEMENTED
-
-=cut
 
 $XML_head =<<"XML";
 <?xml version="1.0" encoding="UTF-8"?>
@@ -349,9 +403,23 @@ sub write_dict
 
 * actually test the write_* stuff
 
+* provided
+
 =head1 BUGS
 
-* probably a lot, but it's too soon to know about them
+* i've taken some shortcuts with the parsing, since balanced text parsing 
+can be really slow.  at the moment this module can't handle more than
+one level of nest dicts or arrays.  this breaks on some application's
+files:
+
+	com.apple.DiskCopy.plist
+	com.apple.dock.plist
+	com.apple.Preview.plist
+	com.apple.TextEdit.plist
+	org.aegidian.yaxjournal.plist
+	FruitMenu.prefPane/Contents/Resources/Library.plist
+	FruitMenu.prefPane/Contents/Resources/Presets.plist
+
 
 =head1 AUTHOR
 
