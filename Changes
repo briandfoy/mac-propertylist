@@ -10,3 +10,10 @@
 0.05 - Wed Sep  4 20:27:09 CDT 2002
 	+ dumped Text::Balanced and took some parsing shortcuts to save
 	on parsing time (which was abysmal).
+0.08 - Wed Dec 18 04:42:45 2002
+	* can now handle nested structures
+	* can handle <array/> and <dict/> (empty nesters) which apparently is 
+	legal
+	* still need to figure out how to do this without reading in the entire
+	file
+
