@@ -1,4 +1,5 @@
 # $Id$
+
 use Test::More tests => 3;
 
 use Mac::PropertyList;
@@ -61,11 +62,10 @@ foreach my $start ( ( $array, $dict ) )
 	{
 	my $plist  = Mac::PropertyList::parse_plist( $start );
 	my $string = Mac::PropertyList::plist_as_string( $plist );
-
-	ok( $string eq $start );
+	is( $string, $start );
 	}
 
-my $plist = Mac::PropertyList::parse_plist( $nested_dict );
+my $plist  = Mac::PropertyList::parse_plist( $nested_dict );
 my $string = Mac::PropertyList::plist_as_string( $plist );
 
 print STDERR "\n$string\n" if $ENV{DEBUG};
