@@ -9,6 +9,11 @@ plists/com.apple.iPhoto.plist
 plists/com.apple.iTunes.plist
 plists/com.apple.systempreferences.plist
 plists/com.unsanity.windowshadex.plist
+t/test_manifest
+t/scalar.t
+t/container.t
+t/dict.t
+t/array.t
 t/false_key.t
 t/load.t
 t/parse.t
