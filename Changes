@@ -3,6 +3,11 @@
 	* Removed requirements on Test::Manifest and Test::Pod
 	* Fixed warnings that show up under -w
 
+0.51 - Tue Feb  3 16:39:39 2004
+    * Refactored the module to get rid of goofy data structure---if you
+    peeked behind-the-scenes this will bite you
+    * Each type in the plist now has its own class, with methods to affect it
+
 0.10 - Mon Feb  3 19:53:24 2003
 	* No code changes
 	* added missing modules to PREREQ_PM
