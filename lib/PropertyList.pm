@@ -6,7 +6,7 @@ use vars qw($ERROR);
 
 =head1 NAME
 
-Mac::PropertyList - work with Mac plists
+Mac::PropertyList - work with Mac plists at a low level
 
 =head1 SYNOPSIS
 
@@ -18,10 +18,96 @@ Mac::PropertyList - work with Mac plists
 	
 =head1 DESCRIPTION
 
-=head2 The plist format
+This module is a low-level interface to the Mac OS X
+Property List (plist) format.  You probably shouldn't use this
+in applications---build interfaces on top of this so
+you don't have to put all the heinous multi-level hash
+stuff where people can see it.
+
+You can parse a plist file and get back a data structure.
+You can take that data structure and get back the plist
+as XML.  If you want to change the structure inbetween
+that's your business. :)
+
+=head2 The Property List format
+
+The MacOS X Property List format is simple XML.  You 
+can read the DTD to get the details.
+
+	http://www.apple.com/DTDs/PropertyList-1.0.dtd
+
+One big problem exists---its dict type uses a flat
+structure to list keys and values so that values
+are only associated with their keys by their position
+in the file rather than by the structure of the DTD.
+This problem is the major design hinderance in this
+module.  A smart XML format would have made things 
+much easier.
 
 =head2 The Mac::PropertyList data structure
 
+A plist can have one or more of any of the plist
+objects, and we have to remember the type of thing
+so we can go back to the XML format.  Perl treats
+numbers and strings the same, but the plist format
+doesn't.
+
+Therefore, everything Mac::PropertyList creates is
+an anonymous hash.  The key "type" is the plist
+object type, and the value "value" is the data.
+
+The hash for a string object looks like
+
+	{
+	type  => 'string',
+	value => 'this is the string'
+	}
+
+The structure for the date, data, integer, float, and
+real look the same.
+
+The plist objects true and false are wierd since in 
+the XML they are empty elements.  Mac::PropertyList
+makes them look not-empty.  This may seem wierd, but
+it saved hours of work in the implementation.
+
+	{
+	type  => 'true',
+	value => 'true'
+	}
+
+The hash for a plist array object looks the same,
+but its value is an anonymous array which holds
+more plist objects (which are in turn hashes).
+
+	{
+	type  => 'array',
+	value => [
+		{ type => integer, value => 1 },
+		{ type => string,  value => 'Foo' }
+		]
+	}
+
+The hash for a plist dict object is similar.  The values
+of the keys are in turn plist objects again.
+
+	{
+	type  => 'dict',
+	value => {
+		"Bar" => { type => string,  value => 'Foo' } 
+		}
+	}
+
+From here you can make any combination of the above
+structures.  I do not intend that you should have to
+know any of this at the application level.  People
+should create another layer on top of this to provide
+a simple interface to a particular plist file.
+
+Run a small script against your favorite plist file
+then dump the results with Data::Dumper.  That's
+what the real deal looks like.
+		
 =cut
 
 my $Debug = 1;
@@ -62,6 +148,9 @@ my $Key = gen_extract_tagged(  "<key>", "</key>", undef, $Options );
 =over 4
 
 =item parse_plist( TEXT )
+
+Parse the XML plist in TEXT and return the Mac::PropertyList
+data structure.
 
 =cut
 
@@ -160,13 +249,15 @@ sub read_data
 
 =item write_plist( PLIST_HASH )
 
+UNIMPLEMENTED
+
 =cut
 
 sub plist_as_string
 	{
 	my $ref = shift;
 	
-	my $string = '';
+	carp "plist_as_string is unimplemented";
 	
 	return $string;
 	}
@@ -231,7 +322,7 @@ sub write_dict
 		my( $type, $value ) = @{ $dict->{$key} }{ qw( type value ) };
 		
 		my $bit  = _string( 'key', $key ) . "\n";
-		my $bit .= $Writers{$type}->( $value ) . "\n";
+		   $bit .= $Writers{$type}->( $value ) . "\n";
 		
 		$bit =~ s/$/\t/gm;
 		
@@ -247,13 +338,19 @@ sub write_dict
 
 =head1 TO DO
 
+* actually test the write_* stuff
+
 =head1 BUGS
+
+* probably a lot, but it's too soon to know about them
 
 =head1 AUTHOR
 
 brian d foy, E<lt>brian d foyE<gt>
 
 =head1 SEE ALSO
+
+http://www.apple.com/DTDs/PropertyList-1.0.dtd
 
 =cut
 
