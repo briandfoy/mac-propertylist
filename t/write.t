@@ -71,4 +71,3 @@ my $string = Mac::PropertyList::plist_as_string( $plist );
 print STDERR "\n$string\n" if $ENV{DEBUG};
 
 ok( ($string eq $nested_dict) || ($string eq $nested_dict_alt), "Nested dict" );
-
