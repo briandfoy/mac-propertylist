@@ -14,5 +14,5 @@ use Test::More tests => scalar @classes;
 
 foreach my $class ( @classes )
 	{
-	use_ok( $class ) or Test::Builder->BAILOUT();
+	print "bail out! $class did not compile\n" unless use_ok( $class );
 	}

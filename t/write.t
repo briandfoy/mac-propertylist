@@ -62,7 +62,7 @@ foreach my $start ( ( $array, $dict ) )
 	{
 	my $plist  = Mac::PropertyList::parse_plist( $start );
 	my $string = Mac::PropertyList::plist_as_string( $plist );
-	is( $string, $start );
+	is( $string, $start, 'Original and rewritten string match' );
 	}
 
 my $plist  = Mac::PropertyList::parse_plist( $nested_dict );
