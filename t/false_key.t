@@ -38,7 +38,7 @@ my $ok = eval {
 ok( $ok, "Zero and space are valid key values" );
 
 
-my $ok = eval {
+$ok = eval {
 	my $plist = Mac::PropertyList::parse_plist( $good_dict );
 	};
 like( $@, qr/key not defined/, "Empty key causes parse_plist to die" );

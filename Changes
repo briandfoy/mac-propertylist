@@ -1,21 +1,6 @@
-# $Id$
-
-0.07 - Tue Nov 12 16:41:03 CST 2002
-	+ added create_from_hash
-	+ cleaned up other parts of the distribution
-	
-0.06 - Mon Sep  9 13:49:23 EDT 2002
-	+ some parsing fixes for the shortcuts
-	
-0.05 - Wed Sep  4 20:27:09 CDT 2002
-	+ dumped Text::Balanced and took some parsing shortcuts to save
-	on parsing time (which was abysmal).
-0.08 - Wed Dec 18 04:42:45 2002
-	* can now handle nested structures
-	* can handle <array/> and <dict/> (empty nesters) which apparently is 
-	legal
-	* still need to figure out how to do this without reading in the entire
-	file
+0.2 -
+	* Removed requirements on Test::Manifest and Test::Pod
+	* Fixed warnings that show up under -w
 
 0.1 - Mon Feb  3 19:53:24 2003
 	* No code changes
