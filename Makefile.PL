@@ -1,6 +1,11 @@
 # $Id$
 use ExtUtils::MakeMaker;
 
+my @Tests = map { "t/$_" } qw(
+load.t
+parse.t
+);
+
 WriteMakefile
 	(
     'NAME'	    => 'Mac::PropertyList',
@@ -9,5 +14,6 @@ WriteMakefile
      'PM'       => {
         'lib/PropertyList.pm'     => '$(INST_LIBDIR)/PropertyList.pm',
          },
+     test => { TESTS => join( " ", @Tests ) },
 	);
 
