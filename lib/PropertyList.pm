@@ -2,7 +2,7 @@
 package Mac::PropertyList;
 use strict;
 
-use vars qw($ERROR);
+use vars qw($ERROR $XML_head $XML_foot);
 
 =head1 NAME
 
@@ -253,13 +253,29 @@ UNIMPLEMENTED
 
 =cut
 
+$XML_head =<<"XML";
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+XML
+
+$XML_foot =<<"XML";
+</plist>
+XML
+
 sub plist_as_string
 	{
-	my $ref = shift;
+	my $hash = shift;
+
+	my( $type, $value ) = @{ $hash }{ qw( type value ) };
+
+	my $string = $XML_head;
 	
-	require Carp;
+	$string .= $Writers{$type}->($value) . "\n";
 	
-	carp( "plist_as_string is unimplemented" );
+	$string .= $XML_foot;
+	
+	return $string;
 	}
 	
 sub _string { "<$_[0]>$_[1]</$_[0]>" }
@@ -271,7 +287,7 @@ sub write_real    { _string( 'real',    $_[0] ) }
 sub write_true    { "<true/>" }
 sub write_false   { "<false/>" }
 
-sub write_data
+sub write_data($)
 	{
 	my $string = shift;
 	
@@ -284,10 +300,7 @@ sub write_data
 
 sub write_array
 	{
-	my $hash = shift;
-	
-	my( $type, $array ) = @{ $hash }{ qw( type value ) };
-	return unless $type eq 'array';
+	my $array = shift;
 	
 	my $string = "<array>\n";
 	
@@ -297,22 +310,19 @@ sub write_array
 		
 		my $bit = $Writers{$type}->( $value );
 		
-		$bit =~ s/$/\t/gm;
+		$bit =~ s/^/\t/gm;
 		
 		$string .= $bit . "\n";
 		}
 	
-	$string .= "</array>\n";
+	$string .= "</array>";
 	
 	return $string;		
 	}
 
 sub write_dict
 	{
-	my $hash = shift;
-	
-	my( $type, $dict ) = @{ $hash }{ qw( type value ) };
-	return unless $type eq 'dict';
+	my $dict  = shift;
 	
 	my $string = "<dict>\n";
 	
@@ -323,12 +333,12 @@ sub write_dict
 		my $bit  = _string( 'key', $key ) . "\n";
 		   $bit .= $Writers{$type}->( $value ) . "\n";
 		
-		$bit =~ s/$/\t/gm;
+		$bit =~ s/^/\t/gm;
 		
 		$string .= $bit;
 		}
 	
-	$string .= "</dict>\n";
+	$string .= "</dict>";
 	
 	return $string;		
 	}
