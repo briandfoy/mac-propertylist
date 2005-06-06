@@ -667,6 +667,10 @@ members of the project can shepherd this module appropriately.
 Thanks to Chris Nandor for general Mac kung fu and Chad Walker
 for help figuring out the recursion for nested structures.
 
+Mike Ciul provided some classes for the different input modes,
+and these allow us to optimize the parsing code for each of
+those.
+
 =head1 TO DO
 
 * change the value of an object
