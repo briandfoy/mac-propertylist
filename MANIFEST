@@ -4,6 +4,7 @@ DTDs/PropertyList-1.0.dtd
 MANIFEST
 Makefile.PL
 hacks/plist.pl
+hacks/plist-timer.pl
 lib/PropertyList.pm
 plists/com.apple.iPhoto.plist
 plists/com.apple.iTunes.plist

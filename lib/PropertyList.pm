@@ -159,6 +159,8 @@ object.
 
 =cut
 
+# This will change to parse_plist_ref when we create the dispatcher
+
 sub parse_plist
 	{
 	my $text = shift;
@@ -167,7 +169,8 @@ sub parse_plist
 	$text =~ s|^<\?xml.*?>\s*<!DOC.*>\s*<plist.*?>\s*||;
 	$text =~ s|\s*</plist>\s*$||;
 
-	my $plist = read_next( \$text );
+	my $text_source = new Mac::PropertyList::TextSource( $text );
+	my $plist = read_next( $text_source );
 
 	return $plist;
 	}
@@ -271,72 +274,90 @@ sub read_false   { Mac::PropertyList::false  ->new           }
 
 sub read_next
 	{
-	my $ref = shift;
+	my $source = shift;
 
-	my $value = do {
-		my $tag;
-		my $value;
-		if( $$ref =~ s[^\s* < (string|date|real|integer|data) >
-			\s*(.*?)\s* </\1> ][]sx )
-			{
-			print STDERR "read_next: Found value type [$1] with value [$2]\n"
-				if $Debug > 1;
-			$Readers{$1}->( $2 );
-			}
-		elsif( $$ref =~ s[^\s* < (dict|array) > ][]x )
-			{
-			print STDERR "\$1 is [$1]\n" if $Debug > 1;
-			$Readers{$1}->( $ref );
-			}
-		# these next two are some wierd cases i found in the iPhoto Prefs
-		elsif( $$ref =~ s[^\s* < dict / > ][]x )
-			{
-			return Mac::PropertyList::dict->new();
-			}
-		elsif( $$ref =~ s[^\s* < array / > ][]x )
-			{
-			return Mac::PropertyList::array->new();
-			}
-		elsif( $$ref =~ s[^\s* < (true|false) /> ][]x )
-			{
-			print STDERR "\$1 is [$1]\n" if $Debug > 1;
-			$Readers{$1}->();
-			}
-		};
+	local $_ = '';
+	my $value;
 
+	while (not defined $value) {
+	    croak "Couldn't read anything!" if $source->eof;
+	    $_ .= $source->get_line;
+
+	    if( s[^\s* < (string|date|real|integer|data) >
+			   \s*(.*?)\s* </\1> ][]sx )
+	    {
+		print STDERR "read_next: Found value type [$1] with value [$2]\n"
+		    if $Debug > 1;
+		$value = $Readers{$1}->( $2 );
+	    }
+	    elsif( s[^\s* < (dict|array) > ][]x )
+	    {
+		print STDERR "\$1 is [$1]\n" if $Debug > 1;
+		$value = $Readers{$1}->( $source );
+	    }
+	    # these next two are some wierd cases i found in the iPhoto Prefs
+	    elsif( s[^\s* < dict / > ][]x )
+	    {
+		$value = Mac::PropertyList::dict->new();
+	    }
+	    elsif( s[^\s* < array / > ][]x )
+	    {
+		$value = Mac::PropertyList::array->new();
+	    }
+	    elsif( s[^\s* < (true|false) /> ][]x )
+	    {
+		print STDERR "\$1 is [$1]\n" if $Debug > 1;
+		$value = $Readers{$1}->();
+	    }
+	}
+	$source->put_line($_);
+	return $value;
 	}
 
 sub read_dict
 	{
-	my $ref = shift;
+	my $source = shift;
 	print STDERR "Processing dict\n" if $Debug > 1;
 
 	my %hash;
-
-	while( not $$ref =~ s|^\s*</dict>|| )
-		{
-		$$ref =~ s[^\s*<key>(.*?)</key>][]s;
-		print STDERR "read_dict: key is [$1]\n" if $Debug > 1;
-		croak "Could not read key!" unless defined $1 and $1 ne '';
-		my $key = $1;
-		$hash{ $key } = read_next( $ref );
+	local $_ = $source->get_line;
+	while( not s|^\s*</dict>|| ) {
+	    my $key;
+	    while (not defined $key) {
+		if (s[^\s*<key>(.*?)</key>][]s) {
+		    $key = $1;
+#                   Bring this back if you want this behavior:
+#		    croak "Key is empty string!" if $key eq '';
 		}
+		else {
+		    croak "Could not read key!" if $source->eof;
+		    $_ .= $source->get_line;
+		}
+	    }
+	    print STDERR "read_dict: key is [$1]\n" if $Debug > 1;
 
+	    $source->put_line( $_ );
+	    $hash{ $key } = read_next( $source );
+	    $_ = $source->get_line;
+	}
+	$source->put_line( $_ );
 	return Mac::PropertyList::dict->new( \%hash );
 	}
 
 sub read_array
 	{
-	my $ref = shift;
+	my $source = shift;
 	print STDERR "Processing array\n" if $Debug > 1;
 
 	my @array = ();
 
-	while( not $$ref =~ s|^\s*</array>|| )
-		{
-		push @array, read_next( $ref );
-		}
-
+	local $_ = $source->get_line;
+	while( not s|^\s*</array>|| ) {
+	    $source->put_line( $_ );
+	    push @array, read_next( $source );
+	    $_ = $source->get_line;
+	}
+	$source->put_line( $_ );
 	return Mac::PropertyList::array->new( \@array );
 	}
 
@@ -370,6 +391,55 @@ sub plist_as_string
 
 	return $string;
 	}
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+package Mac::PropertyList::Source;
+sub new { 
+        print STDERR "Creating new $_[0]\n" if $Debug > 1;
+        my $self = bless { buffer => [], source => $_[1] }, $_[0]; 
+	return $self;
+	}
+
+sub eof { (not @{$_[0]->{buffer}}) and $_[0]->source_eof }
+
+sub get_line 
+        {
+        my $self = shift;
+
+	local $_ = '';
+	while (defined $_ && /^[\r\n\s]*$/) {
+	    if( @{$self->{buffer}} ) {
+		$_ = shift @{$self->{buffer}};
+	    }
+	    else {
+		$_ = $self->get_source_line;
+	    }
+	}
+	return $_;
+        }
+
+sub put_line { unshift @{$_[0]->{buffer}}, $_[1] }  
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+package Mac::PropertyList::LineListSource;
+use base qw(Mac::PropertyList::Source);
+
+sub get_source_line { return shift @{$_->{source}} if @{$_->{source}} }
+
+sub source_eof { not @{$_[0]->{source}} }
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+package Mac::PropertyList::TextSource;
+use base qw(Mac::PropertyList::Source);
+
+sub get_source_line
+        {
+	    my $self = shift;
+	    $self->{source} =~ s/(.*(\r|\n|$))//;
+	    $1;
+        }
+
+sub source_eof { not $_[0]->{source} }
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 package Mac::PropertyList::Item;
