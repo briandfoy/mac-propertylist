@@ -3,6 +3,12 @@
 	* Removed requirements on Test::Manifest and Test::Pod
 	* Fixed warnings that show up under -w
 
+1.23 - Sun Jun  5 19:34:38 2005
+* Mike Ciul added some code to handle input differently for different
+sources (file, string, etc). It's a lot faster for very large files.
+* Most everything else is the same, so unless you need to work with
+very large files, you don't need to rush to upgrade.
+
 1.21 - Fri Mar 11 22:49:28 2005
 	* Added POD coverage tests
 	* Bumped version past the 1.0 barrier
