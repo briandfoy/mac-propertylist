@@ -381,7 +381,7 @@ is the form the Mac likes to see it in.
 
 sub plist_as_string
 	{
-	my $object = shift;
+	my $object = CORE::shift;
 
 	my $string = $XML_head;
 
@@ -404,7 +404,7 @@ sub eof { (not @{$_[0]->{buffer}}) and $_[0]->source_eof }
 
 sub get_line 
         {
-        my $self = shift;
+        my $self = CORE::shift;
 
 	local $_ = '';
 	while (defined $_ && /^[\r\n\s]*$/) {
@@ -434,7 +434,7 @@ use base qw(Mac::PropertyList::Source);
 
 sub get_source_line
         {
-	    my $self = shift;
+	    my $self = CORE::shift;
 	    $self->{source} =~ s/(.*(\r|\n|$))//;
 	    $1;
         }
@@ -480,7 +480,7 @@ use base qw(Mac::PropertyList::Item);
 
 sub new
 	{
-	my $class = shift;
+	my $class = CORE::shift;
 	
 	if( ref $_[0] )
 		{
@@ -499,14 +499,25 @@ sub new
 package Mac::PropertyList::array;
 use base qw(Mac::PropertyList::Container);
 
-sub shift   { shift @{ $_[0]->value } }
+sub shift   { CORE::shift @{ $_[0]->value } }
 sub unshift { }
-sub pop     { pop @{ $_[0]->value }   }
+sub pop     { CORE::pop @{ $_[0]->value }   }
 sub push    { }
 sub splice  { }
 sub count   { return scalar @{ $_[0]->value } }
 
 sub values { my @v = map { $_->value } @{ $_[0]->value }; wantarray ? @v : \@v }
+
+sub as_basic_data
+	{
+	my $self = CORE::shift;
+	return
+		[ map
+		{
+		eval { $_->can('as_basic_data') } ? $_->as_basic_data : $_
+		} @$self
+		];
+	}
 
 sub write
 	{
@@ -556,7 +567,24 @@ sub value
 	}
 	
 sub keys   { my @k = CORE::keys %{ $_[0]->value }; wantarray ? @k : \@k; }
-sub values { my @v = map { $_->value } CORE::values %{ $_[0]->value }; wantarray ? @v : \@v; }
+sub values 
+	{ 
+	my @v = map { $_->value } CORE::values %{ $_[0]->value }; 
+	wantarray ? @v : \@v; 
+	}
+
+sub as_basic_data
+	{
+	my $self = shift;
+
+	my %dict = map
+		{
+		my ($k, $v) = ($_, $self->{$_});
+		$k => eval { $v->can('as_basic_data') } ? $v->as_basic_data : $v
+		} CORE::keys %$self;
+	
+	return \%dict;
+	}
 
 sub write_key   { "<key>$_[1]</key>" }
 
@@ -588,6 +616,8 @@ package Mac::PropertyList::Scalar;
 use base qw(Mac::PropertyList::Item);
 
 sub new { my $copy = $_[1]; $_[0]->SUPER::new( \$copy ) }
+
+sub as_basic_data { $_[0]->value }
 
 sub write { $_[0]->write_open . $_[0]->value . $_[0]->write_close }
 	
@@ -671,6 +701,9 @@ Mike Ciul provided some classes for the different input modes,
 and these allow us to optimize the parsing code for each of
 those.
 
+Ricardo Signes added the as_basic_types() methods so you can
+all the plist junk and just play with the data.
+
 =head1 TO DO
 
 * change the value of an object
@@ -684,7 +717,7 @@ those.
 
 =head1 AUTHOR
 
-Copyright 2002-2005, brian d foy, C<< <bdfoy@cpan.org> >>
+Copyright 2002-2006, brian d foy, C<< <bdfoy@cpan.org> >>
 
 =head1 SEE ALSO
 
