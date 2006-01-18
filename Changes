@@ -3,6 +3,12 @@
 	* Removed requirements on Test::Manifest and Test::Pod
 	* Fixed warnings that show up under -w
 
+1.24 - Tue Jan 17 21:19:40 2006
+	* Ricardo Signes added as_basic_data() methods to turn the plist
+	stuff into a Perl data structure without all the plist
+	tracking. That's probably what most people want if they
+	simply want to get data.
+
 1.23 - Sun Jun  5 19:34:38 2005
 * Mike Ciul added some code to handle input differently for different
 sources (file, string, etc). It's a lot faster for very large files.
