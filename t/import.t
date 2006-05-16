@@ -1,6 +1,6 @@
 # $Id$
 
-use Test::More tests => 10;
+use Test::More tests => 12;
 
 require_ok( 'Mac::PropertyList' );
 
