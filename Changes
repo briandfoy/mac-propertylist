@@ -3,6 +3,11 @@
 	* Removed requirements on Test::Manifest and Test::Pod
 	* Fixed warnings that show up under -w
 
+1.26 - Tue May 16 01:02:29 2006
+	* Added parse_file to the export list. Why was it missing?
+	* There are no other code changes, and you should upgrade
+	if your users expect the documentation to be right. :)
+
 1.24 - Tue Jan 17 21:19:40 2006
 	* Ricardo Signes added as_basic_data() methods to turn the plist
 	stuff into a Perl data structure without all the plist
