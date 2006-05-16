@@ -8,7 +8,9 @@ use Carp qw(croak);
 use base qw(Exporter);
 
 @EXPORT_OK = qw( 
-	parse_plist plist_as_string parse_plist_file
+	parse_plist 
+	plist_as_string 
+	parse_plist_file
 	create_from_hash
 	create_from_array );
 
