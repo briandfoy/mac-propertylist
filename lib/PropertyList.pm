@@ -381,7 +381,7 @@ is the form the Mac likes to see it in.
 
 sub plist_as_string
 	{
-	my $object = CORE::Ifshift;
+	my $object = CORE::shift;
 
 	my $string = $XML_head;
 
