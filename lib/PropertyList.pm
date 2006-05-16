@@ -381,7 +381,7 @@ is the form the Mac likes to see it in.
 
 sub plist_as_string
 	{
-	my $object = CORE::shift;
+	my $object = CORE::Ifshift;
 
 	my $string = $XML_head;
 
@@ -506,7 +506,10 @@ sub push    { }
 sub splice  { }
 sub count   { return scalar @{ $_[0]->value } }
 
-sub values { my @v = map { $_->value } @{ $_[0]->value }; wantarray ? @v : \@v }
+sub values 
+	{ 
+	my @v = map { $_->value } @{ $_[0]->value }; 
+	wantarray ? @v : \@v}
 
 sub as_basic_data
 	{
