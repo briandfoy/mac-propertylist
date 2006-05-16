@@ -3,6 +3,10 @@
 	* Removed requirements on Test::Manifest and Test::Pod
 	* Fixed warnings that show up under -w
 
+1.28 - Tue May 16 01:15:52 2006
+	* This change actually makes the change I claimed in the last version.
+	* I added parse_plist_file to @EXPORT_OK, where it should have been.
+
 1.26 - Tue May 16 01:02:29 2006
 	* Added parse_plist_file to the export list. Why was it missing?
 	* There are no other code changes, and you should upgrade
