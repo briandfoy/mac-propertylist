@@ -20,6 +20,7 @@ t/false_key.t
 t/import.t
 t/load.t
 t/parse.t
+t/parse_plist_fh.t
 t/plists.t
 t/pod.t
 t/pod_coverage.t
