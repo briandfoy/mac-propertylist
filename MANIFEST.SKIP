@@ -12,3 +12,7 @@ MANIFEST.bak
 .lwpcookies
 .releaserc
 \.bak
+\.\#
+\.orig
+\.mine
+\.rej

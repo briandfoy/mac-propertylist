@@ -3,14 +3,15 @@ package Mac::PropertyList;
 use strict;
 
 use vars qw($ERROR $XML_head $XML_foot $VERSION @EXPORT_OK %EXPORT_TAGS);
-use Carp qw(croak);
+use Carp qw(croak carp);
 
 use base qw(Exporter);
 
 @EXPORT_OK = qw( 
 	parse_plist 
-	plist_as_string 
+	parse_plist_fh
 	parse_plist_file
+	plist_as_string 
 	create_from_hash
 	create_from_array );
 
@@ -29,6 +30,14 @@ Mac::PropertyList - work with Mac plists at a low level
 	use Mac::PropertyList;
 
 	my $data  = parse_plist( $text );
+
+		# == OR ==
+	my $data  = parse_plist_file( $filename );
+
+		# == OR ==
+	open my( $fh ), $filename or die "...";
+	my $data  = parse_plist_fh( $fh );
+
 
 	my $text  = plist_as_string( $data );
 
@@ -179,10 +188,39 @@ sub parse_plist
 	return $plist;
 	}
 
+=item parse_plist_fh( FILEHANDLE )
+
+Parse the XML plist from FILEHANDLE and return the Mac::PropertyList
+data structure. Returns false if the arguments is not a reference.
+
+You can do this in a couple of ways. You can open the file with a 
+lexical filehandle (since Perl 5.6).
+
+	open my( $fh ), $file or die "...";
+	parse_plist_fh( $fh );
+	
+Or, you can use a bareword filehandle and pass a reference to its
+typeglob. I don't recommmend this unless you are using an older
+Perl.
+
+	open FILE, $file or die "...";
+	parse_plist_fh( \*FILE );
+
+=cut
+
+sub parse_plist_fh
+	{
+	my $fh = shift;
+	
+	my $text = do { local $/; <$fh> };
+	
+	parse_plist( $text );
+	}
+
 =item parse_plist_file( FILE_PATH )
 
-Parse the XML plist in TEXT and return the Mac::PropertyList
-data structure.
+Parse the XML plist in FILE_PATH and return the Mac::PropertyList
+data structure. Returns false if the file does not exist.
 
 =cut
 
@@ -190,8 +228,14 @@ sub parse_plist_file
 	{
 	my $file = shift;
 
-	return unless -e $file;
+	if( ref $file ) { return parse_plist_fh( $file ) }
 	
+	unless( -e $file )
+		{
+		carp( "parse_plist_file: file [$file] does not exist!" );
+		return;
+		}
+		
 	my $text = do { local $/; open my($fh), $file; <$fh> };
 	
 	parse_plist( $text );

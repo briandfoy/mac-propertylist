@@ -8,6 +8,7 @@ container.t
 array.t
 dict.t
 parse.t
+parse_plist_fh.t
 write.t
 plists.t
 false_key.t
