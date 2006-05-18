@@ -3,6 +3,12 @@
 	* Removed requirements on Test::Manifest and Test::Pod
 	* Fixed warnings that show up under -w
 
+1.29 - Wed May 17 19:25:09 2006
+	* Added a parse_plist_fh function so you can open the files 
+	any way that you like (for instance, as ":utf8").
+	* Added pod_coverage.t to MANIFEST. I use it so I might as
+	well distribute it.
+
 1.28 - Tue May 16 01:15:52 2006
 	* This change actually makes the change I claimed in the last version.
 	* I added parse_plist_file to @EXPORT_OK, where it should have been.
