@@ -49,50 +49,45 @@ Mac::PropertyList - work with Mac plists at a low level
 	
 =head1 DESCRIPTION
 
-This module is a low-level interface to the Mac OS X
-Property List (plist) format.  You probably shouldn't use this
-in applications---build interfaces on top of this so
-you don't have to put all the heinous multi-level object
-stuff where people have to look at it.
+This module is a low-level interface to the Mac OS X Property List
+(plist) format.  You probably shouldn't use this in
+applications---build interfaces on top of this so you don't have to
+put all the heinous multi-level object stuff where people have to look
+at it.
 
-You can parse a plist file and get back a data structure.
-You can take that data structure and get back the plist
-as XML.  If you want to change the structure inbetween
-that's your business. :)
+You can parse a plist file and get back a data structure. You can take
+that data structure and get back the plist as XML.  If you want to
+change the structure inbetween that's your business. :)
 
-You don't need to be on Mac OS X to use this.  It simply
-parses and manipulates a text format that Mac OS X uses.
+You don't need to be on Mac OS X to use this.  It simply parses and
+manipulates a text format that Mac OS X uses.
 
 =head2 The Property List format
 
-The MacOS X Property List format is simple XML.  You
-can read the DTD to get the details.
+The MacOS X Property List format is simple XML.  You can read the DTD
+to get the details.
 
 	http://www.apple.com/DTDs/PropertyList-1.0.dtd
 
-One big problem exists---its dict type uses a flat
-structure to list keys and values so that values
-are only associated with their keys by their position
-in the file rather than by the structure of the DTD.
-This problem is the major design hinderance in this
-module.  A smart XML format would have made things
-much easier.
+One big problem exists---its dict type uses a flat structure to list
+keys and values so that values are only associated with their keys by
+their position in the file rather than by the structure of the DTD.
+This problem is the major design hinderance in this module.  A smart
+XML format would have made things much easier.
 
-If the parse_plist encounters an empty key tag in a dict
-structure (i.e. C<< <key></key> >> ) the function croaks.
+If the parse_plist encounters an empty key tag in a dict structure
+(i.e. C<< <key></key> >> ) the function croaks.
 
 =head2 The Mac::PropertyList classes
 
-A plist can have one or more of any of the plist
-objects, and we have to remember the type of thing
-so we can go back to the XML format.  Perl treats
-numbers and strings the same, but the plist format
+A plist can have one or more of any of the plist objects, and we have
+to remember the type of thing so we can go back to the XML format. 
+Perl treats numbers and strings the same, but the plist format
 doesn't.
 
-Therefore, everything Mac::PropertyList creates is
-an object of some sort.  Container objects like
-Mac::PropertyList::array and Mac::PropertyList::dict
-hold other objects.
+Therefore, everything Mac::PropertyList creates is an object of some
+sort.  Container objects like Mac::PropertyList::array and
+Mac::PropertyList::dict hold other objects.
 
 There are several types of objects: 
 
@@ -105,15 +100,15 @@ There are several types of objects:
 	Mac::PropertyList::dict
 
 =over 4
- 
+
 =item new( VALUE )
 
 Create the object.
 
 =item value
 
-Access the value of the object.  At the moment you cannot
-change the value
+Access the value of the object.  At the moment you cannot change the
+value
 
 =item type
 
@@ -220,7 +215,10 @@ sub parse_plist_fh
 =item parse_plist_file( FILE_PATH )
 
 Parse the XML plist in FILE_PATH and return the Mac::PropertyList
-data structure. Returns false if the file does not exist.
+data structure. Returns false if the file does not exist. 
+
+Alternately, you can pass a filehandle reference, but that just
+calls C<parse_plist_fh> for you.
 
 =cut
 
@@ -245,8 +243,8 @@ sub parse_plist_file
 
 Create a plist dictionary from the hash reference.
 
-The values of the hash can only be simple scalars---not
-references.  Reference values are silently ignored.
+The values of the hash can only be simple scalars---not references. 
+Reference values are silently ignored.
 
 Returns a string representing the hash in the plist format.
 
@@ -283,8 +281,8 @@ sub create_from_hash
 
 Create a plist array from the array reference.
 
-The values of the array can only be simple scalars---not
-references.  Reference values are silently ignored.
+The values of the array can only be simple scalars---not references. 
+Reference values are silently ignored.
 
 Returns a string representing the array in the plist format.
 
@@ -745,15 +743,14 @@ members of the project can shepherd this module appropriately.
 
 =head1 CREDITS
 
-Thanks to Chris Nandor for general Mac kung fu and Chad Walker
-for help figuring out the recursion for nested structures.
+Thanks to Chris Nandor for general Mac kung fu and Chad Walker for
+help figuring out the recursion for nested structures.
 
-Mike Ciul provided some classes for the different input modes,
-and these allow us to optimize the parsing code for each of
-those.
+Mike Ciul provided some classes for the different input modes, and
+these allow us to optimize the parsing code for each of those.
 
-Ricardo Signes added the as_basic_types() methods so you can
-all the plist junk and just play with the data.
+Ricardo Signes added the as_basic_types() methods so you can all the
+plist junk and just play with the data.
 
 =head1 TO DO
 
@@ -768,7 +765,14 @@ all the plist junk and just play with the data.
 
 =head1 AUTHOR
 
-Copyright 2002-2006, brian d foy, C<< <bdfoy@cpan.org> >>
+brian d foy, C<< <bdfoy@cpan.org> >>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 2004-2007 brian d foy.  All rights reserved.
+
+This program is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
 
 =head1 SEE ALSO
 

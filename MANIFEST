@@ -4,6 +4,7 @@ DTDs/PropertyList-1.0.dtd
 hacks/plist-timer.pl
 hacks/plist.pl
 lib/PropertyList.pm
+LICENSE
 Makefile.PL
 MANIFEST
 META.yml			Module meta-data (added by MakeMaker)
