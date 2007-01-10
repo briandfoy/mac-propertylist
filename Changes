@@ -3,6 +3,10 @@
 	* Removed requirements on Test::Manifest and Test::Pod
 	* Fixed warnings that show up under -w
 
+1.30 - Tue Jan  9 22:32:27 2007
+	* updated copyright and license info
+	* no code changes, so no need to upgrade
+
 1.29 - Wed May 17 19:25:09 2006
 	* Added a parse_plist_fh function so you can open the files 
 	any way that you like (for instance, as ":utf8").
