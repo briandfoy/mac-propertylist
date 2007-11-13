@@ -2,8 +2,12 @@
 package Mac::PropertyList;
 use strict;
 
+use warnings;
+no warnings;
+
 use vars qw($ERROR $XML_head $XML_foot $VERSION @EXPORT_OK %EXPORT_TAGS);
 use Carp qw(croak carp);
+use Data::Dumper;
 
 use base qw(Exporter);
 
@@ -19,7 +23,7 @@ use base qw(Exporter);
 	'all' => \@EXPORT_OK,
 	);
 	
-$VERSION = sprintf "%d.%02d", qw( 1 32 );
+$VERSION = sprintf "%d.%02d", qw( 1 31 );
 
 =head1 NAME
 
@@ -505,10 +509,9 @@ sub value
 sub type { my $r = ref $_[0] ? ref $_[0] : $_[0]; $r =~ s/.*:://; $r; }
 
 sub new { 
-	print STDERR "Got [@_]\n"; 
-
+	# print STDERR "Got [@_]\n"; 
 	my( $class, $item ) = @_;
-	bless $item, $class 
+	bless $_[1], $_[0] 
 	}
 	
 sub write_open  { $_[0]->write_either(); }
@@ -532,11 +535,10 @@ use base qw(Mac::PropertyList::Item);
 sub new
 	{
 	my $class = CORE::shift;
-	my $item  = CORE::shift;
 	
 	if( ref $_[0] )
 		{
-		return bless $item, $class;
+		return bless $_[0], $class;
 		}
 		
 	my $empty = do {
@@ -598,9 +600,7 @@ sub write
 package Mac::PropertyList::dict;
 use base qw(Mac::PropertyList::Container);
 
-sub new {
-	print STDERR Data::Dumper::Dumper( $_[1] );
-	
+sub new {	
 	$_[0]->SUPER::new( $_[1] );
 	}
 	

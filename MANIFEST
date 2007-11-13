@@ -8,7 +8,6 @@ lib/PropertyList.pm
 LICENSE
 Makefile.PL
 MANIFEST
-META.yml			Module meta-data (added by MakeMaker)
 plists/com.apple.iPhoto.plist
 plists/com.apple.iTunes.plist
 plists/com.apple.systempreferences.plist
