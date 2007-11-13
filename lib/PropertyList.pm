@@ -511,7 +511,7 @@ sub type { my $r = ref $_[0] ? ref $_[0] : $_[0]; $r =~ s/.*:://; $r; }
 sub new { 
 	# print STDERR "Got [@_]\n"; 
 	my( $class, $item ) = @_;
-	bless $_[1], $_[0] 
+	bless $item, $class
 	}
 	
 sub write_open  { $_[0]->write_either(); }
@@ -535,10 +535,11 @@ use base qw(Mac::PropertyList::Item);
 sub new
 	{
 	my $class = CORE::shift;
+	my $item  = CORE::shift;
 	
-	if( ref $_[0] )
+	if( ref $item )
 		{
-		return bless $_[0], $class;
+		return bless $item, $class;
 		}
 		
 	my $empty = do {
