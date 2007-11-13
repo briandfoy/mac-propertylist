@@ -1,11 +1,14 @@
 # $Id$
 use ExtUtils::MakeMaker;
 
+require 5.006;
+
 eval "use Test::Manifest 1.14";
 
 WriteMakefile
 	(
 	'NAME'         => 'Mac::PropertyList',
+	'ABSTRACT'     => 'work with Mac plists at a low level',
 	'VERSION_FROM' => 'lib/PropertyList.pm',
 	'LICENSE'      => 'perl',
 	'AUTHOR'       => 'brian d foy <bdfoy@cpan.org>',

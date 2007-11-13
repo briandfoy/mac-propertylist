@@ -19,7 +19,7 @@ use base qw(Exporter);
 	'all' => \@EXPORT_OK,
 	);
 	
-$VERSION = sprintf "%d.%02d", q$Revision$ =~ m/ (\d+) \. (\d+) /xg;
+$VERSION = sprintf "%d.%02d", qw( 1 32 );
 
 =head1 NAME
 
@@ -504,7 +504,12 @@ sub value
 	
 sub type { my $r = ref $_[0] ? ref $_[0] : $_[0]; $r =~ s/.*:://; $r; }
 
-sub new { bless $_[1], $_[0] }
+sub new { 
+	print STDERR "Got [@_]\n"; 
+
+	my( $class, $item ) = @_;
+	bless $item, $class 
+	}
 	
 sub write_open  { $_[0]->write_either(); }
 sub write_close { $_[0]->write_either('/'); }
@@ -527,10 +532,11 @@ use base qw(Mac::PropertyList::Item);
 sub new
 	{
 	my $class = CORE::shift;
+	my $item  = CORE::shift;
 	
 	if( ref $_[0] )
 		{
-		return bless $_[0], $class;
+		return bless $item, $class;
 		}
 		
 	my $empty = do {
@@ -592,6 +598,12 @@ sub write
 package Mac::PropertyList::dict;
 use base qw(Mac::PropertyList::Container);
 
+sub new {
+	print STDERR Data::Dumper::Dumper( $_[1] );
+	
+	$_[0]->SUPER::new( $_[1] );
+	}
+	
 sub delete { delete ${ $_[0]->value }{$_[1]}         }
 sub exists { exists ${ $_[0]->value }{$_[1]} ? 1 : 0 }
 sub count  { scalar CORE::keys %{ $_[0]->value }     }
