@@ -3,6 +3,9 @@
 	* Removed requirements on Test::Manifest and Test::Pod
 	* Fixed warnings that show up under -w
 
+1.31 - Wed Jan 16 05:28:00 2008
+	* Clean up for move from CVS to SVN. No need to upgrade.
+
 1.30 - Tue Jan  9 22:32:27 2007
 	* updated copyright and license info
 	* no code changes, so no need to upgrade
