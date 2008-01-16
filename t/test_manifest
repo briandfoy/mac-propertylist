@@ -12,4 +12,4 @@ parse_plist_fh.t
 write.t
 plists.t
 false_key.t
-basic_data.t
+basic_types.t

@@ -12,8 +12,8 @@ WriteMakefile
 	'VERSION_FROM' => 'lib/PropertyList.pm',
 	'LICENSE'      => 'perl',
 	'AUTHOR'       => 'brian d foy <bdfoy@cpan.org>',
-	
-	'PREREQ_PM' => { 
+
+	'PREREQ_PM' => {
 		'MIME::Base64' => '0',
 		'Test::More'   => '0',
 		},

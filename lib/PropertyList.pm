@@ -508,10 +508,11 @@ sub value
 	
 sub type { my $r = ref $_[0] ? ref $_[0] : $_[0]; $r =~ s/.*:://; $r; }
 
-sub new { 
-	# print STDERR "Got [@_]\n"; 
-	my( $class, $item ) = @_;
-	bless $item, $class
+sub new 
+	{ 
+	#print STDERR "Got [@_]\n"; 
+
+	bless $_[1], $_[0] 
 	}
 	
 sub write_open  { $_[0]->write_either(); }
@@ -601,10 +602,12 @@ sub write
 package Mac::PropertyList::dict;
 use base qw(Mac::PropertyList::Container);
 
-sub new {	
+sub new {
+	#print STDERR Data::Dumper::Dumper( $_[1] );
+	
 	$_[0]->SUPER::new( $_[1] );
 	}
-	
+
 sub delete { delete ${ $_[0]->value }{$_[1]}         }
 sub exists { exists ${ $_[0]->value }{$_[1]} ? 1 : 0 }
 sub count  { scalar CORE::keys %{ $_[0]->value }     }
@@ -747,7 +750,7 @@ use base qw(Mac::PropertyList::Boolean);
 =head1 SOURCE AVAILABILITY
 
 This source is part of a SourceForge project which always has the
-latest sources in CVS, as well as all of the previous releases.
+latest sources in SVN, as well as all of the previous releases.
 
 	http://sourceforge.net/projects/brian-d-foy/
 
@@ -782,7 +785,7 @@ brian d foy, C<< <bdfoy@cpan.org> >>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (c) 2004-2007 brian d foy.  All rights reserved.
+Copyright (c) 2004-2008 brian d foy.  All rights reserved.
 
 This program is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
