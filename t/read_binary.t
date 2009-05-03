@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 23;
+use Test::More tests => 16;
 
 use File::Spec::Functions;
 
@@ -20,7 +20,7 @@ ok( -e $test_file, "Test file for binary plist is there" );
 my $parser = $class->new( $test_file );
 isa_ok( $parser, $class );
 
-$plist = $parser->plist;
+my $plist = $parser->plist;
 isa_ok( $plist, 'Mac::PropertyList::dict' );
 
 my %keys_hash = map { $_, 1 } $plist->keys;
@@ -41,11 +41,10 @@ is(
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 # Use it indirectly
 {
-my $plist = 'Mac::PropertyList'->new( $test_file );
-isa_ok( $parser, $class );
+use Mac::PropertyList qw(parse_plist_file);
 
-$plist = $parser->plist;
-isa_ok( $plist, 'Mac::PropertyList' );
+my $plist = parse_plist_file( $test_file );
+isa_ok( $plist, 'Mac::PropertyList::dict' );
 
 my %keys_hash = map { $_, 1 } $plist->keys;
 

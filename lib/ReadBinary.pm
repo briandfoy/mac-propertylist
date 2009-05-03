@@ -1,4 +1,4 @@
-package Mac::PropertyList::Binary;
+package Mac::PropertyList::ReadBinary;
 use strict;
 use warnings;
 
@@ -58,23 +58,24 @@ sub _run
 	print Dumper( $parser->plist );
 	}
 	
-=item new( FILENAME )
+=item new( FILENAME | SCALAR_REF | FILEHANDLE )
 
-Opens the named file, p
+Opens the data source, doing the right thing for filenames,
+scalar references, or a filehandle.
 
 =cut
 
 sub new {
-	my( $class, $file ) = @_;
+	my( $class, $source ) = @_;
 	
-	my $self = bless { file => $file }, $class;
+	my $self = bless { source => $source }, $class;
 	
 	$self->_read;
 	
 	$self;
 	}
 
-sub _file            { $_[0]->{file}               }
+sub _source          { $_[0]->{source}             }
 sub _fh              { $_[0]->{fh}                 }
 sub _trailer         { $_[0]->{trailer}            }
 sub _offsets         { $_[0]->{offsets}            }
@@ -95,18 +96,38 @@ sub _object_size
 
 sub _read
 	{
-	my $self = shift;
-
-	open my( $input ), "<", $self->_file or croak "Could not open file! $!";
-	$self->{fh} = $input;
-	$self->_read_plist_trailer( $input );
-	print Dumper( $self );
+	my( $self, $thingy ) = @_;
+			
+	$self->{fh} = $self->_get_filehandle;
+	$self->_read_plist_trailer;
 	
 	$self->_get_offset_table;
 	
     my $top = $self->_read_object_at_offset( $self->_trailer->{top_object} );
     
     $self->{parsed} = $top;
+	}
+
+sub _get_filehandle
+	{
+	my( $self, $thingy ) = @_;
+
+	my $fh;
+	
+	unless( ref $self->_source ) # filename
+		{
+		open $fh, "<", $self->_source or croak "Could not open source! $!";
+		}
+	elsif( ref $self->_source eq ref \ ''  ) # scalar ref
+		{
+		open $fh, "<", $self->_source or croak "Could not open file! $!";		
+		}
+	elsif( ref $self->_source ) # filehandle
+		{
+		$fh = $self->_source;
+		}
+		
+	$fh;
 	}
 
 sub _read_plist_trailer

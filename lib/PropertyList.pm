@@ -190,8 +190,8 @@ sub parse_plist
 		elsif( $text =~ /\Abplist/ ) # binary plist
 			{
 			require Mac::PropertyList::ReadBinary;
-			my $parser = Mac::PropertyList::ReadBinary->new( $text );
-			$parser->parsed;
+			my $parser = Mac::PropertyList::ReadBinary->new( \$text );
+			$parser->plist;
 			}
 		};
 	}
