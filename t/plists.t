@@ -1,4 +1,3 @@
-# $Id$
 BEGIN { @plists = <plists/*.plist>; }
 
 use Test::More;

@@ -1,5 +1,3 @@
-# $Id$
-
 use Test::More tests => 23;
 
 use Mac::PropertyList;

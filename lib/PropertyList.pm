@@ -177,14 +177,23 @@ sub parse_plist
 	{
 	my $text = shift;
 
-	# we can handle either 0.9 or 1.0
-	$text =~ s|^<\?xml.*?>\s*<!DOC.*>\s*<plist.*?>\s*||;
-	$text =~ s|\s*</plist>\s*$||;
+	my $plist = do {
+		if( $text =~ /\A<\?xml/ ) # XML plists
+			{
+			# we can handle either 0.9 or 1.0
+			$text =~ s|^<\?xml.*?>\s*<!DOC.*>\s*<plist.*?>\s*||;
+			$text =~ s|\s*</plist>\s*$||;
 
-	my $text_source = new Mac::PropertyList::TextSource( $text );
-	my $plist = read_next( $text_source );
-
-	return $plist;
+			my $text_source = Mac::PropertyList::TextSource->new( $text );
+			read_next( $text_source );
+			}
+		elsif( $text =~ /\Abplist/ ) # binary plist
+			{
+			require Mac::PropertyList::ReadBinary;
+			my $parser = Mac::PropertyList::ReadBinary->new( $text );
+			$parser->parsed;
+			}
+		};
 	}
 
 =item parse_plist_fh( FILEHANDLE )

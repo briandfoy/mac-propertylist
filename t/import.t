@@ -1,5 +1,3 @@
-# $Id$
-
 use Test::More 'no_plan';
 
 require_ok( 'Mac::PropertyList' );

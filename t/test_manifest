@@ -1,4 +1,3 @@
-# $Id$
 load.t
 pod.t
 pod_coverage.t
@@ -13,3 +12,4 @@ write.t
 plists.t
 false_key.t
 basic_types.t
+read_binary.t

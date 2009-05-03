@@ -14,16 +14,14 @@ WriteMakefile
 	'AUTHOR'       => 'brian d foy <bdfoy@cpan.org>',
 
 	'PREREQ_PM' => {
+		'Math::BigInt' => '0',
 		'MIME::Base64' => '0',
 		'Test::More'   => '0',
 		},
 
-	'MAN3PODS'		       => {
-		'lib/PropertyList.pm'    => '$(INST_MAN3DIR)/Mac::PropertyList.3',
-		},
-
 	'PM'                   => {
 		'lib/PropertyList.pm'    => '$(INST_LIBDIR)/PropertyList.pm',
+		'lib/ReadBinary.pm'      => '$(INST_LIBDIR)/PropertyList/ReadBinary.pm',
 		},
 
 	clean                  => { FILES => 'Mac-PropertyList-*' },

@@ -8,17 +8,62 @@ use Mac::PropertyList;
 use Math::BigInt;
 use POSIX qw(SEEK_END SEEK_SET);
 
-my %RStrings;
 
-__PACKAGE__->run( @ARGV ) unless caller;
+__PACKAGE__->_run( @ARGV ) unless caller;
 
-sub run
+=head1 NAME
+
+Mac::PropertyList::ReadBinary - read binary property list files
+
+=head1 SYNOPSIS
+
+	# use directly
+	use Mac::PropertyList::ReadBinary;
+
+	my $parser = Mac::PropertyList::ReadBinary->new( $file );
+	
+	my $plist = $parser->plist;
+
+
+	# use indirectly, automatically selects right reader
+	use Mac::PropertyList;
+	
+	my $plist = parse_plist_file( $file );
+	
+=head1 DESCRIPTION
+
+This module is a low-level interface to the Mac OS X Property List
+(plist) format.  You probably shouldn't use this in
+applications---build interfaces on top of this so you don't have to
+put all the heinous multi-level object stuff where people have to look
+at it.
+
+You can parse a plist file and get back a data structure. You can take
+that data structure and get back the plist as XML (but not binary
+yet).  If you want to change the structure inbetween that's your
+business. :)
+
+See C<Mac::PropertyList> for more details. 
+
+=head2 Methods
+
+=over 4
+
+=cut
+
+sub _run
 	{
 	my $parser = $_[0]->new( $_[1] );
 	
-	print Dumper( $parser->parsed );
+	print Dumper( $parser->plist );
 	}
 	
+=item new( FILENAME )
+
+Opens the named file, p
+
+=cut
+
 sub new {
 	my( $class, $file ) = @_;
 	
@@ -34,7 +79,14 @@ sub _fh              { $_[0]->{fh}                 }
 sub _trailer         { $_[0]->{trailer}            }
 sub _offsets         { $_[0]->{offsets}            }
 sub _object_ref_size { $_[0]->_trailer->{ref_size} }
-sub parsed           { $_[0]->{parsed}             }
+
+=item plist
+
+Returns the C<Mac::PropertyList> data structure.
+
+=cut
+
+sub plist            { $_[0]->{parsed}             }
 
 sub _object_size 
 	{   
@@ -291,3 +343,28 @@ sub _read_object
 	}
 	
 }
+
+=back
+
+=head1 SOURCE AVAILABILITY
+
+This project is in Github:
+
+	git://github.com/briandfoy/mac-propertylist.git
+
+=head1 CREDITS
+
+=head1 AUTHOR
+
+brian d foy, C<< <bdfoy@cpan.org> >>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 2004-2009 brian d foy.  All rights reserved.
+
+This program is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
+
+"See why 1984 won't be like 1984";

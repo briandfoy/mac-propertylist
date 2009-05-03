@@ -1,6 +1,4 @@
-# $Id$
-
-BEGIN { @classes = qw(Mac::PropertyList) }
+BEGIN { @classes = qw(Mac::PropertyList Mac::PropertyList::ReadBinary) }
 
 use Test::More tests => scalar @classes;
 
