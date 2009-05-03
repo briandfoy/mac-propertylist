@@ -12,7 +12,7 @@ use Math::BigInt;
 use MIME::Base64 qw(decode_base64);
 use POSIX qw(SEEK_END SEEK_SET);
 
-$VERSION = '1.31_01';
+$VERSION = '1.31_02';
 
 __PACKAGE__->_run( @ARGV ) unless caller;
 
