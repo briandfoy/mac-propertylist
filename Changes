@@ -3,6 +3,9 @@
 	* Removed requirements on Test::Manifest and Test::Pod
 	* Fixed warnings that show up under -w
 
+1.31_01 - Sun May  3 06:40:14 2009
+	* Added initial support for reading binary property lists
+
 1.31 - Wed Jan 16 05:28:00 2008
 	* Clean up for move from CVS to SVN. No need to upgrade.
 
