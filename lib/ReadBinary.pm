@@ -2,12 +2,15 @@ package Mac::PropertyList::ReadBinary;
 use strict;
 use warnings;
 
+use vars qw( $VERSION );
+
 use Carp;
 use Data::Dumper;
 use Mac::PropertyList;
 use Math::BigInt;
 use POSIX qw(SEEK_END SEEK_SET);
 
+$VERSION = '1.31_01';
 
 __PACKAGE__->_run( @ARGV ) unless caller;
 

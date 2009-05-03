@@ -1,4 +1,3 @@
-# $Id$
 package Mac::PropertyList;
 use strict;
 
@@ -17,13 +16,14 @@ use base qw(Exporter);
 	parse_plist_file
 	plist_as_string
 	create_from_hash
-	create_from_array );
+	create_from_array 
+	);
 
 %EXPORT_TAGS = (
 	'all' => \@EXPORT_OK,
 	);
 
-$VERSION = sprintf "%d.%02d", qw( 1 31 );
+$VERSION = '1.31_01';
 
 =head1 NAME
 
