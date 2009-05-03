@@ -715,6 +715,12 @@ package Mac::PropertyList::string;
 use base qw(Mac::PropertyList::Scalar);
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+package Mac::PropertyList::ustring;
+use base qw(Mac::PropertyList::Scalar);
+
+# XXX need to do some fancy unicode checking here
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 package Mac::PropertyList::data;
 use base qw(Mac::PropertyList::Scalar);
 
