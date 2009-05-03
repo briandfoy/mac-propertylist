@@ -442,8 +442,7 @@ sub read_data
 
 =item plist_as_string
 
-Turn the plist data structure into the plist string, which
-is the form the Mac likes to see it in.
+Return the plist data structure as XML in the Mac Property List format.
 
 =cut
 
@@ -456,6 +455,25 @@ sub plist_as_string
 	$string .= $object->write . "\n";
 
 	$string .= $XML_foot;
+
+	return $string;
+	}
+
+=item plist_as_perl
+
+Return the plist data structure as an unblessed Perl data
+structure. There won't be any C<Mac::PropertyList> objects
+in the results.
+
+=cut
+
+sub plist_as_perl
+	{
+	my $object = CORE::shift;
+
+	my $string = '$VAR = ';
+
+	$string .= $object->as_perl;
 
 	return $string;
 	}
@@ -582,11 +600,12 @@ sub pop     { CORE::pop @{ $_[0]->value }   }
 sub push    { }
 sub splice  { }
 sub count   { return scalar @{ $_[0]->value } }
-
+sub _elements { @{ $_[0]->value } } # the raw, unprocessed elements
 sub values
 	{
-	my @v = map { $_->value } @{ $_[0]->value };
-	wantarray ? @v : \@v}
+	my @v = map { $_->value } $_[0]->_elements;
+	wantarray ? @v : \@v
+	}
 
 sub as_basic_data
 	{
@@ -619,6 +638,15 @@ sub write
 	return $string;
 	}
 
+sub as_perl
+	{
+	my $self  = CORE::shift;
+	
+	my @array = map { $_->as_perl } $self->_elements;
+	
+	return \@array;
+	}
+	
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 package Mac::PropertyList::dict;
 use base qw(Mac::PropertyList::Container);
@@ -697,6 +725,23 @@ sub write
 	return $string;
 	}
 
+sub as_perl
+	{
+	my $self  = CORE::shift;
+	
+	my %dict = map { 
+		my $v = $self->value($_);
+		$v = $v->as_perl if eval { $v->can( 'as_perl' ) };
+		print "key is $_, value is $v\n"; 
+		$_, $v 
+		} $self->keys;
+	use Data::Dumper;
+	print "as_perl: ", Dumper( \%dict );
+	
+	return \%dict;
+	}
+
+
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 package Mac::PropertyList::Scalar;
 use base qw(Mac::PropertyList::Item);
@@ -706,6 +751,8 @@ sub new { my $copy = $_[1]; $_[0]->SUPER::new( \$copy ) }
 sub as_basic_data { $_[0]->value }
 
 sub write { $_[0]->write_open . $_[0]->value . $_[0]->write_close }
+
+sub as_perl { $_[0]->value }
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 package Mac::PropertyList::date;
