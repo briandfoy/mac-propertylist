@@ -16,3 +16,5 @@ MANIFEST.bak
 \.orig
 \.mine
 \.rej
+Mac-*
+.git

@@ -1,10 +1,13 @@
 Changes
 DTDs/PropertyList-0.9.dtd
 DTDs/PropertyList-1.0.dtd
+examples/convert_to_perl.pl
+examples/plist-visitor.pl
 examples/README
 hacks/plist-timer.pl
 hacks/plist.pl
 lib/PropertyList.pm
+lib/ReadBinary.pm
 LICENSE
 Makefile.PL
 MANIFEST
@@ -12,6 +15,7 @@ plists/com.apple.iPhoto.plist
 plists/com.apple.iTunes.plist
 plists/com.apple.systempreferences.plist
 plists/com.unsanity.windowshadex.plist
+plists/the_perl_review.abcdp
 README
 t/array.t
 t/basic_types.t
@@ -25,6 +29,7 @@ t/parse_plist_fh.t
 t/plists.t
 t/pod.t
 t/pod_coverage.t
+t/read_binary.t
 t/scalar.t
 t/test_manifest
 t/time.t
