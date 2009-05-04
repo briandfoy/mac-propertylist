@@ -732,11 +732,8 @@ sub as_perl
 	my %dict = map { 
 		my $v = $self->value($_);
 		$v = $v->as_perl if eval { $v->can( 'as_perl' ) };
-		print "key is $_, value is $v\n"; 
 		$_, $v 
 		} $self->keys;
-	use Data::Dumper;
-	print "as_perl: ", Dumper( \%dict );
 	
 	return \%dict;
 	}
