@@ -34,3 +34,4 @@ t/scalar.t
 t/test_manifest
 t/time.t
 t/write.t
+t/as_perl.t

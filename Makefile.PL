@@ -1,7 +1,6 @@
-# $Id$
 use ExtUtils::MakeMaker;
 
-require 5.006;
+require 5.008;
 
 eval "use Test::Manifest 1.21";
 

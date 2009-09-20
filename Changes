@@ -1,7 +1,5 @@
-0.11 - Sat Jan 31 11:24:53 CST 2004
-	* No code changes.
-	* Removed requirements on Test::Manifest and Test::Pod
-	* Fixed warnings that show up under -w
+1.32 - Wed Sep 16 23:03:57 CDT 2009
+	* Things seen to work, so lets release it.
 
 1.31_01 - Sun May  3 06:40:14 2009
 	* Added initial support for reading binary property lists
@@ -35,10 +33,10 @@
 	simply want to get data.
 
 1.23 - Sun Jun  5 19:34:38 2005
-* Mike Ciul added some code to handle input differently for different
-sources (file, string, etc). It's a lot faster for very large files.
-* Most everything else is the same, so unless you need to work with
-very large files, you don't need to rush to upgrade.
+	* Mike Ciul added some code to handle input differently for different
+	sources (file, string, etc). It's a lot faster for very large files.
+	* Most everything else is the same, so unless you need to work with
+	very large files, you don't need to rush to upgrade.
 
 1.21 - Fri Mar 11 22:49:28 2005
 	* Added POD coverage tests
@@ -63,6 +61,11 @@ very large files, you don't need to rush to upgrade.
     * Refactored the module to get rid of goofy data structure---if you
     peeked behind-the-scenes this will bite you
     * Each type in the plist now has its own class, with methods to affect it
+
+0.11 - Sat Jan 31 11:24:53 CST 2004
+	* No code changes.
+	* Removed requirements on Test::Manifest and Test::Pod
+	* Fixed warnings that show up under -w
 
 0.10 - Mon Feb  3 19:53:24 2003
 	* No code changes

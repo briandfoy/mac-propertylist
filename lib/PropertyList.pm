@@ -23,7 +23,7 @@ use base qw(Exporter);
 	'all' => \@EXPORT_OK,
 	);
 
-$VERSION = '1.31_02';
+$VERSION = '1.32';
 
 =head1 NAME
 
