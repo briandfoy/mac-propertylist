@@ -15,9 +15,11 @@ plists/com.apple.iPhoto.plist
 plists/com.apple.iTunes.plist
 plists/com.apple.systempreferences.plist
 plists/com.unsanity.windowshadex.plist
+plists/comments.plist
 plists/the_perl_review.abcdp
 README
 t/array.t
+t/as_perl.t
 t/basic_types.t
 t/container.t
 t/dict.t
@@ -34,4 +36,3 @@ t/scalar.t
 t/test_manifest
 t/time.t
 t/write.t
-t/as_perl.t
