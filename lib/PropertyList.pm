@@ -180,8 +180,10 @@ sub parse_plist
 	my $plist = do {
 		if( $text =~ /\A<\?xml/ ) # XML plists
 			{
+			$text =~ s/<!--(?:[\d\D]*?)-->//g;
 			# we can handle either 0.9 or 1.0
 			$text =~ s|^<\?xml.*?>\s*<!DOC.*>\s*<plist.*?>\s*||;
+
 			$text =~ s|\s*</plist>\s*$||;
 
 			my $text_source = Mac::PropertyList::TextSource->new( $text );
