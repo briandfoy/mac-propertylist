@@ -16,14 +16,14 @@ use base qw(Exporter);
 	parse_plist_file
 	plist_as_string
 	create_from_hash
-	create_from_array 
+	create_from_array
 	);
 
 %EXPORT_TAGS = (
 	'all' => \@EXPORT_OK,
 	);
 
-$VERSION = '1.32';
+$VERSION = '1.32_01';
 
 =head1 NAME
 
@@ -388,7 +388,7 @@ sub read_dict
 		my $key;
 		while (not defined $key)
 			{
-			if (s[^\s*<key>(.*?)</key>][]s)
+			if( s[^\s*<key>(.*?)</key>][]s )
 				{
 				$key = $1;
 				# Bring this back if you want this behavior:
@@ -422,7 +422,7 @@ sub read_array
 	local $_ = $source->get_line;
 	while( not s|^\s*</array>|| )
 		{
-		$source->put_line( $_ );
+		$source->put_line( $_ ) if $_;
 		push @array, read_next( $source );
 		$_ = $source->get_line;
 		}
@@ -643,12 +643,12 @@ sub write
 sub as_perl
 	{
 	my $self  = CORE::shift;
-	
+
 	my @array = map { $_->as_perl } $self->_elements;
-	
+
 	return \@array;
 	}
-	
+
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 package Mac::PropertyList::dict;
 use base qw(Mac::PropertyList::Container);
@@ -730,13 +730,13 @@ sub write
 sub as_perl
 	{
 	my $self  = CORE::shift;
-	
-	my %dict = map { 
+
+	my %dict = map {
 		my $v = $self->value($_);
 		$v = $v->as_perl if eval { $v->can( 'as_perl' ) };
-		$_, $v 
+		$_, $v
 		} $self->keys;
-	
+
 	return \%dict;
 	}
 
