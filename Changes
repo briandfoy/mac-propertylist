@@ -1,6 +1,9 @@
 1.32 - Wed Sep 16 23:03:57 CDT 2009
 	* Things seen to work, so lets release it.
 
+1.32_01 - Tue Mar  1 22:36:54 2011
+	Handle XML comments in plist files. That is, ignore them.
+
 1.31_01 - Sun May  3 06:40:14 2009
 	* Added initial support for reading binary property lists
 
