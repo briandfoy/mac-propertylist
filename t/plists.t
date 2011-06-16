@@ -1,4 +1,4 @@
-BEGIN { @plists = <plists/*.plist>; }
+BEGIN { @plists = glob( 'plists/*.plist' ); }
 
 use Test::More;
 eval "use Time::HiRes";
@@ -10,10 +10,9 @@ use Mac::PropertyList;
 
 my $debug = $ENV{PLIST_DEBUG} || 0;
 
-foreach my $file ( @plists )
-	{
+foreach my $file ( @plists ) {
 	diag( "Working on $file" ) if $debug;
-	unless( open FILE, $file ) {
+	unless( open FILE, '<', $file ) {
 		fail( "Could not open $file" );
 		next;
 		}
@@ -26,8 +25,11 @@ foreach my $file ( @plists )
 	my $time1 = [ Time::HiRes::gettimeofday() ];
 	my $plist = eval { Mac::PropertyList::parse_plist( $data ) };
 	my $error_at = $@;
-	$error_at ? fail( "Error parsing $file: $@" ) : pass( "Parsed $file" );
-	
+	$error_at ?
+		fail( "Error parsing $file: $error_at" )
+			:
+		pass( "Parsed $file without a problem" );
+
 	my $time2 = [ Time::HiRes::gettimeofday() ];
 
 	my $elapsed = Time::HiRes::tv_interval( $time1, $time2 );
