@@ -22,10 +22,12 @@ t/array.t
 t/as_perl.t
 t/basic_types.t
 t/container.t
+t/decode_entities.t
 t/dict.t
 t/false_key.t
 t/import.t
 t/load.t
+t/Makefile.PL
 t/parse.t
 t/parse_plist_fh.t
 t/plists.t
