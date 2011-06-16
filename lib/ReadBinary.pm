@@ -13,7 +13,7 @@ use MIME::Base64      qw(decode_base64);
 use POSIX             qw(SEEK_END SEEK_SET);
 use XML::Entities     ();
 
-$VERSION = '1.33';
+$VERSION = '1.33_01';
 
 __PACKAGE__->_run( @ARGV ) unless caller;
 
