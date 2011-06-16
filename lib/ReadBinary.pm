@@ -6,13 +6,14 @@ use vars qw( $VERSION );
 
 use Carp;
 use Data::Dumper;
-use Encode qw(decode);
+use Encode            qw(decode);
 use Mac::PropertyList;
 use Math::BigInt;
-use MIME::Base64 qw(decode_base64);
-use POSIX qw(SEEK_END SEEK_SET);
+use MIME::Base64      qw(decode_base64);
+use POSIX             qw(SEEK_END SEEK_SET);
+use XML::Entities     ();
 
-$VERSION = '1.32';
+$VERSION = '1.33';
 
 __PACKAGE__->_run( @ARGV ) unless caller;
 
@@ -282,7 +283,10 @@ my $type_readers = {
 		read $self->_fh, $buffer, $length;
 
 		# pack to make it unicode
-		$buffer = pack "U0C*", unpack "C*", $buffer;
+		$buffer = XML::Entities::decode(
+			'all',
+			pack "U0C*", unpack "C*", $buffer
+			);
 
 		return Mac::PropertyList::string->new( $buffer );
 		},
@@ -293,7 +297,10 @@ my $type_readers = {
 		my( $buffer, $value );
 		read $self->_fh, $buffer, 2 * $length;
 
-		$buffer = decode( "UTF-16BE", $buffer );
+		$buffer = XML::Entities::decode(
+			'all',
+			Encode::decode( "UTF-16BE", $buffer )
+			);
 
 		return Mac::PropertyList::ustring->new( $buffer );
 		},
