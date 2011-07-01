@@ -242,7 +242,7 @@ my $type_readers = {
 		my( $buffer, $value );
 		read $self->_fh, $buffer, $byte_length;
 
-		my @formats = qw( a a f d );
+		my @formats = qw( a a f> d> );
 		my @values = unpack $formats[$length], $buffer;
 
 		return Mac::PropertyList::real->new( $values[0] );
@@ -250,20 +250,22 @@ my $type_readers = {
 
 	3 => sub { # date
 		my( $self, $length ) = @_;
-		croak "Real > 8 bytes" if $length > 3;
-		croak "Bad length [$length]" if $length < 2;
-
+		croak "Date != 8 bytes" if $length != 3
 		my $byte_length = 1 << $length;
 
 		my( $buffer, $value );
 		read $self->_fh, $buffer, $byte_length;
 
-		my @formats = qw( a a f d );
-		my @values = unpack $formats[$length], $buffer;
+		my @values = unpack 'd>', $buffer;
 
 		$self->{MLen} += 9;
 
-		return Mac::PropertyList::date->new( $values[0] );
+		my $adjusted_time = POSIX::strftime(
+			"%FT%H:%M:%SZ",
+			gmtime( 978307200 + $values[0])
+			);
+
+		return Mac::PropertyList::date->new( $adjusted_time );
 		},
 
 	4 => sub { # binary data
@@ -274,7 +276,6 @@ my $type_readers = {
 
 		return Mac::PropertyList::data->new( $buffer );
 		},
-
 
 	5 => sub { # utf8 string
 		my( $self, $length ) = @_;
@@ -378,6 +379,12 @@ sub _read_object
 }
 
 =back
+
+=head1 SEE ALSO
+
+Some of the ideas are cribbed from CFBinaryPList.c
+
+	http://opensource.apple.com/source/CF/CF-550/CFBinaryPList.c
 
 =head1 SOURCE AVAILABILITY
 
