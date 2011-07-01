@@ -7,7 +7,7 @@ examples/README
 hacks/plist-timer.pl
 hacks/plist.pl
 lib/Mac/PropertyList.pm
-lib/Mac/ReadBinary.pm
+lib/Mac/PropertyList/ReadBinary.pm
 LICENSE
 Makefile.PL
 MANIFEST
