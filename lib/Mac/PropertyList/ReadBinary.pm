@@ -250,7 +250,7 @@ my $type_readers = {
 
 	3 => sub { # date
 		my( $self, $length ) = @_;
-		croak "Date != 8 bytes" if $length != 3
+		croak "Date != 8 bytes" if $length != 3;
 		my $byte_length = 1 << $length;
 
 		my( $buffer, $value );
