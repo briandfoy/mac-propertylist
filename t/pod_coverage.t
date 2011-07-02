@@ -12,5 +12,5 @@ else
 	pod_coverage_ok( "Mac::PropertyList", {
 		trustme => [ qr/^read_/, qr/indent/ ],
 		},
-		);      
+		);
 	}

@@ -12,7 +12,7 @@ foreach my $name ( @Mac::PropertyList::EXPORT_OK )
 	next if $name eq 'parse_plist';
 	ok( ! defined( &$name ), "$name is not defined yet" );
 	}
-	
+
 Mac::PropertyList->import( ":all" );
 
 foreach my $name ( @Mac::PropertyList::EXPORT_OK )

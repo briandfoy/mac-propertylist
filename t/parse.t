@@ -67,7 +67,7 @@ isa_ok( $plist->value, 'Mac::PropertyList::array' );
 my @elements = @{ $plist->value };
 isa_ok( $elements[0], 'Mac::PropertyList::string' );
 isa_ok( $elements[1], 'Mac::PropertyList::string' );
-is( $elements[0]->value, 'Mimi',   'Mimi string is right'   ); 
+is( $elements[0]->value, 'Mimi',   'Mimi string is right'   );
 is( $elements[1]->value, 'Roscoe', 'Roscoe string is right' );
 }
 
@@ -94,13 +94,13 @@ foreach my $string ( ( $string0_9, $string1_0 ) )
 	is( $plist->type, 'string',      'type key has right value for string' );
 	is( $plist->value, 'This is it', 'value is right for string'           );
 	}
-	
+
 $plist = Mac::PropertyList::parse_plist( $nested_dict );
 
 isa_ok( $plist, 'Mac::PropertyList::dict'            );
 is( $plist->type, 'dict', 'type key has right value for nested dict' );
 isa_ok( $plist->value, 'HASH'   );
-		
+
 ########################################################################
 my $hash = $plist->value->{Mimi};
 

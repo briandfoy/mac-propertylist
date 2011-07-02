@@ -28,6 +28,6 @@ isa_ok( $plist, "Mac::PropertyList::array", "Make object  from plist string" );
 is( $plist->count, 4, "Object has right number of values" );
 
 my @values = $plist->values;
-ok( eq_array( \@values, [qw(Mimi Roscoe Juliet Buster)] ), 
+ok( eq_array( \@values, [qw(Mimi Roscoe Juliet Buster)] ),
 	"Object has right values" );
 

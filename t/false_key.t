@@ -39,6 +39,6 @@ TODO: {
     my $ok = eval {
 		my $plist = Mac::PropertyList::parse_plist( $good_dict );
 		};
-    
+
 	like( $@, qr/key not defined/, "Empty key causes parse_plist to die" );
 	}
