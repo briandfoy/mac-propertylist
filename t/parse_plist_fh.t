@@ -51,7 +51,7 @@ test_plist( $plist );
 sub test_plist
 	{
 	my $plist = shift;
-	
+
 	my $value = eval { $plist->value->{NSColorPanelMode}->value };
 	print STDERR $@ if $@;
 	is( $value, 5, "NSColorPanelMode has the right value" );
