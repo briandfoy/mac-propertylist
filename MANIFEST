@@ -11,6 +11,7 @@ lib/Mac/PropertyList/ReadBinary.pm
 LICENSE
 Makefile.PL
 MANIFEST
+plists/binary.plist
 plists/com.apple.iPhoto.plist
 plists/com.apple.iTunes.plist
 plists/com.apple.systempreferences.plist
@@ -20,11 +21,13 @@ plists/the_perl_review.abcdp
 README
 t/array.t
 t/as_perl.t
+t/bad_plist.t
 t/basic_types.t
 t/container.t
 t/decode_entities.t
 t/dict.t
 t/false_key.t
+t/get_filehandle.t
 t/import.t
 t/load.t
 t/Makefile.PL
