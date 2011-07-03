@@ -173,13 +173,11 @@ object.
 
 # This will change to parse_plist_ref when we create the dispatcher
 
-sub parse_plist
-	{
+sub parse_plist {
 	my $text = shift;
 
 	my $plist = do {
-		if( $text =~ /\A<\?xml/ ) # XML plists
-			{
+		if( $text =~ /\A<\?xml/ ) { # XML plists
 			# we can handle either 0.9 or 1.0
 			$text =~ s|^<\?xml.*?>\s*<!DOC.*>\s*<plist.*?>\s*||;
 			$text =~ s|\s*</plist>\s*$||;
@@ -187,11 +185,13 @@ sub parse_plist
 			my $text_source = Mac::PropertyList::TextSource->new( $text );
 			read_next( $text_source );
 			}
-		elsif( $text =~ /\Abplist/ ) # binary plist
-			{
+		elsif( $text =~ /\Abplist/ ) { # binary plist
 			require Mac::PropertyList::ReadBinary;
 			my $parser = Mac::PropertyList::ReadBinary->new( \$text );
 			$parser->plist;
+			}
+		else {
+			croak( "This doesn't look like a valid plist format!" );
 			}
 		};
 	}
@@ -216,8 +216,7 @@ Perl.
 
 =cut
 
-sub parse_plist_fh
-	{
+sub parse_plist_fh {
 	my $fh = shift;
 
 	my $text = do { local $/; <$fh> };
@@ -235,15 +234,13 @@ calls C<parse_plist_fh> for you.
 
 =cut
 
-sub parse_plist_file
-	{
+sub parse_plist_file {
 	my $file = shift;
 
 	if( ref $file ) { return parse_plist_fh( $file ) }
 
-	unless( -e $file )
-		{
-		carp( "parse_plist_file: file [$file] does not exist!" );
+	unless( -e $file ) {
+		croak( "parse_plist_file: file [$file] does not exist!" );
 		return;
 		}
 
@@ -263,16 +260,14 @@ Returns a string representing the hash in the plist format.
 
 =cut
 
-sub create_from_hash
-	{
+sub create_from_hash {
 	my $hash  = shift;
 
 	return unless UNIVERSAL::isa( $hash, 'HASH' );
 
 	my $string = "$XML_head" . Mac::PropertyList::dict->write_open . "\n";
 
-	foreach my $key ( keys %$hash )
-		{
+	foreach my $key ( keys %$hash ) {
 		next if ref $hash->{$key};
 
 		my $bit   = Mac::PropertyList::dict->write_key( $key ) . "\n";
@@ -301,16 +296,14 @@ Returns a string representing the array in the plist format.
 
 =cut
 
-sub create_from_array
-	{
+sub create_from_array {
 	my $array  = shift;
 
 	return unless UNIVERSAL::isa( $array, 'ARRAY' );
 
 	my $string = "$XML_head" . Mac::PropertyList::array->write_open . "\n";
 
-	foreach my $element ( @$array )
-		{
+	foreach my $element ( @$array ) {
 		my $value = Mac::PropertyList::string->new( $element );
 
 		my $bit  .= $value->write . "\n";
@@ -324,6 +317,24 @@ sub create_from_array
 	return $string;
 	}
 
+=item read_string
+
+=item read_data
+
+=item read_integer
+
+=item read_date
+
+=item read_real
+
+=item read_true
+
+=item read_false
+
+Reads a certain sort of property list data
+
+=cut
+
 sub read_string  { Mac::PropertyList::string ->new( XML::Entities::decode( 'all', $_[0] ) )  }
 sub read_integer { Mac::PropertyList::integer->new( $_[0] )  }
 sub read_date    { Mac::PropertyList::date   ->new( $_[0] )  }
@@ -331,42 +342,37 @@ sub read_real    { Mac::PropertyList::real   ->new( $_[0] )  }
 sub read_true    { Mac::PropertyList::true   ->new           }
 sub read_false   { Mac::PropertyList::false  ->new           }
 
-sub read_next
-	{
+=item read_next
+
+Read the next data item
+
+=cut
+
+sub read_next {
 	my $source = shift;
 
 	local $_ = '';
 	my $value;
 
-	while( not defined $value )
-		{
+	while( not defined $value ) {
 		croak "Couldn't read anything!" if $source->eof;
 		$_ .= $source->get_line;
 
 		if( s[^\s* < (string|date|real|integer|data) >
-			   \s*(.*?)\s* </\1> ][]sx )
-			{
-			print STDERR "read_next: Found value type [$1] with value [$2]\n"
-				if $Debug > 1;
+			   \s*(.*?)\s* </\1> ][]sx ) {
 			$value = $Readers{$1}->( $2 );
 			}
-	    elsif( s[^\s* < (dict|array) > ][]x )
-			{
-			print STDERR "\$1 is [$1]\n" if $Debug > 1;
+	    elsif( s[^\s* < (dict|array) > ][]x ) {
 			$value = $Readers{$1}->( $source );
 			}
 	    # these next two are some wierd cases i found in the iPhoto Prefs
-		elsif( s[^\s* < dict / > ][]x )
-			{
+		elsif( s[^\s* < dict / > ][]x ) {
 			$value = Mac::PropertyList::dict->new();
 			}
-	    elsif( s[^\s* < array / > ][]x )
-			{
+	    elsif( s[^\s* < array / > ][]x ) {
 			$value = Mac::PropertyList::array->new();
 			}
-	    elsif( s[^\s* < (true|false) /> ][]x )
-			{
-			print STDERR "\$1 is [$1]\n" if $Debug > 1;
+	    elsif( s[^\s* < (true|false) /> ][]x ) {
 			$value = $Readers{$1}->();
 			}
 		}
@@ -374,32 +380,30 @@ sub read_next
 	return $value;
 	}
 
-sub read_dict
-	{
+=item read_dict
+
+Read a dictionary
+
+=cut
+
+sub read_dict {
 	my $source = shift;
-	print STDERR "Processing dict\n" if $Debug > 1;
 
 	my %hash;
 	local $_ = $source->get_line;
-	while( not s|^\s*</dict>|| )
-		{
+	while( not s|^\s*</dict>|| ) {
 		my $key;
-		while (not defined $key)
-			{
-			if (s[^\s*<key>(.*?)</key>][]s)
-				{
+		while (not defined $key) {
+			if (s[^\s*<key>(.*?)</key>][]s) {
 				$key = $1;
 				# Bring this back if you want this behavior:
 				# croak "Key is empty string!" if $key eq '';
 				}
-			else
-				{
+			else {
 				croak "Could not read key!" if $source->eof;
 				$_ .= $source->get_line;
 				}
 			}
-
-		print STDERR "read_dict: key is [$1]\n" if $Debug > 1;
 
 		$source->put_line( $_ );
 		$hash{ $key } = read_next( $source );
@@ -410,16 +414,19 @@ sub read_dict
 	return Mac::PropertyList::dict->new( \%hash );
 	}
 
-sub read_array
-	{
+=item read_array
+
+Read an array
+
+=cut
+
+sub read_array {
 	my $source = shift;
-	print STDERR "Processing array\n" if $Debug > 1;
 
 	my @array = ();
 
 	local $_ = $source->get_line;
-	while( not s|^\s*</array>|| )
-		{
+	while( not s|^\s*</array>|| ) {
 		$source->put_line( $_ );
 		push @array, read_next( $source );
 		$_ = $source->get_line;
@@ -429,8 +436,7 @@ sub read_array
 	return Mac::PropertyList::array->new( \@array );
 	}
 
-sub read_data
-	{
+sub read_data {
 	my $string = shift;
 
 	require MIME::Base64;
@@ -479,26 +485,22 @@ sub plist_as_perl
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 package Mac::PropertyList::Source;
-sub new
-	{
-	print STDERR "Creating new $_[0]\n" if $Debug > 1;
+sub new {
 	my $self = bless { buffer => [], source => $_[1] }, $_[0];
 	return $self;
 	}
 
 sub eof { (not @{$_[0]->{buffer}}) and $_[0]->source_eof }
 
-sub get_line
-	{
+sub get_line {
 	my $self = CORE::shift;
 
 	local $_ = '';
-	while (defined $_ && /^[\r\n\s]*$/)
-		{
+	while (defined $_ && /^[\r\n\s]*$/) {
 		if( @{$self->{buffer}} ) {
 			$_ = shift @{$self->{buffer}};
 			}
-			else {
+		else {
 			$_ = $self->get_source_line;
 			}
 		}
@@ -520,8 +522,7 @@ sub source_eof { not @{$_[0]->{source}} }
 package Mac::PropertyList::TextSource;
 use base qw(Mac::PropertyList::Source);
 
-sub get_source_line
-	{
+sub get_source_line {
 	my $self = CORE::shift;
 	$self->{source} =~ s/(.*(\r|\n|$))//;
 	$1;
@@ -533,8 +534,7 @@ sub source_eof { not $_[0]->{source} }
 package Mac::PropertyList::Item;
 sub type_value { ( $_[0]->type, $_[0]->value ) }
 
-sub value
-	{
+sub value {
 	my $ref = $_[0]->type;
 
 	do {
@@ -546,8 +546,7 @@ sub value
 
 sub type { my $r = ref $_[0] ? ref $_[0] : $_[0]; $r =~ s/.*:://; $r; }
 
-sub new
-	{
+sub new {
 	#print STDERR "Got [@_]\n";
 
 	bless $_[1], $_[0]
@@ -556,8 +555,7 @@ sub new
 sub write_open  { $_[0]->write_either(); }
 sub write_close { $_[0]->write_either('/'); }
 
-sub write_either
-	{
+sub write_either {
 	my $slash = defined $_[1] ? '/' : '';
 
 	my $type = $_[0]->type;
@@ -571,13 +569,11 @@ sub write_empty { my $type = $_[0]->type; "<$type/>"; }
 package Mac::PropertyList::Container;
 use base qw(Mac::PropertyList::Item);
 
-sub new
-	{
+sub new {
 	my $class = CORE::shift;
 	my $item  = CORE::shift;
 
-	if( ref $item )
-		{
+	if( ref $item ) {
 		return bless $item, $class;
 		}
 
@@ -600,14 +596,12 @@ sub push    { }
 sub splice  { }
 sub count   { return scalar @{ $_[0]->value } }
 sub _elements { @{ $_[0]->value } } # the raw, unprocessed elements
-sub values
-	{
+sub values {
 	my @v = map { $_->value } $_[0]->_elements;
 	wantarray ? @v : \@v
 	}
 
-sub as_basic_data
-	{
+sub as_basic_data {
 	my $self = CORE::shift;
 	return
 		[ map
@@ -617,14 +611,12 @@ sub as_basic_data
 		];
 	}
 
-sub write
-	{
+sub write {
 	my $self  = CORE::shift;
 
 	my $string = $self->write_open . "\n";
 
-	foreach my $element ( @$self )
-		{
+	foreach my $element ( @$self ) {
 		my $bit = $element->write;
 
 		$bit =~ s/^/\t/gm;
@@ -637,8 +629,7 @@ sub write
 	return $string;
 	}
 
-sub as_perl
-	{
+sub as_perl {
 	my $self  = CORE::shift;
 
 	my @array = map { $_->as_perl } $self->_elements;
@@ -660,15 +651,13 @@ sub delete { delete ${ $_[0]->value }{$_[1]}         }
 sub exists { exists ${ $_[0]->value }{$_[1]} ? 1 : 0 }
 sub count  { scalar CORE::keys %{ $_[0]->value }     }
 
-sub value
-	{
+sub value {
 	my $self = shift;
 	my $key  = shift;
 
 	do
 		{
-		if( defined $key )
-			{
+		if( defined $key ) {
 			my $hash = $self->SUPER::value;
 
 			if( exists $hash->{$key} ) { $hash->{$key}->value }
@@ -680,18 +669,15 @@ sub value
 	}
 
 sub keys   { my @k = CORE::keys %{ $_[0]->value }; wantarray ? @k : \@k; }
-sub values
-	{
+sub values {
 	my @v = map { $_->value } CORE::values %{ $_[0]->value };
 	wantarray ? @v : \@v;
 	}
 
-sub as_basic_data
-	{
+sub as_basic_data {
 	my $self = shift;
 
-	my %dict = map
-		{
+	my %dict = map {
 		my ($k, $v) = ($_, $self->{$_});
 		$k => eval { $v->can('as_basic_data') } ? $v->as_basic_data : $v
 		} CORE::keys %$self;
@@ -701,14 +687,12 @@ sub as_basic_data
 
 sub write_key   { "<key>$_[1]</key>" }
 
-sub write
-	{
+sub write {
 	my $self  = shift;
 
 	my $string = $self->write_open . "\n";
 
-	foreach my $key ( $self->keys )
-		{
+	foreach my $key ( $self->keys ) {
 		my $element = $self->{$key};
 
 		my $bit  = __PACKAGE__->write_key( $key ) . "\n";
@@ -776,8 +760,7 @@ use base qw(Mac::PropertyList::Scalar);
 package Mac::PropertyList::data;
 use base qw(Mac::PropertyList::Scalar);
 
-sub write
-	{
+sub write {
 	my $self  = shift;
 
 	my $type  = $self->type;
@@ -794,8 +777,7 @@ sub write
 package Mac::PropertyList::Boolean;
 use base qw(Mac::PropertyList::Item);
 
-sub new
-	{
+sub new {
 	my $class = shift;
 
 	my( $type ) = $class =~ m/.*::(.*)/g;
