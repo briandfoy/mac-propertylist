@@ -193,6 +193,9 @@ sub parse_plist
 			my $parser = Mac::PropertyList::ReadBinary->new( \$text );
 			$parser->plist;
 			}
+		else {
+			croak( "This doesn't look like a valid plist format!" );
+			}
 		};
 	}
 

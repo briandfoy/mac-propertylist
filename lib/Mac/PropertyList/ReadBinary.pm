@@ -55,15 +55,6 @@ See C<Mac::PropertyList> for more details.
 
 =over 4
 
-=cut
-
-sub _run
-	{
-	my $parser = $_[0]->new( $_[1] );
-
-	print Dumper( $parser->plist );
-	}
-
 =item new( FILENAME | SCALAR_REF | FILEHANDLE )
 
 Opens the data source, doing the right thing for filenames,
