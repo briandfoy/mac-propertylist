@@ -1,5 +1,6 @@
 use strict;
 use warnings;
+use utf8;
 
 use Test::More tests => 20;
 
@@ -81,9 +82,12 @@ is(
 	'NegativeInteger returns the right value'
 	);
 
-is(
-	$plist->value( 'Pi' ),
-	'3.14159',
-	'Pi returns the right value'
+my $π = $plist->value( 'Pi' );
+my $Δ = abs( 3.14159 - $π ); # possible floating point error
+my $ε = 1e-4;
+
+ok(
+	$Δ < $ε,
+	'π returns the right value, within ε'
 	);
 }
