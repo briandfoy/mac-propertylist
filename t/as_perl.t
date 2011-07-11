@@ -19,7 +19,7 @@ my $plist = Mac::PropertyList::parse_plist_file( $test_file );
 isa_ok( $plist, 'Mac::PropertyList::dict' );
 can_ok( $plist, @methods );
 
-my $perl = $plist->as_perl;	
+my $perl = $plist->as_perl;
 is(
 	$perl->{ 'Organization' },
 	'The Perl Review',

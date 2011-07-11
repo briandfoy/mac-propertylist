@@ -16,7 +16,7 @@ foreach my $file ( @plists ) {
 		fail( "Could not open $file" );
 		next;
 		}
-		
+
 	my $data = do { local $/; <FILE> };
 	close FILE;
 

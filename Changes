@@ -1,4 +1,11 @@
 
+1.33_02 - Sat Jul  9 13:17:15 2011
+	* Require 5.10 because I need the > pack modifier
+
+1.33_01 - Sat Jul  2 18:06:19 2011
+	* Ensure binary reads are for big endian
+	* Various cleanups for format and whitespace
+
 1.33 - Tue Nov 24 08:00:33 2009
 	* Hey, you have to decode those XML entities as you read
 	them.

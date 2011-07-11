@@ -6,8 +6,10 @@ scalar.t
 container.t
 array.t
 dict.t
+get_filehandle.t
 parse.t
 parse_plist_fh.t
+bad_plist.t
 decode_entities.t
 write.t
 plists.t
