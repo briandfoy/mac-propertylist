@@ -1,4 +1,8 @@
 
+1.34 - Mon Jul 11 18:10:36 2011
+	* In ReadBinary, handle the data as big-endian. This means you
+	need the > pack modifier introduced in 5.10.
+
 1.33_02 - Sat Jul  9 13:17:15 2011
 	* Require 5.10 because I need the > pack modifier
 
