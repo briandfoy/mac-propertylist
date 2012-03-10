@@ -24,7 +24,7 @@ use parent qw(Exporter);
 	'all' => \@EXPORT_OK,
 	);
 
-$VERSION = '1.34';
+$VERSION = '1.35';
 
 =head1 NAME
 
