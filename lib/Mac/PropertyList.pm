@@ -9,7 +9,7 @@ use Carp qw(croak carp);
 use Data::Dumper;
 use XML::Entities;
 
-use base qw(Exporter);
+use parent qw(Exporter);
 
 @EXPORT_OK = qw(
 	parse_plist
@@ -51,6 +51,7 @@ Mac::PropertyList - work with Mac plists at a low level
 
 	my $plist = Mac::PropertyList::dict->new( \%hash );
 
+	my $perl  = $plist->as_perl;
 
 =head1 DESCRIPTION
 
@@ -121,6 +122,12 @@ Access the type of the object (string, data, etc)
 =item write
 
 Create a string version of the object, recursively if necessary.
+
+=item as_perl
+
+Turn the plist data structure, which is decorated with extra
+information, into a lean Perl data structure without the value type
+information or blessed objects.
 
 =back
 
