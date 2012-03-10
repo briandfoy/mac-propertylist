@@ -19,7 +19,6 @@ WriteMakefile
 		'XML::Entities' => '0',
 		},
 
-	clean                  => { FILES => 'Mac-PropertyList-*' },
-
+	clean          => { FILES => 'Mac-PropertyList-*' },
 	);
 
