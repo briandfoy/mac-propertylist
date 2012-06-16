@@ -41,8 +41,8 @@ Mac::PropertyList::ReadBinary - read binary property list files
 =head1 DESCRIPTION
 
 This module is a low-level interface to the Mac OS X Property List
-(plist) format.  You probably shouldn't use this in
-applications---build interfaces on top of this so you don't have to
+(plist) format. You probably shouldn't use this in
+applications—build interfaces on top of this so you don't have to
 put all the heinous multi-level object stuff where people have to look
 at it.
 

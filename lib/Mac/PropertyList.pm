@@ -76,7 +76,7 @@ to get the details.
 
 	http://www.apple.com/DTDs/PropertyList-1.0.dtd
 
-One big problem exists--its dict type uses a flat structure to list
+One big problem exists—its dict type uses a flat structure to list
 keys and values so that values are only associated with their keys by
 their position in the file rather than by the structure of the DTD.
 This problem is the major design hinderance in this module. A smart
