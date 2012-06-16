@@ -32,7 +32,6 @@ Mac::PropertyList::ReadBinary - read binary property list files
 
 	my $plist = $parser->plist;
 
-
 	# use indirectly, automatically selects right reader
 	use Mac::PropertyList;
 
@@ -48,7 +47,7 @@ at it.
 
 You can parse a plist file and get back a data structure. You can take
 that data structure and get back the plist as XML (but not binary
-yet).  If you want to change the structure inbetween that's your
+yet). If you want to change the structure inbetween that's your
 business. :)
 
 See C<Mac::PropertyList> for more details.
