@@ -17,6 +17,8 @@ $VERSION = '1.35_01';
 
 __PACKAGE__->_run( @ARGV ) unless caller;
 
+=encoding utf8
+
 =head1 NAME
 
 Mac::PropertyList::ReadBinary - read binary property list files

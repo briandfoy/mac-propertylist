@@ -26,6 +26,8 @@ use parent qw(Exporter);
 
 $VERSION = '1.35_01';
 
+=encoding utf8
+
 =head1 NAME
 
 Mac::PropertyList - work with Mac plists at a low level
