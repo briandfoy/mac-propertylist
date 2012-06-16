@@ -105,6 +105,12 @@ There are several types of objects:
 	Mac::PropertyList::date
 	Mac::PropertyList::array
 	Mac::PropertyList::dict
+	Mac::PropertyList::true
+	Mac::PropertyList::false
+
+Note that the Xcode property list editor abstracts the C<true> and
+C<false> objects as just C<Boolean>. They are separate tags in the
+plist format though.
 
 =over 4
 
