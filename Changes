@@ -1,4 +1,7 @@
 
+1.36 - Sat Jun 16 16:10:01 2012
+	* Update the docs, and make the previous dev releases official
+
 1.35 - Fri Mar  9 19:38:59 2012
 	* Document the as_perl method, which undecorates that internal
 	data structure
