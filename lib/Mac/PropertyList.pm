@@ -34,7 +34,7 @@ Mac::PropertyList - work with Mac plists at a low level
 
 =head1 SYNOPSIS
 
-	use Mac::PropertyList;
+	use Mac::PropertyList qw(:all);
 
 	my $data  = parse_plist( $text );
 
