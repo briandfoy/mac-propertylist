@@ -24,7 +24,7 @@ use parent qw(Exporter);
 	'all' => \@EXPORT_OK,
 	);
 
-$VERSION = '1.35_01';
+$VERSION = '1.36';
 
 =encoding utf8
 
