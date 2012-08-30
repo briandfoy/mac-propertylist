@@ -1,4 +1,8 @@
 
+1.37 - Thu Aug 30 11:39:39 2012
+	* fix plist_as_perl to be the same as as_perl (and as
+	documented)
+
 1.36 - Sat Jun 16 16:10:01 2012
 	* Update the docs, and make the previous dev releases official
 
