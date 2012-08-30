@@ -37,6 +37,7 @@ Mac::PropertyList - work with Mac plists at a low level
 	use Mac::PropertyList qw(:all);
 
 	my $data  = parse_plist( $text );
+	my $perl  = $data->as_perl;
 
 		# == OR ==
 	my $data  = parse_plist_file( $filename );
@@ -482,20 +483,12 @@ sub plist_as_string {
 =item plist_as_perl
 
 Return the plist data structure as an unblessed Perl data structure.
-There won't be any C<Mac::PropertyList> objects in the results.
+There won't be any C<Mac::PropertyList> objects in the results. This
+is really just C<as_perl>.
 
 =cut
 
-sub plist_as_perl
-	{
-	my $object = CORE::shift;
-
-	my $string = '$VAR = ';
-
-	$string .= $object->as_perl;
-
-	return $string;
-	}
+sub plist_as_perl { $_[0]->as_perl }
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 package Mac::PropertyList::Source;
