@@ -467,8 +467,7 @@ Return the plist data structure as XML in the Mac Property List format.
 
 =cut
 
-sub plist_as_string
-	{
+sub plist_as_string {
 	my $object = CORE::shift;
 
 	my $string = $XML_head;
@@ -723,8 +722,7 @@ sub write {
 	return $string;
 	}
 
-sub as_perl
-	{
+sub as_perl {
 	my $self  = CORE::shift;
 
 	my %dict = map {
