@@ -17,6 +17,7 @@ WriteMakefile
 		'MIME::Base64'  => '0',
 		'Test::More'    => '0',
 		'XML::Entities' => '0',
+		'parent'        => '0',
 		},
 
 	clean          => { FILES => 'Mac-PropertyList-*' },
