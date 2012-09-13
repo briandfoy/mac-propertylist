@@ -50,15 +50,18 @@ CoreFoundation functions.
 
 =item C<undef>
 
-This is written as the null object.
+This is written as the null object. CoreFoundation will read this as
+C<kCFNull>, but appears to be unable to write it.
 
 =back
 
 Strings are uniqued (two equal strings will be written as references
 to the same object). If the same reference appears more than once in
 the structure, it will likewise only be represented once in the
-output. Circular data structures can be written this way, but will not
-be read correctly by CoreFoundation, so you probably shouldn't do that.
+output. Although the bplist format can represent circular data
+structures, they cannot be written by this module (they will be
+detected and result in an error — they wouldn't be read correctly by
+CoreFoundation anyway, so you aren't missing much).
 
 =head1 BUGS
 
@@ -71,6 +74,9 @@ Perl's dictionary keys can only be strings, but a bplist's can be
 any scalar object.
 
 There is no way to write the C<UID> objects used by the keyed archiver.
+
+Perls that do not use IEEE-754 format internally for floating point
+numbers will produce incorrect output.
 
 =cut
 
@@ -166,12 +172,12 @@ sub _assign_id {
     # If we reach here we know that $value is a ref. Keep a table of
     # stringified refs, so that we can re-use the id of an object
     # we've seen before.
-    return $context->{refs}->{$value}
-        if exists $context->{refs}{$value};
-
-    # Assign the next object ID to this object.
-    my($thisid) = $context->{nextid} ++;
-    $context->{refs}->{$value} = $thisid;
+    if(exists $context->{refs}{$value}) {
+        my($thisid) = $context->{refs}->{$value};
+        die "Recursive data structure\n" unless defined $thisid;
+        return $thisid;
+    }
+    $context->{refs}->{$value} = undef;
 
     # Serialize the object into $fragment if possible. Since we
     # don't yet know how many bytes we will use to represent object
@@ -185,13 +191,21 @@ sub _assign_id {
     } elsif($tp eq 'HASH') {
         my(@ks) = sort (CORE::keys %$value);
         $fragment = _counted_header(tagDict, scalar @ks);
-        @objrefs = ( map { $context->_assign_id($_) } @ks,
-                     map { $context->_assign_id($value->{$_}) } @ks );
+        @objrefs = ( ( map { $context->_assign_id($_) } @ks ),
+                     ( map { $context->_assign_id($value->{$_}) } @ks ) );
     } elsif(UNIVERSAL::can($tp, '_as_bplist_fragment')) {
-        ($fragment, @objrefs) = $value->_as_bplist_fragment;
+        ($fragment, @objrefs) = $value->_as_bplist_fragment($context);
     } else {
         die "Cannot serialize type '$tp'\n";
     }
+
+    # As a special case, a fragment of 'undef' indicates that
+    # the object ID was already assigned.
+    return $objrefs[0] if !defined $fragment;
+
+    # Assign the next object ID to this object.
+    my($thisid) = $context->{nextid} ++;
+    $context->{refs}->{$value} = $thisid;
 
     # Store the fragment and unpacked object references (if any).
     $context->{fragments}->{$thisid} = $fragment;
@@ -282,21 +296,21 @@ sub _counted_header {
     # own type byte).
 
     if ($count < 15) {
-        return pack('C', $typebyte + $count);
+        return pack('C',    $typebyte + $count);
     } elsif ($count < 256) {
-        return pack('CC',  $typebyte + 15, tagInteger + 0, $count);
+        return pack('CCC',  $typebyte + 15, tagInteger + 0, $count);
     } elsif ($count < 65536) {
-        return pack('CS>', $typebyte + 15, tagInteger + 1, $count);
+        return pack('CCS>', $typebyte + 15, tagInteger + 1, $count);
     } else {
-        return pack('Cq>', $typebyte + 15, tagInteger + 3, $count);
+        return pack('CCq>', $typebyte + 15, tagInteger + 3, $count);
     }
 }
 
 package Mac::PropertyList::array;
 
 sub _as_bplist_fragment {
-    my($value, $context) = ( $_[0]->value, $_[1] );
-    my(@items) = map { $context->_assign_id($_) } @{$value};
+    my($context, @items) = ( $_[1], $_[0]->value );
+    @items = map { $context->_assign_id($_) } @items;
 
     return ( Mac::PropertyList::WriteBinary::_counted_header(Mac::PropertyList::WriteBinary::tagArray, scalar @items),
              @items );
@@ -305,12 +319,13 @@ sub _as_bplist_fragment {
 package Mac::PropertyList::dict;
 
 sub _as_bplist_fragment {
-    my($value, $context) = ( $_[0]->value, $_[1] );
+    my($self, $context) = @_;
+    my($value) = scalar $self->value;  # Returns a ref in scalar context
     my(@keys) = sort (CORE::keys %$value);
 
     return ( Mac::PropertyList::WriteBinary::_counted_header(Mac::PropertyList::WriteBinary::tagDict, scalar @keys),
-             map { $context->_assign_id($_) } @keys,
-             map { $context->_assign_id($value->{$_}) } @keys );
+             ( map { $context->_assign_id($_) } @keys ),
+             ( map { $context->_assign_id($value->{$_}) } @keys ));
 
 }
 
@@ -355,11 +370,19 @@ sub _as_bplist_fragment {
 
 package Mac::PropertyList::string;
 
-sub _as_bplist_fragment { $_[1]->_assign_id($_[0]->value); }
+sub _as_bplist_fragment {
+    # Returning a fragment of 'undef' indicates we've already assigned
+    # an object ID.
+    return ( undef, $_[1]->_assign_id($_[0]->value) );
+}
 
 package Mac::PropertyList::ustring;
 
-sub _as_bplist_fragment { $_[1]->_assign_id($_[0]->value); }
+sub _as_bplist_fragment {
+    # Returning a fragment of 'undef' indicates we've already assigned
+    # an object ID.
+    return ( undef, $_[1]->_assign_id($_[0]->value) );
+}
 
 package Mac::PropertyList::data;
 
