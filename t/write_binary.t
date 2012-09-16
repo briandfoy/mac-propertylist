@@ -52,10 +52,7 @@ sub testrep {
 &testrep( integer => 255,    "\x10\xFF" );
 &testrep( integer => 256,    "\x11\x01\x00" );
 &testrep( integer => 65535,  "\x11\xFF\xFF" );
-TODO: {
-    local $TODO = "32-bit integer repr not done yet";
-    &testrep( integer => 65536,  "\x12\x00\x01\x00\x00" );
-}
+&testrep( integer => 65536,  "\x12\x00\x01\x00\x00" );
 &testrep( integer => -1,     "\x13\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF" );
 &testrep( integer => -255,   "\x13\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x01" );
 
@@ -65,13 +62,6 @@ TODO: {
                              "\x5F\x10\x0FFifteenCharLong" );
 &testrep( string => "Uni\x{2013}Code",
                              "\x68\0U\0n\0i\x20\x13\0C\0o\0d\0e" );
-TODO: {
-    local $TODO = "&testrep function not smart enough for >256bytes";
-&testrep( string => ( 'π' x 128 ) . ( 'p' x 128 ),
-                             "\x6F\x11\x01\x00" .
-                             ( "\x03\xC0" x 128 ) .
-                             ( "\x00\x70" x 128 ) );
-}
 
 TODO: {
     todo_skip "Date objects in binary plists not implemented" => 4;
@@ -171,6 +161,29 @@ $expect = 'bplist00' .            # header
           "\0\0\0\0\0\0\0\x24";   # offset-offset
 is($val, $expect, 'more complex structure') || diag Dumper([$val, $expect]);
 
+{
+    # Testing items which are long enough to require 2-byte
+    # offsets. WriteBinary will currently use 4-byte offsets,
+    # although 3-byte offsets are valid and presumably better.
+    my($s1) = Mac::PropertyList::string->new( ( 'π' x 128 ) . ( 'p' x 128 ) );
+    my($s2) = Mac::PropertyList::string->new( ( '¢' x 128 ) );
+    my($bplist) = as_string([ $s1, $s2 ]);
+    my($expected) = 'bplist00'.
+                    "\x6F\x11\x01\x00" .   # 256 characters in this string
+                    ( "\x03\xC0" x 128 ) .
+                    ( "\x00\x70" x 128 ) .
+                    "\x6F\x10\x80" .       # 128 characters in this string
+                    ( "\x00\xA2" x 128 ) .
+                    "\xA2\x00\x01" .       # 2-element array
+                    "\x00\x08\x02\x0C\x03\x0F" .  # offsets table
+                    "\0\0\0\0\0\0\x02\x01" . # sizes
+                    "\0\0\0\0\0\0\x00\x03" . # count
+                    "\0\0\0\0\0\0\x00\x02" . # root object
+                    "\0\0\0\0\0\0\x03\x12";  # offset of offset table
+    is($bplist, $expected, "large (>256byte) object offsets")
+        || diag Dumper([$bplist, $expected]);
+}
+
 ##
 # Test some unwritable structures.
 #
@@ -186,7 +199,7 @@ isnt($@, '', "writing a subroutine reference should fail");
     $d1->{B} = $d2;
     
     eval { $val = as_string($d1); };
-    like($@, qr/Recursive/, "recursive data structure");
+    like($@, qr/Recursive/, "recursive data structure should fail");
 }
 
 

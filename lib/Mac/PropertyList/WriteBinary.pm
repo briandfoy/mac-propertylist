@@ -93,6 +93,10 @@ use constant {
     tagArray     => 0xA0,
     tagSet       => 0xC0,
     tagDict      => 0xD0,
+
+    # If we can actually represent an integer close to 2^64 with full
+    # precision and pack it with 'Q', then we can use that
+    havePack64   => ( eval { pack('Q>', 1153202979583557643) eq "\x10\x01\0\0\0\0\0\x0B" } ? 1 : 0 ),
 };
 
 $VERSION = undef;
@@ -129,7 +133,7 @@ sub as_string {
     }
 
     # Write the file trailer
-    $buf .= pack('x5 CCC Q>Q>Q>',
+    $buf .= pack('x5 CCC ' . ( havePack64? 'Q>' : 'x4N' ) x 3,
                  0, $offset_size, $ctxt->{objref_size},
                  $ctxt->{nextid}, $ctxt->{rootid}, $xref_offset);
 
@@ -228,8 +232,7 @@ sub _create_fragments {
         objrefs => { },    # Maps object IDs to objref lists
     });
 
-    # Traverse the data structure, and remember the id of the root
-    # object (actually it's always 0...)
+    # Traverse the data structure, and remember the id of the root object
     $ctxt->{rootid} = $ctxt->_assign_id($value);
 
     # Figure out how many bytes to use to represent an object id.
@@ -297,12 +300,22 @@ sub _counted_header {
 
     if ($count < 15) {
         return pack('C',    $typebyte + $count);
-    } elsif ($count < 256) {
-        return pack('CCC',  $typebyte + 15, tagInteger + 0, $count);
-    } elsif ($count < 65536) {
-        return pack('CCS>', $typebyte + 15, tagInteger + 1, $count);
     } else {
-        return pack('CCq>', $typebyte + 15, tagInteger + 3, $count);
+        return pack('C',    $typebyte + 15) . &_pos_integer($count);
+    }
+}
+
+sub _pos_integer {
+    my($count) = @_;
+
+    if ($count < 256) {
+        return pack('CC',  tagInteger + 0, $count);
+    } elsif ($count < 65536) {
+        return pack('CS>', tagInteger + 1, $count);
+    } elsif (havePack64 && ($count > 4294967295)) {
+        return pack('Cq>', tagInteger + 3, $count);
+    } else {
+        return pack('CN',  tagInteger + 2, $count);
     }
 }
 
@@ -358,13 +371,13 @@ sub _as_bplist_fragment {
     # integers.
 
     if ($value < 0) {
-        return pack('Cq>', tagInteger + 3, $value);
-    } elsif ($value < 256) {
-        return pack('CC',  tagInteger,     $value);
-    } elsif ($value < 65536) {
-        return pack('CS>', tagInteger + 1, $value);
+        if (Mac::PropertyList::WriteBinary::havePack64) {
+            return pack('Cq>', tagInteger + 3, $value);
+        } else {
+            return pack('CSSl>', tagInteger + 3, 65535, 65535, $value);
+        }
     } else {
-        return pack('Cq>', tagInteger + 3, $value);
+        return Mac::PropertyList::WriteBinary::_pos_integer($value);
     }
 }
 
