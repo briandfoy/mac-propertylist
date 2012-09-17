@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use utf8;
 
-use Test::More tests => 20;
+use Test::More tests => 25;
 
 use File::Spec::Functions;
 
@@ -37,6 +37,29 @@ is(
 	'Organization returns the right value'
 	);
 
+isa_ok( $plist->{'Creation'}, 'Mac::PropertyList::date' );
+is( $plist->{'Creation'}->value, '2007-11-14T02:19:03Z', 'Creation date has the right value' );
+
+is_deeply(
+	$plist->{'Phone'}->as_perl,
+	{
+		'identifiers' => [
+                    'DCBE4C18-EC2E-457F-A594-99A10257AB37',
+                    'CBE21CFF-0EF2-4975-98E6-84FCA75202BA'
+                ],
+                'labels' => [
+                    '_$!<Mobile>!$_',
+                    '_$!<WorkFAX>!$_'
+                ],
+                'primary' => 'DCBE4C18-EC2E-457F-A594-99A10257AB37',
+                'values' => [
+                    '(312) 492-4632',
+                    '866 750-7099'
+                ]
+        },
+	'nested arrays and dicts return the right value'
+	);
+
 }
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -63,7 +86,7 @@ is(
 }
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Test with real and date
+# Test with real and data
 {
 use Mac::PropertyList qw(parse_plist_file);
 my $test_file = catfile( qw( plists binary.plist ) );
@@ -90,4 +113,8 @@ ok(
 	$Δ < $ε,
 	'π returns the right value, within ε'
 	);
+
+isa_ok( $plist->{'Data'}, 'Mac::PropertyList::data' );
+is( $plist->value( 'Data' ), "\x01\x50\x01\x15", "Data returns the right value" );
+
 }
