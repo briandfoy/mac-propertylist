@@ -16,6 +16,8 @@ WriteMakefile
 		'Math::BigInt'  => '0',
 		'MIME::Base64'  => '0',
 		'Test::More'    => '0',
+		'Time::Local'   => '0',
+		'Scalar::Util'  => '1.11',
 		'XML::Entities' => '0',
 		'parent'        => '0',
 		},

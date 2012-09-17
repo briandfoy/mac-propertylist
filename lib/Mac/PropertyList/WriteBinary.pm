@@ -343,6 +343,29 @@ sub _as_bplist_fragment {
 }
 
 package Mac::PropertyList::date;
+
+use Scalar::Util ( 'looks_like_number' );
+use Time::Local  ( 'timegm' );
+
+sub _as_bplist_fragment {
+    my($value) = scalar $_[0]->value;
+    my($posixval);
+
+    if (looks_like_number($value)) {
+        $posixval = $value;
+    } elsif ($value =~ /\A(\d\d\d\d)-(\d\d)-(\d\d)T(\d\d)\:(\d\d)\:(\d\d(?:\.\d+)?)Z\z/) {
+        $posixval = timegm($6, $5, $4, $3, $2 - 1, $1);
+    } else {
+        die "Invalid plist date '$value'\n";
+    }
+
+    # Dates are simply stored as floating-point numbers (seconds since the
+    # start of the CoreFoundation epoch) with a different tag value.
+    # See the notes in Mac::PropertyList::real on float format.
+    return pack('Cd>', Mac::PropertyList::WriteBinary::tagDate + 3,
+                $posixval - 978307200);
+}
+
 package Mac::PropertyList::real;
 
 # Here we're assuming that the 'd' format for pack produces
