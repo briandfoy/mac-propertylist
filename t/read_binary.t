@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use utf8;
 
-use Test::More tests => 25;
+use Test::More tests => 41;
 
 use File::Spec::Functions;
 
@@ -116,5 +116,35 @@ ok(
 
 isa_ok( $plist->{'Data'}, 'Mac::PropertyList::data' );
 is( $plist->value( 'Data' ), "\x01\x50\x01\x15", "Data returns the right value" );
+
+}
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# Test with various width integers, booleans, unusual strings
+{
+my $test_file_2 = catfile( qw( plists binary2.plist ) );
+my $plist = parse_plist_file( $test_file_2 );
+
+isa_ok( $plist, 'Mac::PropertyList::array' );
+my(@values) = $plist->value;
+is( scalar @values, 8, 'right number of elements in array' );
+
+my(@types) = qw( integer integer integer true false string ustring ustring );
+my(@expect) = ( 1280, 2752512, 2147483649, 1, 0,
+                'Entities: & and &amp;',
+                'Unicode: π≠2 Entities: & and &amp;',
+                "Unicode Supplementary: \x{1203C}, \x{1F06B}." );
+
+# The characters in the Supplementary string are CUNEIFORM SIGN ASH
+# OVER ASH OVER ASH and DOMINO TILE VERICAL 1 1.  They were entered
+# in utf8 into an xml plist, then converted to bplist format by plutil
+# on MacOSX10.6.8.
+
+for my $index (0 .. 7) {
+    isa_ok( $values[$index], 'Mac::PropertyList::' . $types[$index] );
+    is( scalar $values[$index]->value, $expect[$index],
+        "$types[$index] at index $index has right value" )
+        unless ( $index == 3 || $index == 4 );
+}
 
 }
