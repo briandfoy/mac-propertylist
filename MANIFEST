@@ -8,9 +8,12 @@ hacks/plist-timer.pl
 hacks/plist.pl
 lib/Mac/PropertyList.pm
 lib/Mac/PropertyList/ReadBinary.pm
+lib/Mac/PropertyList/WriteBinary.pm
 LICENSE
 Makefile.PL
 MANIFEST
+MYMETA.json
+MYMETA.yml
 plists/binary.plist
 plists/com.apple.iPhoto.plist
 plists/com.apple.iTunes.plist
@@ -40,3 +43,4 @@ t/scalar.t
 t/test_manifest
 t/time.t
 t/write.t
+t/write_binary.t
