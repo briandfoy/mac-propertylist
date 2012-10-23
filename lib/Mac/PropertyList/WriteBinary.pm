@@ -8,6 +8,8 @@ use Encode              ();
 use Mac::PropertyList   ();
 use base                qw(Exporter);
 
+=encoding utf8
+
 =head1 NAME
 
 Mac::PropertyList::WriteBinary - pack data into a Mac "binary property list"
