@@ -16,4 +16,5 @@ plists.t
 false_key.t
 basic_types.t
 read_binary.t
+write_binary.t
 as_perl.t
