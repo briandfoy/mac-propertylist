@@ -2,6 +2,9 @@
 	* fix plist_as_perl to be the same as as_perl (and as
 	documented)
 
+1.38 - Tue Oct 23 15:44:26 2012
+	Wim Lewis <wiml@cpan.org> added WriteBinary. Great work!
+
 1.36 - Sat Jun 16 16:10:01 2012
 	* Update the docs, and make the previous dev releases official
 
