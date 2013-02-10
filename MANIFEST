@@ -15,6 +15,7 @@ MANIFEST
 MYMETA.json
 MYMETA.yml
 plists/binary.plist
+plists/binary2.plist
 plists/com.apple.iPhoto.plist
 plists/com.apple.iTunes.plist
 plists/com.apple.systempreferences.plist
