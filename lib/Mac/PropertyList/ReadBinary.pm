@@ -180,19 +180,27 @@ sub _read_object_at_offset {
 # # # # # # # # # # # # # #
 
 BEGIN {
+
+my %singletons = (
+    0 => undef,
+    8 => Mac::PropertyList::false->new(),
+    9 => Mac::PropertyList::true->new(),
+
+    # 15 is also defined (as "fill") in the comments to Apple's
+    # implementation in CFBinaryPList.c but Apple's actual code has no
+    # support for it at all, either reading or writing, so it's
+    # probably not important to implement.
+
+);
+
 my $type_readers = {
 
 	0 => sub { # the odd balls
 		my( $self, $length ) = @_;
 
-		my %hash = (
-			 0 => [ qw(null  0) ],
-			 8 => [ qw(false 0) ],
-			 9 => [ qw(true  1) ],
-			15 => [ qw(fill 15) ],
-			);
-
-		return $hash{ $length } || [];
+		return $singletons{ $length } if exists $singletons{ $length };
+		
+		croak ( sprintf "Unknown type byte %02X\n", $length );
     	},
 
 	1 => sub { # integers
@@ -274,11 +282,7 @@ my $type_readers = {
 		my( $buffer, $value );
 		read $self->_fh, $buffer, $length;
 
-		# pack to make it unicode
-		$buffer = XML::Entities::decode(
-			'all',
-			pack "U0C*", unpack "C*", $buffer
-			);
+		$buffer = Encode::decode( 'ascii', $buffer );
 
 		return Mac::PropertyList::string->new( $buffer );
 		},
@@ -289,10 +293,7 @@ my $type_readers = {
 		my( $buffer, $value );
 		read $self->_fh, $buffer, 2 * $length;
 
-		$buffer = XML::Entities::decode(
-			'all',
-			Encode::decode( "UTF-16BE", $buffer )
-			);
+		$buffer = Encode::decode( "UTF-16BE", $buffer );
 
 		return Mac::PropertyList::ustring->new( $buffer );
 		},
