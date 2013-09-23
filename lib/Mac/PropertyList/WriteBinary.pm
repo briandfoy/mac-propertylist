@@ -442,7 +442,7 @@ sub _as_bplist_fragment { return "\x08"; }
 
 Wim Lewis, C<< <wiml@cpan.org> >>
 
-Copyright E<copy> 2012 Wim Lewis.  All rights reserved.
+Copyright © 2012 Wim Lewis.  All rights reserved.
 
 This program is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
