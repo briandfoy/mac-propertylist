@@ -2,6 +2,9 @@
 	* fix plist_as_perl to be the same as as_perl (and as
 	documented)
 
+1.38_02 - Mon Sep 23 19:52:20 2013
+	* Fix non-portable strftime format (RT #83460)
+
 1.38_01 - Sun Feb 10 17:08:57 2013
 	* Wim Lewis improved the binary reader / writer and made better
 	tests for it.
