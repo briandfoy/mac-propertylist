@@ -260,7 +260,7 @@ my $type_readers = {
 		$self->{MLen} += 9;
 
 		my $adjusted_time = POSIX::strftime(
-			"%FT%H:%M:%SZ",
+			"%Y-%m-%dT%H:%M:%SZ",
 			gmtime( 978307200 + $values[0])
 			);
 
