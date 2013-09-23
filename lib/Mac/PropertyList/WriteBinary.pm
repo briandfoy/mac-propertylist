@@ -187,7 +187,7 @@ sub _assign_id {
 
     # Serialize the object into $fragment if possible. Since we
     # don't yet know how many bytes we will use to represent object
-    # ids in the final file, don't serialize those yet--- keep them
+    # ids in the final file, don't serialize those yet–keep them
     # as a list of integers for now.
     my($fragment, @objrefs);
 

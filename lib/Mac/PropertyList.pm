@@ -59,7 +59,7 @@ Mac::PropertyList - work with Mac plists at a low level
 =head1 DESCRIPTION
 
 This module is a low-level interface to the Mac OS X Property List
-(plist) format. You probably shouldn't use this in applications--build
+(plist) format. You probably shouldn't use this in applications–build
 interfaces on top of this so you don't have to put all the heinous
 multi-level object stuff where people have to look at it.
 
@@ -269,7 +269,7 @@ sub parse_plist_file {
 
 Create a plist dictionary from the hash reference.
 
-The values of the hash can only be simple scalars--not references.
+The values of the hash can only be simple scalars–not references.
 Reference values are silently ignored.
 
 Returns a string representing the hash in the plist format.
@@ -305,7 +305,7 @@ sub create_from_hash {
 
 Create a plist array from the array reference.
 
-The values of the array can only be simple scalars--not references.
+The values of the array can only be simple scalars–not references.
 Reference values are silently ignored.
 
 Returns a string representing the array in the plist format.
