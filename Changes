@@ -2,6 +2,10 @@
 	* fix plist_as_perl to be the same as as_perl (and as
 	documented)
 
+1.39 - Fri Sep 27 16:28:21 2013
+	* Bump to full release
+	âˆ
+
 1.38_02 - Mon Sep 23 19:52:20 2013
 	* Fix non-portable strftime format (RT #83460)
 
