@@ -1,10 +1,7 @@
-1.37 - Thu Aug 30 11:39:39 2012
-	* fix plist_as_perl to be the same as as_perl (and as
-	documented)
+# Changes for Mac::PropertyList
 
 1.39 - Fri Sep 27 16:28:21 2013
 	* Bump to full release
-	âˆ
 
 1.38_02 - Mon Sep 23 19:52:20 2013
 	* Fix non-portable strftime format (RT #83460)
@@ -14,7 +11,11 @@
 	tests for it.
 
 1.38 - Tue Oct 23 15:44:26 2012
-	Wim Lewis <wiml@cpan.org> added WriteBinary. Great work!
+	* Wim Lewis <wiml@cpan.org> added WriteBinary. Great work!
+
+1.37 - Thu Aug 30 11:39:39 2012
+	* fix plist_as_perl to be the same as as_perl (and as
+	documented)
 
 1.36 - Sat Jun 16 16:10:01 2012
 	* Update the docs, and make the previous dev releases official
@@ -98,7 +99,7 @@
 	* No need to upgrade if you have the previous version (0.11)
 
 0.51 - Tue Feb  3 16:39:39 2004
-    * Refactored the module to get rid of goofy data structure---if you
+    * Refactored the module to get rid of goofy data structureâ€”if you
     peeked behind-the-scenes this will bite you
     * Each type in the plist now has its own class, with methods to affect it
 
@@ -114,5 +115,5 @@
 	* no need to upgrade from 0.09 if you already have it installed
 
 0.09 - Fri Jan 31 11:20:53 2003
-	* fixed bug in which a dicct key named "0" would kill the program
+	* fixed bug in which a dict key named "0" would kill the program
 
