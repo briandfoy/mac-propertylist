@@ -1,5 +1,8 @@
 # Changes for Mac::PropertyList
 
+1.40 - Fri Jan  3 13:57:08 2014
+	* Get rid of MYMETA
+
 1.39 - Fri Sep 27 16:28:21 2013
 	* Bump to full release
 
