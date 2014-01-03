@@ -101,7 +101,7 @@ use constant {
     havePack64   => ( eval { pack('Q>', 1153202979583557643) eq "\x10\x01\0\0\0\0\0\x0B" } ? 1 : 0 ),
 };
 
-$VERSION = '1.39';
+$VERSION = '1.40';
 @EXPORT_OK = qw( as_string );
 
 sub as_string {
@@ -442,7 +442,7 @@ sub _as_bplist_fragment { return "\x08"; }
 
 Wim Lewis, C<< <wiml@cpan.org> >>
 
-Copyright © 2012 Wim Lewis.  All rights reserved.
+Copyright © 2012-2014 Wim Lewis.  All rights reserved.
 
 This program is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
