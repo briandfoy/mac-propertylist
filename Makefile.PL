@@ -23,5 +23,21 @@ WriteMakefile
 		},
 
 	clean          => { FILES => 'Mac-PropertyList-*' },
+
+	META_MERGE => {
+		"meta-spec" => { version => 2 },
+		resources => {
+			repository => {
+				type => 'git',
+				url => 'git://github.com/briandfoy/mac-propertylist.git',
+				web => 'https://github.com/briandfoy/mac-propertylist',
+				},
+
+			bugtracker => {
+				web => 'https://rt.cpan.org/Public/Dist/Display.html?Name=Mac-PropertyList',
+				mailto => 'bug-MacPropertyList@rt.cpan.org',
+				},
+			},
+		},
 	);
 
