@@ -59,7 +59,7 @@
 	* no code changes, so no need to upgrade
 
 1.29 - Wed May 17 19:25:09 2006
-	* Added a parse_plist_fh function so you can open the files 
+	* Added a parse_plist_fh function so you can open the files
 	any way that you like (for instance, as ":utf8").
 	* Added pod_coverage.t to MANIFEST. I use it so I might as
 	well distribute it.
