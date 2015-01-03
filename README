@@ -1,5 +1,3 @@
-$Id$
-
 This module parses the property lists rom Mac OS X, at
 least the ones from the pre-Tiger releases. I wrote this
 module to work on all platforms, since I needed it to
