@@ -1,4 +1,4 @@
-# Changes for Mac::PropertyList
+Revision history for Perl module Mac::PropertyList
 
 1.41 - Fri Sep 12 06:15:56 2014
 	* Fix up some metadata (GitHub #4)
