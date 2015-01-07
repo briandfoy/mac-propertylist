@@ -2,13 +2,15 @@ require 5.010;
 use strict;
 use warnings;
 
-WriteMakefile
-	(
-	'NAME'         => 'Mac::PropertyList',
+my $github    = 'https://github.com/briandfoy/mac-propertylist';
+my $main_file = 'lib/Mac/PropertyList.pm';
+
+my %WriteMakefile = (
+	'NAME'          => 'Mac::PropertyList',
 	'ABSTRACT_FROM' => $main_file,
-	'VERSION_FROM' => 'lib/Mac/PropertyList.pm',
-	'LICENSE'      => 'perl',
-	'AUTHOR'       => 'brian d foy <bdfoy@cpan.org>',
+	'VERSION_FROM'  => $main_file,
+	'LICENSE'       => 'perl',
+	'AUTHOR'        => 'brian d foy <bdfoy@cpan.org>',
 
 	'CONFIGURE_REQUIRES' => {
 		'ExtUtils::MakeMaker' => '6.64',
