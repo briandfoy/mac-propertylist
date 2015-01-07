@@ -1,18 +1,27 @@
-use ExtUtils::MakeMaker 6.64;
-
 require 5.010;
-
-eval "use Test::Manifest 1.21";
+use strict;
+use warnings;
 
 WriteMakefile
 	(
 	'NAME'         => 'Mac::PropertyList',
-	'ABSTRACT'     => 'work with Mac plists at a low level',
+	'ABSTRACT_FROM' => $main_file,
 	'VERSION_FROM' => 'lib/Mac/PropertyList.pm',
 	'LICENSE'      => 'perl',
 	'AUTHOR'       => 'brian d foy <bdfoy@cpan.org>',
 
-	'PREREQ_PM' => {
+	'CONFIGURE_REQUIRES' => {
+		'ExtUtils::MakeMaker' => '6.64',
+		},
+
+	'BUILD_REQUIRES' => {
+		},
+
+	'TEST_REQUIRES' => {
+		'Test::More' => '0.94',
+		},
+
+	'PREREQ_PM'     => {
 		'Math::BigInt'  => '0',
 		'MIME::Base64'  => '0',
 		'Time::Local'   => '0',
@@ -21,26 +30,41 @@ WriteMakefile
 		'parent'        => '0',
 		},
 
-	'TEST_REQUIRES' => {
-		'Test::More'    => '0',
-		},
-
-	'clean'          => { FILES => 'Mac-PropertyList-*' },
-
 	'META_MERGE' => {
-		"meta-spec" => { version => 2 },
+		'meta-spec' => { version => 2 },
 		resources => {
 			repository => {
 				type => 'git',
-				url => 'git://github.com/briandfoy/mac-propertylist.git',
-				web => 'https://github.com/briandfoy/mac-propertylist',
+				url  => "$github.git",
+				web  => $github,
 				},
-
-			bugtracker => {
-				web => 'https://rt.cpan.org/Public/Dist/Display.html?Name=Mac-PropertyList',
-				mailto => 'bug-MacPropertyList@rt.cpan.org',
+			bugtraker => {
+				web    => "$github/issues",
 				},
+			homepage => $github,
 			},
 		},
+
+	'clean'          => { FILES => 'Mac-PropertyList-*' },
 	);
 
+
+sub arguments { \%WriteMakefile }
+
+do_it() unless caller;
+sub do_it {
+	require File::Spec;
+	my $MM ='ExtUtils::MakeMaker';
+	my $MM_version =
+		eval{ "$MM " . $WriteMakefile{'CONFIGURE_REQUIRES'}{'ExtUtils::MakeMaker'} }
+			//
+		"$MM 6.64";
+	eval "use $MM_version";
+	eval "use Test::Manifest 1.21" 
+		if -e File::Spec->catfile( qw(t test_manifest) );
+	WriteMakefile( %WriteMakefile );
+	}
+
+
+no warnings;
+__PACKAGE__;
