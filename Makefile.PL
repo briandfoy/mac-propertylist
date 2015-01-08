@@ -2,11 +2,14 @@ require 5.010;
 use strict;
 use warnings;
 
+use File::Spec::Functions qw(catfile);
+
+my $module    = 'Mac::PropertyList';
 my $github    = 'https://github.com/briandfoy/mac-propertylist';
-my $main_file = 'lib/Mac/PropertyList.pm';
+my $main_file = catfile( 'lib', split /::/, "$module.pm" );
 
 my %WriteMakefile = (
-	'NAME'          => 'Mac::PropertyList',
+	'NAME'          => $module,
 	'ABSTRACT_FROM' => $main_file,
 	'VERSION_FROM'  => $main_file,
 	'LICENSE'       => 'perl',
