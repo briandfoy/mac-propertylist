@@ -5,6 +5,8 @@ use warnings;
 use File::Spec::Functions qw(catfile);
 
 my $module    = 'Mac::PropertyList';
+( my $dist = $module ) =~ s/::/-/g;
+
 my $github    = 'https://github.com/briandfoy/mac-propertylist';
 my $main_file = catfile( 'lib', split /::/, "$module.pm" );
 
