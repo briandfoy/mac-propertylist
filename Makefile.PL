@@ -53,7 +53,7 @@ my %WriteMakefile = (
 			},
 		},
 
-	'clean'          => { FILES => 'Mac-PropertyList-*' },
+	clean => { FILES => "$dist-*" },
 	);
 
 
