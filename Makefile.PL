@@ -1,10 +1,12 @@
 require 5.010;
+
+package Mac::PropertyList;
 use strict;
 use warnings;
 
 use File::Spec::Functions qw(catfile);
 
-my $module    = 'Mac::PropertyList';
+my $module    = __PACKAGE__;
 ( my $dist = $module ) =~ s/::/-/g;
 
 my $github    = 'https://github.com/briandfoy/mac-propertylist';
