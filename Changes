@@ -1,5 +1,9 @@
 Revision history for Perl module Mac::PropertyList
 
+1.41_01 2015-01-29T04:41:09Z
+	RT #101795 Mis-parse or hang while parsing non-pretty XML
+	RT #101796: Wide character in print warning in t/read_binary.t
+
 1.41 - 2014-09-12
 	* Fix up some metadata (GitHub #4)
 
