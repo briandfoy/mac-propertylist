@@ -11,7 +11,7 @@ lib/Mac/PropertyList/ReadBinary.pm
 lib/Mac/PropertyList/WriteBinary.pm
 LICENSE
 Makefile.PL
-MANIFEST			This list of files
+MANIFEST
 MANIFEST.SKIP
 plists/binary.plist
 plists/binary2.plist

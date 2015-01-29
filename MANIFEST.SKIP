@@ -63,3 +63,4 @@
 \.lwpcookies
 Mac-\.*
 \.swp$
+\.patch$
