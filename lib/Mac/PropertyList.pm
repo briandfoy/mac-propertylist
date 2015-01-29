@@ -379,6 +379,11 @@ sub read_next {
 			$value = $Readers{$1}->( $2 );
 			}
 	    elsif( s[^\s* < (dict|array) > ][]x ) {
+			# We need to put back the unprocessed text if
+			# any because the <dict> and <array> readers
+			# need to see it.
+			$source->put_line( $_ ) if defined $_ && '' ne $_;
+			$_ = '';
 			$value = $Readers{$1}->( $source );
 			}
 	    # these next two are some wierd cases i found in the iPhoto Prefs
