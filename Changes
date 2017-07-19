@@ -1,5 +1,8 @@
 Revision history for Perl module Mac::PropertyList
 
+1.411 2017-07-19T02:10:42Z
+	* Bram Stappers fixed a regression with XML comments
+
 1.41_01 2015-01-29T04:41:09Z
 	- RT #101795: Mis-parse or hang while parsing non-pretty XML (Tom Wyant)
 	- RT #101796: Wide character in print warning in t/read_binary.t (Tom Wyant)
