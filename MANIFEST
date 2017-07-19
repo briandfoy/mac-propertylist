@@ -20,6 +20,7 @@ plists/com.apple.iPhoto.plist
 plists/com.apple.iTunes.plist
 plists/com.apple.systempreferences.plist
 plists/com.unsanity.windowshadex.plist
+plists/comments.plist
 plists/the_perl_review.abcdp
 README.pod
 t/array.t
