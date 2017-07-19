@@ -13,7 +13,7 @@ use MIME::Base64      qw(decode_base64);
 use POSIX             qw(SEEK_END SEEK_SET);
 use XML::Entities     ();
 
-$VERSION = '1.41_01';
+$VERSION = '1.411';
 
 __PACKAGE__->_run( @ARGV ) unless caller;
 
@@ -199,7 +199,7 @@ my $type_readers = {
 		my( $self, $length ) = @_;
 
 		return $singletons{ $length } if exists $singletons{ $length };
-		
+
 		croak ( sprintf "Unknown type byte %02X\n", $length );
     	},
 
