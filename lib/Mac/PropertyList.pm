@@ -515,6 +515,7 @@ sub get_line {
 			}
 		else {
 			$_ = $self->get_source_line;
+			return $_;
 			}
 		}
 
