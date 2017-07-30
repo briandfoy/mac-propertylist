@@ -169,7 +169,6 @@ my %Readers = (
 	"date"    => \&read_date,
 	"real"    => \&read_real,
 	"integer" => \&read_integer,
-	"string"  => \&read_string,
 	"array"   => \&read_array,
 	"data"    => \&read_data,
 	"true"    => \&read_true,
