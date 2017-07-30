@@ -382,9 +382,7 @@ sub read_next {
 	while( not defined $value ) {
 		croak "Couldn't read anything!" if $source->eof;
 		$_ .= $source->get_line;
-
-		if( s[^\s* < (string|date|real|integer|data) >
-			   \s*(.*?)\s* </\1> ][]sx ) {
+		if( s[^\s* < (string|date|real|integer|data) > \s*(.*?)\s* </\1> ][]sx ) {
 			$value = $Readers{$1}->( $2 );
 			}
 	    elsif( s[^\s* < (dict|array) > ][]x ) {
