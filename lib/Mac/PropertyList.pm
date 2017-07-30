@@ -568,8 +568,6 @@ sub value {
 sub type { my $r = ref $_[0] ? ref $_[0] : $_[0]; $r =~ s/.*:://; $r; }
 
 sub new {
-	#print STDERR "Got [@_]\n";
-
 	bless $_[1], $_[0]
 	}
 
@@ -663,8 +661,6 @@ package Mac::PropertyList::dict;
 use base qw(Mac::PropertyList::Container);
 
 sub new {
-	#print STDERR Data::Dumper::Dumper( $_[1] );
-
 	$_[0]->SUPER::new( $_[1] );
 	}
 
