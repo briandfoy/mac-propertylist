@@ -59,9 +59,10 @@ Mac::PropertyList - work with Mac plists at a low level
 =head1 DESCRIPTION
 
 This module is a low-level interface to the Mac OS X Property List
-(plist) format. You probably shouldn't use this in applications–build
-interfaces on top of this so you don't have to put all the heinous
-multi-level object stuff where people have to look at it.
+(plist) format in either XML or binary. You probably shouldn't use
+this in applications–build interfaces on top of this so you don't have
+to put all the heinous multi-level object stuff where people have to
+look at it.
 
 You can parse a plist file and get back a data structure. You can take
 that data structure and get back the plist as XML. If you want to
@@ -69,6 +70,14 @@ change the structure inbetween that's your business. :)
 
 You don't need to be on Mac OS X to use this. It simply parses and
 manipulates a text format that Mac OS X uses.
+
+If you need to work with the old ASCII or newer JSON formet, you can
+use the B<plutil> tool that comes with MacOS X:
+
+	% plutil -convert xml1 -o ExampleBinary.xml.plist ExampleBinary.plist
+
+Or, you can extend this module to handle those formats (and send a pull
+request).
 
 =head2 The Property List format
 
