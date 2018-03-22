@@ -9,7 +9,7 @@ use Carp qw(croak carp);
 use Data::Dumper;
 use XML::Entities;
 
-use parent qw(Exporter);
+use Exporter qw(import);
 
 @EXPORT_OK = qw(
 	parse_plist

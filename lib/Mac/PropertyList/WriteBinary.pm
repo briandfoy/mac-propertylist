@@ -6,7 +6,7 @@ use vars qw( $VERSION @EXPORT_OK );
 
 use Encode              ();
 use Mac::PropertyList   ();
-use base                qw(Exporter);
+use Exporter          qw(import);
 
 =encoding utf8
 
