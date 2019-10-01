@@ -9,6 +9,8 @@ perl:
     - "5.18"
     - "5.20"
     - "5.22"
+    - "5.28"
+    - "5.30"
 
 before_install:
     - git clone git://github.com/travis-perl/helpers ~/travis-perl-helpers
