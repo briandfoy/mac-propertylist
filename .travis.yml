@@ -3,8 +3,6 @@
 # https://github.com/briandfoy/brians_perl_modules_travis_config
 # This file is licensed under the Artistic License 2.0
 
-sudo: false
-
 dist: trusty
 
 cache:
