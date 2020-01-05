@@ -298,6 +298,18 @@ my $type_readers = {
 		return Mac::PropertyList::ustring->new( $buffer );
 		},
 
+	8 => sub { # UIDs
+		my( $self, $length ) = @_;
+
+		my $byte_length = $length + 1;
+
+		read $self->_fh, ( my $buffer ), $byte_length;
+
+		my $value = unpack 'H*', $buffer;
+
+		return Mac::PropertyList::uid->new( $value );
+		},
+
 	a => sub { # array
 		my( $self, $elements ) = @_;
 
