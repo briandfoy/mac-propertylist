@@ -4,7 +4,7 @@ use strict;
 use warnings;
 no warnings;
 
-use vars qw($ERROR $XML_head $XML_foot $VERSION @EXPORT_OK %EXPORT_TAGS);
+use vars qw($ERROR $VERSION @EXPORT_OK %EXPORT_TAGS);
 use Carp qw(croak carp);
 use Data::Dumper;
 use XML::Entities;
@@ -153,16 +153,6 @@ information or blessed objects.
 
 my $Debug = $ENV{PLIST_DEBUG} || 0;
 
-$XML_head =<<"XML";
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-XML
-
-$XML_foot =<<"XML";
-</plist>
-XML
-
 my %Readers = (
 	"dict"    => \&read_dict,
 	"string"  => \&read_string,
@@ -293,7 +283,7 @@ sub create_from_hash {
 		return;
 		}
 
-	my $string = "$XML_head" . Mac::PropertyList::dict->write_open . "\n";
+	my $string = XML_head() . Mac::PropertyList::dict->write_open . "\n";
 
 	foreach my $key ( keys %$hash ) {
 		next if ref $hash->{$key};
@@ -308,7 +298,7 @@ sub create_from_hash {
 		$string .= $bit;
 		}
 
-	$string .= Mac::PropertyList::dict->write_close . "\n$XML_foot";
+	$string .= Mac::PropertyList::dict->write_close . "\n" . XML_foot();
 
 	return $string;
 	}
@@ -332,7 +322,7 @@ sub create_from_array {
 		return;
 		}
 
-	my $string = "$XML_head" . Mac::PropertyList::array->write_open . "\n";
+	my $string = XML_head() . Mac::PropertyList::array->write_open . "\n";
 
 	foreach my $element ( @$array ) {
 		my $value = Mac::PropertyList::string->new( $element );
@@ -343,7 +333,7 @@ sub create_from_array {
 		$string .= $bit;
 		}
 
-	$string .= Mac::PropertyList::array->write_close . "\n$XML_foot";
+	$string .= Mac::PropertyList::array->write_close . "\n" . XML_foot();
 
 	return $string;
 	}
@@ -480,6 +470,38 @@ sub read_data {
 	return Mac::PropertyList::data->new( $string );
 	}
 
+=back
+
+=head2 Things that write
+
+=over 4
+
+=item XML_head
+
+Returns a string that represents the start of the PList XML.
+
+=cut
+
+sub XML_head () {
+	<<"XML";
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+XML
+	}
+
+=item XML_foot
+
+Returns a string that represents the end of the PList XML.
+
+=cut
+
+sub XML_foot () {
+	<<"XML";
+</plist>
+XML
+	}
+
 =item plist_as_string
 
 Return the plist data structure as XML in the Mac Property List format.
@@ -489,11 +511,11 @@ Return the plist data structure as XML in the Mac Property List format.
 sub plist_as_string {
 	my $object = CORE::shift;
 
-	my $string = $XML_head;
+	my $string = XML_head();
 
 	$string .= $object->write . "\n";
 
-	$string .= $XML_foot;
+	$string .= XML_foot();
 
 	return $string;
 	}
@@ -507,6 +529,10 @@ is really just C<as_perl>.
 =cut
 
 sub plist_as_perl { $_[0]->as_perl }
+
+=back
+
+=cut
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 package Mac::PropertyList::Source;
