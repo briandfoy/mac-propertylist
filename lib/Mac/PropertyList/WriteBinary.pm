@@ -18,8 +18,8 @@ Mac::PropertyList::WriteBinary - pack data into a Mac "binary property list"
 
     use Mac::PropertyList::WriteBinary;
 
-    my $data = new Mac::PropertyList::dict({ ... => ... });
-    my $buf = Mac::PropertyList::WriteBinary::as_string($data);
+    my $data = Mac::PropertyList::dict->new( { ... => ... } );
+    my $buf  = Mac::PropertyList::WriteBinary::as_string($data);
 
 =head1 DESCRIPTION
 
