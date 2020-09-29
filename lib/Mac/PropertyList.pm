@@ -288,7 +288,10 @@ Returns a string representing the hash in the plist format.
 sub create_from_hash {
 	my $hash  = shift;
 
-	return unless UNIVERSAL::isa( $hash, 'HASH' );
+	unless( ref $hash eq ref {} ) {
+		carp "create_from_hash did not get an hash reference"
+		return;
+		}
 
 	my $string = "$XML_head" . Mac::PropertyList::dict->write_open . "\n";
 
@@ -324,7 +327,10 @@ Returns a string representing the array in the plist format.
 sub create_from_array {
 	my $array  = shift;
 
-	return unless UNIVERSAL::isa( $array, 'ARRAY' );
+	unless( ref $array eq ref [] ) {
+		carp "create_from_array did not get an array reference"
+		return;
+		}
 
 	my $string = "$XML_head" . Mac::PropertyList::array->write_open . "\n";
 
