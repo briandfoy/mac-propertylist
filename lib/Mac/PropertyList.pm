@@ -18,6 +18,7 @@ use Exporter qw(import);
 	plist_as_string
 	create_from_hash
 	create_from_array
+	create_from_string
 	);
 
 %EXPORT_TAGS = (
@@ -339,6 +340,47 @@ sub create_from_array {
 	}
 
 =item read_string
+
+=item create_from_string( STRING )
+
+Returns a string representing the string in the plist format.
+
+=cut
+
+sub create_from_string {
+	my $string  = shift;
+
+	unless( ! ref $string ) {
+		carp "create_from_string did not get a string";
+		return;
+		}
+
+	return
+		XML_head() .
+		Mac::PropertyList::string->new( $string )->write .
+		"\n" . XML_foot();
+	}
+
+=item create_from
+
+Dispatches to either C<create_from_array>, C<create_from_hash>, or
+C<create_from_string> based on the argument. If none of those fit,
+this C<croak>s.
+
+=cut
+
+sub create_from {
+	my $thingy  = shift;
+
+	return do {
+		if(      ref $thingy eq ref [] ) { &create_from_array  }
+		elsif(   ref $thingy eq ref {} ) { &create_from_hash   }
+		elsif( ! ref $thingy eq ref {} ) { &create_from_string }
+		else {
+			croak "Did not recognize argument! Must be a string, or reference to a hash or array";
+			}
+		};
+	}
 
 =item read_data
 
