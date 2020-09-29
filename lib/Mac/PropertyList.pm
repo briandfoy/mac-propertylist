@@ -289,7 +289,7 @@ sub create_from_hash {
 	my $hash  = shift;
 
 	unless( ref $hash eq ref {} ) {
-		carp "create_from_hash did not get an hash reference"
+		carp "create_from_hash did not get an hash reference";
 		return;
 		}
 
@@ -328,7 +328,7 @@ sub create_from_array {
 	my $array  = shift;
 
 	unless( ref $array eq ref [] ) {
-		carp "create_from_array did not get an array reference"
+		carp "create_from_array did not get an array reference";
 		return;
 		}
 
