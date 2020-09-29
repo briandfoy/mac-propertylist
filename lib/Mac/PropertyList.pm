@@ -24,7 +24,7 @@ use Exporter qw(import);
 	'all' => \@EXPORT_OK,
 	);
 
-$VERSION = '1.413';
+$VERSION = '1.501';
 
 =encoding utf8
 
