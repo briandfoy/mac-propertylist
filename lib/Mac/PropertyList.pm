@@ -177,6 +177,8 @@ will be imported unless you ask for it.
 
 	use Mac::PropertyList qw( :all );
 
+=head2 Things that parse
+
 =over 4
 
 =item parse_plist( TEXT )
@@ -339,8 +341,6 @@ sub create_from_array {
 	return $string;
 	}
 
-=item read_string
-
 =item create_from_string( STRING )
 
 Returns a string representing the string in the plist format.
@@ -381,6 +381,8 @@ sub create_from {
 			}
 		};
 	}
+
+=item read_string
 
 =item read_data
 
@@ -906,8 +908,6 @@ use base qw(Mac::PropertyList::Boolean);
 package Mac::PropertyList::false;
 use base qw(Mac::PropertyList::Boolean);
 
-
-=back
 
 =head1 SOURCE AVAILABILITY
 
