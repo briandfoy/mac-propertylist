@@ -454,7 +454,9 @@ sub _as_bplist_fragment { return "\x08"; }
 
 Wim Lewis, C<< <wiml@cpan.org> >>
 
-Copyright © 2012-2014 Wim Lewis.  All rights reserved.
+Copyright © 2012-2014 Wim Lewis. All rights reserved.
+
+Tom Wyant added support for UID types.
 
 This program is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

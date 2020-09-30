@@ -1016,6 +1016,8 @@ all the plist junk and just play with the data.
 
 brian d foy, C<< <bdfoy@cpan.org> >>
 
+Tom Wyant added support for UID types.
+
 =head1 COPYRIGHT AND LICENSE
 
 Copyright © 2004-2020, brian d foy <bdfoy@cpan.org>. All rights reserved.

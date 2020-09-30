@@ -402,6 +402,8 @@ This project is in Github:
 
 brian d foy, C<< <bdfoy@cpan.org> >>
 
+Tom Wyant added support for UID types.
+
 =head1 COPYRIGHT AND LICENSE
 
 Copyright © 2004-2020, brian d foy <bdfoy@cpan.org>. All rights reserved.
