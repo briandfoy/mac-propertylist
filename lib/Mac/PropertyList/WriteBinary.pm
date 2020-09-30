@@ -6,6 +6,7 @@ use vars qw( $VERSION @EXPORT_OK );
 
 use Encode              ();
 use Mac::PropertyList   ();
+use Math::BigInt;
 use Exporter          qw(import);
 
 =encoding utf8
@@ -404,6 +405,17 @@ sub _as_bplist_fragment {
     } else {
         return Mac::PropertyList::WriteBinary::_pos_integer($value);
     }
+}
+
+package Mac::PropertyList::uid;
+
+use constant tagUID => Mac::PropertyList::WriteBinary->tagUID;
+
+sub _as_bplist_fragment {
+    my( $value ) = $_[0]->value;
+
+    # TODO what about UIDs longer than 16 bytes? Or are there none?
+    return pack 'CH*', tagUID + length( $value ) / 2 - 1, $value;
 }
 
 package Mac::PropertyList::string;
