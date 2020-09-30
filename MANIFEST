@@ -40,6 +40,7 @@ t/pod.t
 t/pod_coverage.t
 t/read_binary.t
 t/scalar.t
+t/string.t
 t/test_manifest
 t/time.t
 t/write.t
