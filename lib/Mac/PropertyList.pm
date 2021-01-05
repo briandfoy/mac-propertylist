@@ -426,6 +426,9 @@ sub read_next {
 		if( s[^\s* < (string|date|real|integer|data) > \s*(.*?)\s* </\1> ][]sx ) {
 			$value = $Readers{$1}->( $2 );
 			}
+		elsif( s[^\s* < string / > ][]x ){
+			$value = $Readers{'string'}->( '' );
+			}
 	    elsif( s[^\s* < (dict|array) > ][]x ) {
 			# We need to put back the unprocessed text if
 			# any because the <dict> and <array> readers
