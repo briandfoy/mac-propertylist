@@ -34,3 +34,4 @@ inc/
 nytprof.out
 pm_to_blib
 *.patch
+*.icould
