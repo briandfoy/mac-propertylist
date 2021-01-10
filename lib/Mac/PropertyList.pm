@@ -1023,7 +1023,7 @@ Tom Wyant added support for UID types.
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright © 2004-2020, brian d foy <bdfoy@cpan.org>. All rights reserved.
+Copyright © 2004-2021, brian d foy <bdfoy@cpan.org>. All rights reserved.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the Artistic License 2.0.
