@@ -69,3 +69,6 @@ Mac-\.*
 MANIFEST\s\d
 CHANGES\s\d
 
+\bMANIFEST\s\d
+\bChanges\s\d
+
