@@ -29,7 +29,7 @@ jobs:
             - name: Perl version
               run: perl -V
             - name: Install dependencies
-              run: cpan .
+              run: cpan -M https://www.cpan.org/ -T .
             - name: Run tests
               run: |
                 perl Makefile.PL
