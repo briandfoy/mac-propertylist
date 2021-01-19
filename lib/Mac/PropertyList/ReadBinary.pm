@@ -1,3 +1,5 @@
+use v5.10;
+
 package Mac::PropertyList::ReadBinary;
 use strict;
 use warnings;
