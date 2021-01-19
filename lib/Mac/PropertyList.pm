@@ -6,14 +6,14 @@ use strict;
 use warnings;
 no warnings;
 
-use vars qw($ERROR $VERSION @EXPORT_OK %EXPORT_TAGS);
+use vars qw($ERROR);
 use Carp qw(croak carp);
 use Data::Dumper;
 use XML::Entities;
 
 use Exporter qw(import);
 
-@EXPORT_OK = qw(
+our @EXPORT_OK = qw(
 	parse_plist
 	parse_plist_fh
 	parse_plist_file
@@ -23,11 +23,11 @@ use Exporter qw(import);
 	create_from_string
 	);
 
-%EXPORT_TAGS = (
+our %EXPORT_TAGS = (
 	'all' => \@EXPORT_OK,
 	);
 
-$VERSION = '1.502';
+our $VERSION = '1.502';
 
 =encoding utf8
 

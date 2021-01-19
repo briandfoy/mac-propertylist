@@ -4,8 +4,6 @@ package Mac::PropertyList::WriteBinary;
 use strict;
 use warnings;
 
-use vars qw( $VERSION @EXPORT_OK );
-
 use Encode              ();
 use Mac::PropertyList   ();
 use Math::BigInt;
@@ -104,8 +102,8 @@ use constant {
     havePack64   => ( eval { pack('Q>', 1153202979583557643) eq "\x10\x01\0\0\0\0\0\x0B" } ? 1 : 0 ),
 };
 
-$VERSION = '1.502';
-@EXPORT_OK = qw( as_string );
+our $VERSION = '1.502';
+our @EXPORT_OK = qw( as_string );
 
 sub as_string {
     my($value) = @_;

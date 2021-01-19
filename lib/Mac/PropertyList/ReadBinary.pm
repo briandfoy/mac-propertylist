@@ -4,8 +4,6 @@ package Mac::PropertyList::ReadBinary;
 use strict;
 use warnings;
 
-use vars qw( $VERSION );
-
 use Carp;
 use Data::Dumper;
 use Encode            qw(decode);
@@ -15,7 +13,7 @@ use MIME::Base64      qw(decode_base64);
 use POSIX             qw(SEEK_END SEEK_SET);
 use XML::Entities     ();
 
-$VERSION = '1.502';
+our $VERSION = '1.502';
 
 __PACKAGE__->_run( @ARGV ) unless caller;
 
