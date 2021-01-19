@@ -993,7 +993,7 @@ use base qw(Mac::PropertyList::Boolean);
 
 This project is in Github:
 
-	git://github.com/briandfoy/mac-propertylist.git
+	https://github.com/briandfoy/mac-propertylist.git
 
 =head1 CREDITS
 
