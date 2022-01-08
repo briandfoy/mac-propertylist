@@ -50,7 +50,7 @@ that data structure and get back the plist as XML (but not binary
 yet). If you want to change the structure inbetween that's your
 business. :)
 
-See C<Mac::PropertyList> for more details.
+See L<Mac::PropertyList> for more details.
 
 =head2 Methods
 
