@@ -186,8 +186,7 @@ my %singletons = (
     # implementation in CFBinaryPList.c but Apple's actual code has no
     # support for it at all, either reading or writing, so it's
     # probably not important to implement.
-
-);
+	);
 
 my $type_readers = {
 
