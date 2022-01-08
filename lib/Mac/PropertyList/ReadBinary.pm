@@ -87,8 +87,7 @@ Returns the C<Mac::PropertyList> data structure.
 
 sub plist            { $_[0]->{parsed}             }
 
-sub _object_size
-	{
+sub _object_size {
 	$_[0]->_trailer->{object_count} * $_[0]->_trailer->{offset_size}
 	}
 
@@ -127,8 +126,7 @@ sub _get_filehandle {
 	$fh;
 	}
 
-sub _read_plist_trailer
-	{
+sub _read_plist_trailer {
 	my $self = shift;
 
 	seek $self->_fh, -32, SEEK_END;
@@ -143,8 +141,7 @@ sub _read_plist_trailer
 	$self->{trailer} = \%hash;
 	}
 
-sub _get_offset_table
-	{
+sub _get_offset_table {
 	my $self = shift;
 
     seek $self->_fh, $self->_trailer->{table_offset}, SEEK_SET;
@@ -160,8 +157,7 @@ sub _get_offset_table
 
 	$self->{offsets} = \@offsets;
 
-    if( $self->_trailer->{offset_size} == 3 )
-    	{
+    if( $self->_trailer->{offset_size} == 3 ) {
 		@offsets = map { hex } @offsets;
    	 	}
 
@@ -215,13 +211,11 @@ my $type_readers = {
 		my @formats = qw( C n N NN );
 		my @values = unpack $formats[$length], $buffer;
 
-		if( $length == 3 )
-			{
+		if( $power2 == 3 ) {
 			my( $high, $low ) = @values;
 
 			my $b = Math::BigInt->new($high)->blsft(32)->bior($low);
-			if( $b->bcmp(Math::BigInt->new(2)->bpow(63)) > 0)
-				{
+			if( $b->bcmp(Math::BigInt->new(2)->bpow(63)) > 0) {
 				$b -= Math::BigInt->new(2)->bpow(64);
 				}
 
@@ -358,8 +352,7 @@ my $type_readers = {
 		},
 	};
 
-sub _read_object
-	{
+sub _read_object {
 	my $self = shift;
 
     my $buffer;
