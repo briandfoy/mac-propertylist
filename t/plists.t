@@ -10,6 +10,9 @@ if( $@ ) { plan skip_all => "Needs Time::HiRes to time parsing" }
 my $class = 'Mac::PropertyList';
 use_ok( $class ) or BAIL_OUT( "$class did not compile\n" );
 
+my $parse_fqname = $class . '::parse_plist';
+ok( defined &$parse_fqname, "$parse_fqname is defined" );
+
 my $debug = $ENV{PLIST_DEBUG} || 0;
 
 foreach my $file ( @plists ) {
@@ -25,7 +28,7 @@ foreach my $file ( @plists ) {
 	my $b = length $data;
 
 	my $time1 = [ Time::HiRes::gettimeofday() ];
-	my $plist = eval { Mac::PropertyList::parse_plist( $data ) };
+	my $plist = eval { &{$parse_fqname}( $data ) };
 	my $error_at = $@;
 	$error_at ?
 		fail( "Error parsing $file: $error_at" )

@@ -5,6 +5,8 @@ use Test::More;
 my $class = 'Mac::PropertyList';
 use_ok( $class ) or BAIL_OUT( "$class did not compile\n" );
 
+my $parse_fqname = $class . '::parse_plist';
+
 my $array =<<"HERE";
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -18,7 +20,7 @@ HERE
 
 use Data::Dumper;
 
-my $plist  = Mac::PropertyList::parse_plist( $array );
+my $plist  = &{$parse_fqname}( $array );
 diag( Dumper( $plist ) . "\n" ) if $ENV{DEBUG};
 
 is( $plist->[0]->value, 'Mimi & Buster' );

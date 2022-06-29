@@ -1,12 +1,14 @@
 #!/usr/bin/env perl
 
-use strict;
+use strict qw(subs vars);
 use warnings;
 
 use Test::More;
 
 my $class = 'Mac::PropertyList';
 use_ok( $class ) or BAIL_OUT( "$class did not compile\n" );
+
+my $parse_fqname = $class . '::parse_plist';
 
 my $array = <<'HERE';
 <?xml version="1.0" encoding="UTF-8"?>
@@ -20,7 +22,7 @@ my $array = <<'HERE';
 HERE
 
 is_deeply(
-  Mac::PropertyList::parse_plist($array)->as_basic_data,
+  &{$parse_fqname}($array)->as_basic_data,
   [ qw(Green Yellow) ],
   "basic data from an array",
 );
@@ -41,7 +43,7 @@ my $dict = <<'HERE';
 HERE
 
 is_deeply(
-  Mac::PropertyList::parse_plist($dict)->as_basic_data,
+  &{$parse_fqname}($dict)->as_basic_data,
   { Bananas => 59, Ripeness => 'Very Ripe', Flavor => 'Delicious' },
   "basic data from a dict",
 );
@@ -62,7 +64,7 @@ my $nested_array = <<'HERE';
 HERE
 
 is_deeply(
-  Mac::PropertyList::parse_plist($nested_array)->as_basic_data,
+  &{$parse_fqname}($nested_array)->as_basic_data,
   [ 'Green', 'Yellow', [ 'Orange', 'Blue', ], ],
   "basic data from nested arrays",
 );
@@ -90,7 +92,7 @@ my $nested_dict = <<'HERE';
 HERE
 
 is_deeply(
-  Mac::PropertyList::parse_plist($nested_dict)->as_basic_data,
+  &{$parse_fqname}($nested_dict)->as_basic_data,
   { Bananas => 59, Ripeness => 'Very Ripe',
     Flavor  => { Banananess => 78, Mold => 12, Tarantula => 51 } },
   "basic data from nested dicts",
@@ -105,7 +107,7 @@ my $scalar = <<'HERE';
 HERE
 
 is_deeply(
-  Mac::PropertyList::parse_plist($scalar)->as_basic_data,
+  &{$parse_fqname}($scalar)->as_basic_data,
   59,
   "basic data from a scalar",
 );
@@ -121,7 +123,7 @@ my $string = <<'HERE';
 HERE
 
 is_deeply(
-  Mac::PropertyList::parse_plist($string)->as_basic_data,
+  &{$parse_fqname}($string)->as_basic_data,
   "A
 
   new line",

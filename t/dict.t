@@ -5,11 +5,14 @@ use Test::More;
 my $class = 'Mac::PropertyList';
 use_ok( $class ) or BAIL_OUT( "$class did not compile\n" );
 
+my $type_class = $class . '::dict';
+my $parse_fqname = $class . '::parse_plist';
+
 ########################################################################
 # Test the dict bits
 {
-my $dict = Mac::PropertyList::dict->new();
-isa_ok( $dict, "Mac::PropertyList::dict" );
+my $dict = $type_class->new;
+isa_ok( $dict, "${class}::dict" );
 is( $dict->count, 0, "Empty object has right number of keys" );
 }
 
@@ -27,8 +30,8 @@ my $dict =<<"HERE";
 </plist>
 HERE
 
-$plist = Mac::PropertyList::parse_plist( $dict );
-isa_ok( $plist, 'Mac::PropertyList::dict' );
+$plist = &{$parse_fqname}( $dict );
+isa_ok( $plist, $type_class );
 is( $plist->count, 2, "Has right number of keys" );
 isnt( $plist->count, 3, "Hasn't wrong number of keys" );
 
@@ -52,14 +55,14 @@ is( $plist->count, 1, "Has right count after delete" );
 
 note 'Try non-canonical layout';
 
-$plist = Mac::PropertyList::parse_plist( <<"HERE" );
+$plist = &{$parse_fqname}( <<"HERE" );
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict><key>Clayton</key><string>John</string><key>Napier</key><string>Carson</string><key>Gridley</key><string>Jason</string></dict>
 </plist>
 HERE
-isa_ok( $plist, 'Mac::PropertyList::dict' );
+isa_ok( $plist, $type_class );
 is( $plist->count, 3, "Has right number of keys" );
 
 @keys = sort $plist->keys;

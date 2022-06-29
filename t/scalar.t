@@ -7,18 +7,24 @@ use_ok( $class ) or BAIL_OUT( "$class did not compile\n" );
 
 ########################################################################
 # Test the data bits
-my $date = Mac::PropertyList::date->new();
-isa_ok( $date, "Mac::PropertyList::date" );
+{
+my $type_class = $class . '::real';
+
+my $date = $type_class->new();
+isa_ok( $date, $type_class );
+}
 
 ########################################################################
 # Test the real bits
-my $real = Mac::PropertyList::real->new();
-isa_ok( $real, "Mac::PropertyList::real" );
-
 {
+my $type_class = $class . '::real';
+
+my $real = $type_class->new;
+isa_ok( $real, $type_class );
+
 my $value = 3.15;
-$string = Mac::PropertyList::real->new( $value );
-isa_ok( $string, "Mac::PropertyList::real" );
+$string = $type_class->new( $value );
+isa_ok( $string, $type_class );
 is( $string->value, $value );
 is( $string->type, 'real' );
 is( $string->write, "<real>$value</real>" );
@@ -26,13 +32,15 @@ is( $string->write, "<real>$value</real>" );
 
 ########################################################################
 # Test the integer bits
-my $integer = Mac::PropertyList::integer->new();
-isa_ok( $integer, "Mac::PropertyList::integer" );
-
 {
+my $type_class = $class . '::integer';
+
+my $integer = $type_class->new;
+isa_ok( $integer, $type_class );
+
 my $value = 37;
-$string = Mac::PropertyList::integer->new( $value );
-isa_ok( $string, "Mac::PropertyList::integer" );
+$string = $type_class->new( $value );
+isa_ok( $string, $type_class );
 is( $string->value, $value );
 is( $string->type, 'integer' );
 is( $string->write, "<integer>$value</integer>" );
@@ -40,13 +48,15 @@ is( $string->write, "<integer>$value</integer>" );
 
 ########################################################################
 # Test the uid bits
-my $uid = Mac::PropertyList::uid->new();
-isa_ok( $uid, "Mac::PropertyList::uid" );
-
 {
+my $type_class = $class . '::uid';
+
+my $uid = $type_class->new();
+isa_ok( $uid, $type_class );
+
 my $value = 37;
-$string = Mac::PropertyList::uid->integer( $value );
-isa_ok( $string, "Mac::PropertyList::uid" );
+$string = $type_class->integer( $value );
+isa_ok( $string, $type_class );
 is( $string->value, sprintf '%x', $value );
 is( $string->type, 'uid' );
 # Per plutil, this is the xml1 representation of a UID.
@@ -58,13 +68,15 @@ is( $string->write, "<dict>
 
 ########################################################################
 # Test the string bits
-my $string = Mac::PropertyList::string->new();
-isa_ok( $string, "Mac::PropertyList::string" );
-
 {
+my $type_class = $class . '::string';
+
+my $string = $type_class->new;
+isa_ok( $string, $type_class );
+
 my $value = 'Buster';
-$string = Mac::PropertyList::string->new( $value );
-isa_ok( $string, "Mac::PropertyList::string" );
+$string = $type_class->new( $value );
+isa_ok( $string, $type_class );
 is( $string->value, $value );
 is( $string->type, 'string' );
 is( $string->write, "<string>$value</string>" );
@@ -72,20 +84,28 @@ is( $string->write, "<string>$value</string>" );
 
 ########################################################################
 # Test the data bits
-my $data = Mac::PropertyList::data->new();
-isa_ok( $data, "Mac::PropertyList::data" );
-
+{
+my $type_class = $class . '::data';
+my $data = $type_class->new;
+isa_ok( $data, $type_class );
+}
 
 ########################################################################
 # Test the boolean bits
-my $true = Mac::PropertyList::true->new;
-isa_ok( $true, "Mac::PropertyList::true" );
+{
+my $type_class = $class . '::true';
+my $true = $type_class->new;
+isa_ok( $true, $type_class );
 is( $true->value, 'true' );
 is( $true->write, '<true/>' );
+}
 
-my $false = Mac::PropertyList::false->new;
-isa_ok( $false, "Mac::PropertyList::false" );
+{
+my $type_class = $class . '::false';
+my $false = $type_class->new;
+isa_ok( $false, $type_class );
 is( $false->value, 'false' );
 is( $false->write, '<false/>' );
+}
 
 done_testing();

@@ -4,8 +4,11 @@ use strict;
 use warnings;
 
 use Test::More;
-use Mac::PropertyList qw(parse_plist_file parse_plist);
 
+my $class = 'Mac::PropertyList';
+my @import = qw( parse_plist parse_plist_file );
+
+use_ok( $class, @import ) or BAIL_OUT( "$class did not compile\n" );
 
 foreach my $string ( ( '', 'blirt', '<XML' ) ) {
 	my $plist = eval { parse_plist( $string ) };

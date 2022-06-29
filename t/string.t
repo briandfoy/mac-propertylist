@@ -5,11 +5,12 @@ use Test::More;
 my $class = 'Mac::PropertyList';
 use_ok( $class ) or BAIL_OUT( "$class did not compile\n" );
 
-########################################################################
-# Test the string bits
+my $type_class = $class . '::string';
+my $parse_fqname = $class . '::parse_plist';
+
 subtest empty_object => sub {
-	my $string = Mac::PropertyList::string->new();
-	isa_ok( $string, "Mac::PropertyList::string", 'Make empty object' );
+	my $string = $type_class->new;
+	isa_ok( $string, $type_class, "Make empty object fo $type_class" );
 	};
 
 subtest parse => sub {
@@ -21,12 +22,12 @@ subtest parse => sub {
 </plist>
 HERE
 
-	$plist = Mac::PropertyList::parse_plist( $plist );
-	isa_ok( $plist, "Mac::PropertyList::string", "Make object from plist string" );
+	$plist = &{$parse_fqname}( $plist );
+	isa_ok( $plist, $type_class, "Make $type_class object from plist string" );
 	};
 
 subtest create => sub {
-	Mac::PropertyList->import( 'create_from_string' );
+	$class->import( 'create_from_string' );
 	ok( defined &create_from_string );
 
 	my $plist = create_from_string( 'Roscoe' );
