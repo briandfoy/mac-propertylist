@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-use strict;
+use strict qw(subs vars);
 use warnings;
 
 use Test::More;
@@ -8,7 +8,10 @@ use Test::More;
 my $class = 'Mac::PropertyList';
 use_ok( $class ) or BAIL_OUT( "$class did not compile\n" );
 
-$class->import( 'parse_plist_fh' );
+my $parse_name = 'parse_plist_fh';
+ok( ! defined &$parse_name, "$parse_name is not defined before import" );
+$class->import( $parse_name );
+ok( defined &$parse_name, "$parse_name is defined after import" );
 
 my $File = "plists/com.apple.systempreferences.plist";
 
@@ -16,12 +19,9 @@ ok( -e $File, "Sample plist file exists" );
 
 ########################################################################
 {
-ok(
-	open( my( $fh ), $File ),
-	"Opened $File"
-	);
+ok( open( my $fh, '<:encoding(UTF-8)', $File ), "Opened $File with lexical" );
 
-my $plist = parse_plist_fh( $fh );
+my $plist = &{$parse_name}( $fh );
 
 ok( $plist, "return value is not false" );
 isa_ok( $plist, "${class}::dict" );
@@ -32,12 +32,9 @@ test_plist( $plist );
 ########################################################################
 
 {
-ok(
-	open( FILE, $File ),
-	"Opened $File"
-	);
+ok( open( FILE, '<', $File ), "Opened $File with bareword" );
 
-my $plist = parse_plist_fh( \*FILE );
+my $plist = &{$parse_name}( \*FILE );
 
 ok( $plist, "return value is not false" );
 isa_ok( $plist,"${class}::dict" );
@@ -49,8 +46,7 @@ done_testing();
 
 ########################################################################
 
-sub test_plist
-	{
+sub test_plist {
 	my $plist = shift;
 
 	my $value = eval { $plist->value->{NSColorPanelMode}->value };
