@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More 'no_plan';
+use Test::More;
 
 my $Class = 'Mac::PropertyList';
 use_ok( $Class );
@@ -45,7 +45,7 @@ is( $plist->type, 'dict', 'type key has right value for nested dict' );
 test_plist( $plist );
 }
 
-
+done_testing();
 
 ########################################################################
 

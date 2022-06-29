@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-use Test::More tests => 21;
+use Test::More;
 
 use Mac::PropertyList;
 
@@ -70,3 +70,5 @@ ok( eq_array( \@values, [qw(Carson Jason John)] ), "Check hash values" );
 ok( $plist->exists( 'Clayton' ), 'Claytin key exists' );
 
 is( $plist->value( 'Clayton' ),  'John', "Check Clayton's value" );
+
+done_testing();

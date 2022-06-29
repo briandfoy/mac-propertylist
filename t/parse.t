@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-use Test::More tests => 30;
+use Test::More;
 
 use Mac::PropertyList;
 
@@ -128,3 +128,4 @@ isa_ok( $plist, 'Mac::PropertyList::string' );
 is( $plist->type, 'string',      'type key has right value for string' );
 is( $plist->value, '', 'value is right for string'           );
 
+done_testing();

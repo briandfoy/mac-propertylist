@@ -10,7 +10,7 @@ use Math::BigInt;
 
 our($val, $expect);
 
-use Test::More tests => 42;
+use Test::More;
 
 BEGIN {
     my $class = 'Mac::PropertyList::WriteBinary';
@@ -213,5 +213,4 @@ isnt($@, '', "writing a subroutine reference should fail");
     like($@, qr/Recursive/, "recursive data structure should fail");
 }
 
-
-1;
+done_testing();

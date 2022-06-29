@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-use Test::More tests => 3;
+use Test::More;
 
 use Mac::PropertyList;
 
@@ -32,3 +32,5 @@ subtest create => sub {
 
 	like $plist, qr|<string>Roscoe</string>|, 'Has the string node';
 	};
+
+done_testing();

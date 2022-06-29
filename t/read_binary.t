@@ -9,7 +9,7 @@ BEGIN {
     binmode STDOUT, ':encoding(utf-8)';
 }
 
-use Test::More tests => 51;
+use Test::More;
 
 use File::Spec::Functions;
 
@@ -176,3 +176,5 @@ for my $index (0 .. 7) {
 	    "uid at index $index has right value" );
     }
 }
+
+done_testing();

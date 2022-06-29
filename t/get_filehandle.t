@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 6;
+use Test::More;
 
 my $class = 'Mac::PropertyList::ReadBinary';
 use_ok( $class );
@@ -37,3 +37,5 @@ my $self = bless { source => \ '<xml>'   }, $class;
 my $fh = $self->_get_filehandle;
 ok( openhandle( $fh ), 'Got a defined filehandle' );
 }
+
+done_testing();

@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-use Test::More tests => 3;
+use Test::More;
 
 BEGIN {
     use_ok( 'Mac::PropertyList' );
@@ -44,3 +44,5 @@ TODO: {
 
 	like( $@, qr/key not defined/, "Empty key causes parse_plist to die" );
 	}
+
+done_testing();

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 6;
+use Test::More;
 use Mac::PropertyList;
 
 my $array = <<'HERE';
@@ -125,3 +125,5 @@ is_deeply(
   new line",
   "basic data from a string with embedded new lines",
 );
+
+done_testing();

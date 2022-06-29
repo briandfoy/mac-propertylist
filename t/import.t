@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-use Test::More 'no_plan';
+use Test::More;
 
 require_ok( 'Mac::PropertyList' );
 
@@ -22,3 +22,4 @@ foreach my $name ( @Mac::PropertyList::EXPORT_OK )
 	ok( defined( &$name ), "$name is now defined yet" );
 	}
 
+done_testing();

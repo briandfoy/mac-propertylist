@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-use Test::More tests => 1;
+use Test::More;
 
 use Mac::PropertyList;
 use Time::HiRes qw(tv_interval gettimeofday);
@@ -18,3 +18,5 @@ my $elapsed = tv_interval( $time1, $time2 );
 print STDERR "Elapsed time is $elapsed\n";
 
 ok($elapsed < 3, "Parsing time test");
+
+done_testing();

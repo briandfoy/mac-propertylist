@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-use Test::More tests => 8;
+use Test::More;
 
 use Mac::PropertyList;
 
@@ -48,3 +48,5 @@ is( $plist->count, 3, "Non-canonical object has right number of values" );
 @values = $plist->values();
 ok( eq_array( \@values, [ qw{ Athos Porthos Aramis } ] ),
 	"Non-canonical object has right values" );
+
+done_testing();

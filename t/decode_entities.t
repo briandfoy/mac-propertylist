@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-use Test::More 'no_plan';
+use Test::More;
 
 use Mac::PropertyList;
 
@@ -23,3 +23,4 @@ diag( Dumper( $plist ) . "\n" ) if $ENV{DEBUG};
 is( $plist->[0]->value, 'Mimi & Buster' );
 is( $plist->[1]->value, 'Buster "Bean"' );
 
+done_testing();

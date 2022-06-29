@@ -44,3 +44,5 @@ foreach my $file ( @plists ) {
 		'plists/binary_uids.plist'	=> 'ARRAY',
 	    }->{$file} || 'HASH' );
 	}
+
+done_testing();

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 13;
+use Test::More;
 use Mac::PropertyList qw(parse_plist_file parse_plist);
 
 
@@ -31,3 +31,5 @@ foreach my $file ( 'not_there' ) {
 	like( $at, qr/does not exist/,
 		'$@ has the right error message' );
 	}
+
+done_testing();

@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-use Test::More tests => 28;
+use Test::More;
 
 use Mac::PropertyList;
 
@@ -87,4 +87,4 @@ isa_ok( $false, "Mac::PropertyList::false" );
 is( $false->value, 'false' );
 is( $false->write, '<false/>' );
 
-
+done_testing();

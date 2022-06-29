@@ -1,5 +1,46 @@
-use Test::More tests => 8;
 #!/usr/bin/env perl
+
+use Test::More;
+
+=encoding utf8
+
+=head1 NAME
+
+write.t
+
+=head1 SYNOPSIS
+
+	# run all the tests
+	% perl Makefile.PL
+	% make test
+
+	# run all the tests
+	% prove
+
+	# run a single test
+	% perl -Ilib t/write.t
+
+	# run a single test
+	% prove t/write.t
+
+=head1 DESCRIPTION
+
+=head1 AUTHORS
+
+Original author: brian d foy C<< <bdfoy@cpan.org> >>
+
+Contributors:
+
+=head1 COPYRIGHT
+
+Copyright © 2002-2022, brian d foy
+
+=head1 LICENSE
+
+This file is licenses under the Artistic License 2.0. You should have
+received a copy of this license with this distribution.
+
+=cut
 
 use Mac::PropertyList;
 
@@ -96,6 +137,7 @@ is($string, &canonicalize_data_elts($array_various),
 is_deeply($plist, Mac::PropertyList::parse_plist($string),
    "canonicalization doesn't break test");
 
+done_testing();
 
 sub canonicalize_data_elts {
     my($string) = @_;

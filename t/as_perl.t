@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 7;
+use Test::More;
 
 use File::Spec::Functions;
 
@@ -41,3 +41,5 @@ is(
 	);
 }
 
+
+done_testing();
