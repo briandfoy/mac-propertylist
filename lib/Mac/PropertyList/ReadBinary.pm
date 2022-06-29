@@ -160,7 +160,6 @@ sub _get_offset_table {
     if( $self->_trailer->{offset_size} == 3 ) {
 		@offsets = map { hex } @offsets;
    	 	}
-
 	}
 
 sub _read_object_at_offset {
@@ -189,7 +188,6 @@ my %singletons = (
 	);
 
 my $type_readers = {
-
 	0 => sub { # the odd balls
 		my( $self, $length ) = @_;
 
@@ -199,16 +197,17 @@ my $type_readers = {
     	},
 
 	1 => sub { # integers
-		my( $self, $length ) = @_;
-		croak "Integer > 8 bytes = $length" if $length > 3;
+		my( $self, $power2 ) = @_;
 
-		my $byte_length = 1 << $length;
+		croak "Integer with <$power2> bytes is not supported" if $power2 > 3;
+
+		my $byte_length = 1 << $power2;
 
 		my( $buffer, $value );
 		read $self->_fh, $buffer, $byte_length;
 
-		my @formats = qw( C n N NN );
-		my @values = unpack $formats[$length], $buffer;
+		my @formats = qw( C n N NN NNNN );
+		my @values = unpack $formats[$power2], $buffer;
 
 		if( $power2 == 3 ) {
 			my( $high, $low ) = @values;
@@ -216,6 +215,20 @@ my $type_readers = {
 			my $b = Math::BigInt->new($high)->blsft(32)->bior($low);
 			if( $b->bcmp(Math::BigInt->new(2)->bpow(63)) > 0) {
 				$b -= Math::BigInt->new(2)->bpow(64);
+				}
+
+			@values = ( $b );
+			}
+		elsif( $power2 == 4 ) {
+			my( $highest, $higher, $high, $low ) = @values;
+			my $b = Math::BigInt
+				->new($highest)
+				->blsft(32)->bior($higher)
+				->blsft(32)->bior($high)
+				->blsft(32)->bior($low);
+
+			if( $b->bcmp(Math::BigInt->new(2)->bpow(127)) > 0) {
+				$b -= Math::BigInt->new(2)->bpow(128);
 				}
 
 			@values = ( $b );
@@ -353,22 +366,25 @@ my $type_readers = {
 
 sub _read_object {
 	my $self = shift;
-
+say "Reading object!";
     my $buffer;
+    say "\tTELL: ", tell( $self->_fh );
     croak "read() failed while trying to get type byte! $!"
     	unless read( $self->_fh, $buffer, 1) == 1;
 
     my $length = unpack( "C*", $buffer ) & 0x0F;
-
+say "\tlength is $length";
     $buffer    = unpack "H*", $buffer;
+    say "\t", join '', map { sprintf '%02x', ord } split //, $buffer;
     my $type   = substr $buffer, 0, 1;
+say "\ttype is $type";
 
 	$length = $self->_read_object->value if $type ne "0" && $length == 15;
 
 	my $sub = $type_readers->{ $type };
 	my $result = eval { $sub->( $self, $length ) };
 	croak "$@" if $@;
-
+say "RESULT: ", Dumper($result);
     return $result;
 	}
 
