@@ -14,7 +14,7 @@ use Test::More tests => 42;
 
 BEGIN {
     my $class = 'Mac::PropertyList::WriteBinary';
-    
+
     use_ok( $class, qw( as_string ) );
     can_ok( $class, qw( as_string ) );
 }
@@ -29,7 +29,7 @@ sub testrep {
 
     my($val) = "Mac::PropertyList::$tp"->new($arg);
     my($bplist) = as_string($val);
-    my($expected) = "bplist00" . $frag . 
+    my($expected) = "bplist00" . $frag .
         pack('C x6 CC x4N x4N x4N',
              8,    # Offset table: offset of only object
              1, 1, # Byte sizes of offsets and of object IDs
@@ -37,7 +37,7 @@ sub testrep {
              0,    # ID of root (only) object
              8 + length($frag)  # Start offset of offset table
         );
- 
+
      is($bplist, $expected, "basic datatype '$tp', line $ln")
          || diag ( Data::Dumper->Dump([$val, $bplist, $expected], ['value', 'got', 'exp']) );
 }
@@ -208,7 +208,7 @@ isnt($@, '', "writing a subroutine reference should fail");
     my($d1) = { 'A' => 'aye', 'B' => 'bee' };
     my($d2) = { 'A' => 'aye', 'B' => $d1 };
     $d1->{B} = $d2;
-    
+
     eval { $val = as_string($d1); };
     like($@, qr/Recursive/, "recursive data structure should fail");
 }

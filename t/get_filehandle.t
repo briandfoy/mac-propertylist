@@ -25,7 +25,7 @@ ok( ! openhandle( $fh ), q(Didn't get a defined filehandle) );
 
 {
 my $string    = '<xml>';
-open my $string_fh, '<', \ $string; 
+open my $string_fh, '<', \ $string;
 my $self = bless { source => $string_fh  }, $class;
 my $fh = $self->_get_filehandle;
 ok( openhandle( $fh ), 'Got a defined filehandle' );

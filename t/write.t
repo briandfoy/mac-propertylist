@@ -99,7 +99,7 @@ is_deeply($plist, Mac::PropertyList::parse_plist($string),
 
 sub canonicalize_data_elts {
     my($string) = @_;
-    
+
     # Whitespace is ignored inside <data>
     $string =~ s#(\<data\>)([a-zA-Z0-9_+=\s]+)(\</data\>)# my($b64) = $2; $b64 =~ y/a-zA-Z0-9_+=//cd; $1.$b64.$3; #gem;
     $string;
