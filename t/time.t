@@ -17,7 +17,7 @@ my $plist = Mac::PropertyList::parse_plist( $data );
 my $time2 = [ gettimeofday ];
 
 my $elapsed = tv_interval( $time1, $time2 );
-print STDERR "Elapsed time is $elapsed\n";
+note( "Elapsed time is $elapsed" );
 
 ok($elapsed < 3, "Parsing time test");
 
