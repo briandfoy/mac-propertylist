@@ -23,17 +23,25 @@ write.t
 	# run a single test
 	% prove t/write.t
 
-=head1 DESCRIPTION
-
 =head1 AUTHORS
 
 Original author: brian d foy C<< <bdfoy@cpan.org> >>
 
 Contributors:
 
+=over 4
+
+=item Andy Lester C<< <andy@petdance.com> >>
+
+=back
+
+=head1 SOURCE
+
+This file was originally in https://github.com/briandfoy/mac-propertylist
+
 =head1 COPYRIGHT
 
-Copyright © 2002-2022, brian d foy
+Copyright © 2002-2022, brian d foy, C<< <bdfoy@cpan.org> >>
 
 =head1 LICENSE
 
