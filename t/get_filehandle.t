@@ -6,7 +6,8 @@ use warnings;
 use Test::More;
 
 my $class = 'Mac::PropertyList::ReadBinary';
-use_ok( $class );
+use_ok( $class ) or BAIL_OUT( "$class did not compile\n" );
+
 can_ok( $class, qw(new _get_filehandle) );
 use Scalar::Util qw(openhandle);
 

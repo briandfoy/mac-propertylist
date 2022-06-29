@@ -42,7 +42,8 @@ received a copy of this license with this distribution.
 
 =cut
 
-use Mac::PropertyList;
+my $class = 'Mac::PropertyList';
+use_ok( $class ) or BAIL_OUT( "$class did not compile\n" );
 
 my $array =<<"HERE";
 <?xml version="1.0" encoding="UTF-8"?>

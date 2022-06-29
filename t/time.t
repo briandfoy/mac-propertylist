@@ -2,7 +2,9 @@
 
 use Test::More;
 
-use Mac::PropertyList;
+my $class = 'Mac::PropertyList';
+use_ok( $class ) or BAIL_OUT( "$class did not compile\n" );
+
 use Time::HiRes qw(tv_interval gettimeofday);
 
 my $data = do {

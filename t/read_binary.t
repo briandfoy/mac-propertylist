@@ -16,7 +16,7 @@ use File::Spec::Functions;
 my $class = 'Mac::PropertyList::ReadBinary';
 my @methods = qw( new plist );
 
-use_ok( $class );
+use_ok( $class ) or BAIL_OUT( "$class did not compile\n" );
 can_ok( $class, @methods );
 
 my $test_file = catfile( qw( plists the_perl_review.abcdp ) );

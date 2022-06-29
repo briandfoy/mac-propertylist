@@ -10,7 +10,7 @@ use File::Spec::Functions;
 my $class = 'Mac::PropertyList';
 my @methods = qw( as_perl );
 
-use_ok( $class );
+use_ok( $class ) or BAIL_OUT( "$class did not compile\n" );
 
 my $test_file = catfile( qw( plists the_perl_review.abcdp ) );
 ok( -e $test_file, "Test file for binary plist is there" );

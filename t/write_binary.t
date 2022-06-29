@@ -15,7 +15,7 @@ use Test::More;
 BEGIN {
     my $class = 'Mac::PropertyList::WriteBinary';
 
-    use_ok( $class, qw( as_string ) );
+    use_ok( $class, qw( as_string ) ) or BAIL_OUT( "$class did not compile\n" );
     can_ok( $class, qw( as_string ) );
 }
 

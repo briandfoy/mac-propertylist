@@ -2,7 +2,8 @@
 
 use Test::More;
 
-require_ok( 'Mac::PropertyList' );
+my $class = 'Mac::PropertyList';
+use_ok( $class ) or BAIL_OUT( "$class did not compile\n" );
 
 ok( ! defined( &parse_plist ), "parse_plist is not defined yet" );
 my $result = Mac::PropertyList->import( 'parse_plist' );

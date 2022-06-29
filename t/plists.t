@@ -6,9 +6,9 @@ use Test::More;
 eval "use Time::HiRes";
 
 if( $@ ) { plan skip_all => "Needs Time::HiRes to time parsing" }
-else     { plan tests => 2 * scalar @plists }
 
-use Mac::PropertyList;
+my $class = 'Mac::PropertyList';
+use_ok( $class ) or BAIL_OUT( "$class did not compile\n" );
 
 my $debug = $ENV{PLIST_DEBUG} || 0;
 

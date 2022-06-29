@@ -5,10 +5,10 @@ use warnings;
 
 use Test::More;
 
-my $Class = 'Mac::PropertyList';
-use_ok( $Class );
+my $class = 'Mac::PropertyList';
+use_ok( $class ) or BAIL_OUT( "$class did not compile\n" );
 
-$Class->import( 'parse_plist_fh' );
+$class->import( 'parse_plist_fh' );
 
 my $File = "plists/com.apple.systempreferences.plist";
 
@@ -24,7 +24,7 @@ ok(
 my $plist = parse_plist_fh( $fh );
 
 ok( $plist, "return value is not false" );
-isa_ok( $plist, "${Class}::dict" );
+isa_ok( $plist, "${class}::dict" );
 is( $plist->type, 'dict', 'type key has right value for nested dict' );
 test_plist( $plist );
 }
@@ -40,7 +40,7 @@ ok(
 my $plist = parse_plist_fh( \*FILE );
 
 ok( $plist, "return value is not false" );
-isa_ok( $plist,"${Class}::dict" );
+isa_ok( $plist,"${class}::dict" );
 is( $plist->type, 'dict', 'type key has right value for nested dict' );
 test_plist( $plist );
 }
