@@ -1,3 +1,5 @@
+#!/usr/bin/env perl
+
 BEGIN { @plists = glob( 'plists/*.plist' ); }
 
 use Test::More;

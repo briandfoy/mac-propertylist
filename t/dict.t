@@ -1,3 +1,5 @@
+#!/usr/bin/env perl
+
 use Test::More tests => 21;
 
 use Mac::PropertyList;

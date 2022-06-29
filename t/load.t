@@ -1,3 +1,5 @@
+#!/usr/bin/env perl
+
 BEGIN { @classes = qw(
 	Mac::PropertyList
 	Mac::PropertyList::ReadBinary
