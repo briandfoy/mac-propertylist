@@ -1,5 +1,5 @@
 # brian's standard GitHub Actions Windows config for Perl 5 modules
-# version 20220118.001
+# version 20220307.001
 # https://github.com/briandfoy/github_actions
 # https://github.com/features/actions
 # This file is licensed under the Artistic License 2.0
@@ -11,6 +11,7 @@ on:
             - '**'
             - '!**linux**'
             - '!**macos**'
+            - '!**release**'
         tags-ignore:
             # I tag release pushes but those should have already been tested
             - 'release-*'
@@ -18,6 +19,7 @@ on:
             # list all the files which are irrelevant to the tests
             # non-code, support files, docs, etc
             - '.appveyor.yml'
+            - '.github/workflows/release.yml'
             - '.github/workflows/macos.yml'
             - '.github/workflows/ubuntu.yml'
             - '.gitignore'
@@ -57,6 +59,12 @@ jobs:
               run: |
                 perl Makefile.PL
                 make test
+# Run author tests, but only if there's an xt/ directory
+            - name: Author tests
+              if: hashFiles('xt') != ''
+              run: |
+                cpan -M https://www.cpan.org -T Test::CPAN::Changes
+                prove -r -b xt
 # Running tests in parallel should be faster, but it's also more
 # tricky in cases where different tests share a feature, such as a
 # file they want to write to. Parallel tests can stomp on each other.
@@ -77,10 +85,12 @@ jobs:
               run: |
                 perl Makefile.PL
                 make disttest
+                make clean
 # And, coverage reports
             - name: Run coverage tests
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: |
                 cpan -M https://www.cpan.org -T Devel::Cover Devel::Cover::Report::Coveralls
+                perl Makefile.PL
                 cover -test -report coveralls
