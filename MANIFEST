@@ -1,4 +1,5 @@
 Changes
+CITATION.cff
 DTDs/PropertyList-0.9.dtd
 DTDs/PropertyList-1.0.dtd
 examples/convert_to_perl.pl
@@ -46,3 +47,4 @@ t/time.t
 t/write.t
 t/write_binary.t
 xt/changes.t
+xt/citation.t
