@@ -52,7 +52,6 @@ my @methods = qw( as_perl );
 
 use_ok( $class ) or BAIL_OUT( "$class did not compile\n" );
 
-my $type_class = $class . '::array';
 my $parse_fqname = $class . '::parse_plist_file';
 
 my $test_file = catfile( qw( plists the_perl_review.abcdp ) );
