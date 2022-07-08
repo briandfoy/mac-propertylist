@@ -13,7 +13,7 @@ use MIME::Base64      qw(decode_base64);
 use POSIX             qw(SEEK_END SEEK_SET);
 use XML::Entities     ();
 
-our $VERSION = '1.503';
+our $VERSION = '1.504';
 
 my $Debug = $ENV{PLIST_DEBUG} || 0;
 
