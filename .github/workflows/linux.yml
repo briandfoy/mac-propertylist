@@ -1,6 +1,6 @@
 # brian's standard GitHub Actions Ubuntu config for Perl 5 modules
-# version 20220307.001
-# https://github.com/briandfoy/github_actions
+# version 20220825.001
+# https://github.com/briandfoy/github_workflows
 # https://github.com/features/actions
 # This file is licensed under the Artistic License 2.0
 name: ubuntu
@@ -19,6 +19,7 @@ on:
             # list all the files which are irrelevant to the tests
             # non-code, support files, docs, etc
             - '.appveyor.yml'
+            - '.gitattributes'
             - '.github/workflows/macos.yml'
             - '.github/workflows/windows.yml'
             - '.github/workflows/release.yml'
@@ -35,9 +36,9 @@ jobs:
         strategy:
           matrix:
             os:
-                - ubuntu-18.04
-                - ubuntu-20.04
+                - ubuntu-22.04
             perl-version:
+                - '5.8'
                 - '5.10'
                 - '5.12'
                 - '5.14'
@@ -50,6 +51,7 @@ jobs:
                 - '5.28'
                 - '5.30'
                 - '5.32'
+                - '5.34'
                 - 'latest'
         container:
             image: perl:${{ matrix.perl-version }}
