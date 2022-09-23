@@ -4,8 +4,6 @@ use strict;
 
 use Data::Dumper;
 use Mac::PropertyList qw(parse_plist);
-use JSON::Any;
-use Storable qw(dclone);
 
 my $data = do { local $/; <DATA> };
 my $plist = parse_plist( $data );
