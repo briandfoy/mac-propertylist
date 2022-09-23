@@ -23,11 +23,11 @@ print "Error! $@" if $@;
 print Dumper( $ds );
 
 
-BEGIN { 
-	package Mac::PropertyList::dict; 
-	
+BEGIN {
+	package Mac::PropertyList::dict;
+
 	use overload
-		'""' => sub { 
+		'""' => sub {
 			my $s = "{\n";
 			foreach my $key ( $_[0]->keys )
 				{
@@ -37,11 +37,11 @@ BEGIN {
 			$s .= "\t}";
 			$s;
 			};
-	
-	package Mac::PropertyList::array; 
-	
+
+	package Mac::PropertyList::array;
+
 	use overload
-		'""' => sub { 
+		'""' => sub {
 			my $s = "[\n";
 			foreach my $value ( $_[0]->value )
 				{
@@ -51,13 +51,13 @@ BEGIN {
 			$s;
 			};
 
-	package Mac::PropertyList::Scalar; 
-	
+	package Mac::PropertyList::Scalar;
+
 	use overload
-		'""' => sub { 
+		'""' => sub {
 			"'" . $_[0]->value . "'";
 			};
-	
+
 	}
 
 __END__
