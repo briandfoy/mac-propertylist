@@ -199,19 +199,20 @@ my $type_readers = {
     	},
 
 	1 => sub { # integers
-		my( $self, $power2 ) = @_;
+		my( $self, $power_of_2 ) = @_;
 
-		croak "Integer with <$power2> bytes is not supported" if $power2 > 3;
+		print "\tpower is <$power_of_2>\n";
+		croak "Integer with <$power_of_2> bytes is not supported" if $power_of_2 > 3;
 
-		my $byte_length = 1 << $power2;
+		my $byte_length = 1 << $power_of_2;
 
 		my( $buffer, $value );
 		read $self->_fh, $buffer, $byte_length;
 
 		my @formats = qw( C n N NN NNNN );
-		my @values = unpack $formats[$power2], $buffer;
+		my @values = unpack $formats[$power_of_2], $buffer;
 
-		if( $power2 == 3 ) {
+		if( $power_of_2 == 3 ) { # 64 bits
 			my( $high, $low ) = @values;
 
 			my $b = Math::BigInt->new($high)->blsft(32)->bior($low);
@@ -221,7 +222,7 @@ my $type_readers = {
 
 			@values = ( $b );
 			}
-		elsif( $power2 == 4 ) {
+		elsif( $power_of_2 == 4 ) { # 128 bits
 			my( $highest, $higher, $high, $low ) = @values;
 			my $b = Math::BigInt
 				->new($highest)
@@ -416,7 +417,7 @@ Tom Wyant added support for UID types.
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright © 2004-2021, brian d foy <bdfoy@cpan.org>. All rights reserved.
+Copyright © 2004-2022, brian d foy <bdfoy@cpan.org>. All rights reserved.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the Artistic License 2.0.
