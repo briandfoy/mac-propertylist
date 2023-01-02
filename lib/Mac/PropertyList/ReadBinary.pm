@@ -9,9 +9,7 @@ use Data::Dumper;
 use Encode            qw(decode);
 use Mac::PropertyList;
 use Math::BigInt;
-use MIME::Base64      qw(decode_base64);
 use POSIX             qw(SEEK_END SEEK_SET);
-use XML::Entities     ();
 
 our $VERSION = '1.504';
 
@@ -140,6 +138,8 @@ sub _read_plist_trailer {
 	@hash{ qw( offset_size ref_size object_count top_object table_offset ) }
 		= unpack "x6 C C (x4 N)3", $buffer;
 
+	print Dumper( \%hash );
+
 	$self->{trailer} = \%hash;
 	}
 
@@ -166,8 +166,6 @@ sub _get_offset_table {
 
 sub _read_object_at_offset {
 	my( $self, $offset ) = @_;
-
-	my @caller = caller(1);
 
     seek $self->_fh, ${ $self->_offsets }[$offset], SEEK_SET;
 
@@ -201,8 +199,7 @@ my $type_readers = {
 	1 => sub { # integers
 		my( $self, $power_of_2 ) = @_;
 
-		print "\tpower is <$power_of_2>\n";
-		croak "Integer with <$power_of_2> bytes is not supported" if $power_of_2 > 3;
+		croak "Integer with <$power_of_2> bytes is not supported" if $power_of_2 > 4;
 
 		my $byte_length = 1 << $power_of_2;
 
@@ -223,6 +220,8 @@ my $type_readers = {
 			@values = ( $b );
 			}
 		elsif( $power_of_2 == 4 ) { # 128 bits
+		    # 128 bits aren't part of the public API, but apparently
+		    # they are out there.
 			my( $highest, $higher, $high, $low ) = @values;
 			my $b = Math::BigInt
 				->new($highest)
@@ -369,25 +368,21 @@ my $type_readers = {
 
 sub _read_object {
 	my $self = shift;
-    say "Reading object!" if $Debug;
     my $buffer;
-    say "\tTELL: ", tell( $self->_fh ) if $Debug;
+
     croak "read() failed while trying to get type byte! $!"
     	unless read( $self->_fh, $buffer, 1) == 1;
 
     my $length = unpack( "C*", $buffer ) & 0x0F;
-    say "\tlength is $length" if $Debug;
     $buffer    = unpack "H*", $buffer;
-    say "\t", join '', map { sprintf '%02x', ord } split //, $buffer if $Debug;
     my $type   = substr $buffer, 0, 1;
-    say "\ttype is $type" if $Debug;
 
 	$length = $self->_read_object->value if $type ne "0" && $length == 15;
 
 	my $sub = $type_readers->{ $type };
 	my $result = eval { $sub->( $self, $length ) };
 	croak "$@" if $@;
-    say "RESULT: ", Dumper($result) if $Debug;
+
     return $result;
 	}
 
@@ -417,7 +412,7 @@ Tom Wyant added support for UID types.
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright © 2004-2022, brian d foy <bdfoy@cpan.org>. All rights reserved.
+Copyright © 2004-2023, brian d foy <bdfoy@cpan.org>. All rights reserved.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the Artistic License 2.0.
