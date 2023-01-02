@@ -308,6 +308,24 @@ sub _counted_header {
     }
 }
 
+sub _neg_integer {
+    my($count) = @_;
+
+	my $abs = abs($count);
+
+    if ($count < 256) {
+        return pack('CC',  tagInteger + 0, $count);
+    } elsif ($count < 65536) {
+        return pack('CS>', tagInteger + 1, $count);
+    } elsif (havePack64 && ($count > 4294967295)) {
+        return pack('Cq>', tagInteger + 3, $count);
+    } elsif (havePack64 && ($count > 4294967295)) {
+        return pack('Cq>', tagInteger + 4, $count);
+    } else {
+        return pack('CN',  tagInteger + 2, $count);
+    }
+}
+
 sub _pos_integer {
     my($count) = @_;
 
@@ -396,15 +414,9 @@ sub _as_bplist_fragment {
     # Therefore all negative numbers must be written as 8-byte
     # integers.
 
-    if ($value < 0) {
-        if (Mac::PropertyList::WriteBinary::havePack64) {
-            return pack('Cq>', tagInteger + 3, $value);
-        } else {
-            return pack('CSSl>', tagInteger + 3, 65535, 65535, $value);
-        }
-    } else {
-        return Mac::PropertyList::WriteBinary::_pos_integer($value);
-    }
+	my $method = $value < 0 ? '_neg_integer' : '_pos_integer';
+	my $sub = Mac::PropertyList::WriteBinary->can($method);
+	$sub->($value);
 }
 
 package Mac::PropertyList::uid;
