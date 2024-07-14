@@ -310,20 +310,7 @@ sub _counted_header {
 
 sub _neg_integer {
     my($count) = @_;
-
-	my $abs = abs($count);
-
-    if ($count < 256) {
-        return pack('CC',  tagInteger + 0, $count);
-    } elsif ($count < 65536) {
-        return pack('CS>', tagInteger + 1, $count);
-    } elsif (havePack64 && ($count > 4294967295)) {
-        return pack('Cq>', tagInteger + 3, $count);
-    } elsif (havePack64 && ($count > 4294967295)) {
-        return pack('Cq>', tagInteger + 4, $count);
-    } else {
-        return pack('CN',  tagInteger + 2, $count);
-    }
+   	return pack('Cq>',  tagInteger + 3, $count);
 }
 
 sub _pos_integer {
