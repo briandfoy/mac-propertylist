@@ -74,3 +74,4 @@ CHANGES\s\d
 \A\.github\b
 
 \.gitattributes\b
+\Ascratch\b
