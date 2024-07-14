@@ -265,7 +265,7 @@ sub parse_plist_file {
 		return;
 		}
 
-	my $text = do { local $/; open my($fh), $file; <$fh> };
+	my $text = do { local $/; open my($fh), '<:raw', $file; <$fh> };
 
 	parse_plist( $text );
 	}
