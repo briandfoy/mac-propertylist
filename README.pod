@@ -89,7 +89,7 @@ You need a GitHub account and the L<gh tool|https://github.com/larsks/ghcli>.
 	# download the distro file from GitHub, MetaCPAN, or a CPAN mirror
 	$ gh auth login
 	...follow instructions...
-	$ gh attestation verify PerlPowerTools-1.046.tar.gz --owner briandfoy
+	$ gh attestation verify Mac-PropertyList-1.505.tar.gz --owner briandfoy
 
 =head2 Getting help
 
