@@ -15,16 +15,16 @@ This script finds Mac plist files under the specified directory
 to parse them with Mac::PropertyList.  If that doesn't work, it
 reports an error.
 
-I use this to find special cases that Mac::PropertyList can't 
+I use this to find special cases that Mac::PropertyList can't
 handle.
 
 =head1 AUTHOR
 
-brian d foy, E<lt>bdfoy@cpan.orgE<gt>
+brian d foy, E<lt>briandfoy@pobox.comE<gt>
 
 =head1 COPYRIGHT
 
-Copyright © 2002-2015, brian d foy <bdfoy@cpan.org>. All rights reserved.
+Copyright © 2002-2024, brian d foy <briandfoy@pobox.com>. All rights reserved.
 =cut
 
 use Cwd;
@@ -34,14 +34,14 @@ use Mac::PropertyList;
 my $dir = $ARGV[0] || cwd;
 
 @files = File::Find::Rule->file()->name( '*.plist' )->in( $dir );
-	
+
 foreach my $file ( @files )
 	{
 	my $name = $file;
 	$name =~ s|^\Q$dir|--|;
-	
+
 	print STDERR "Processing $name...";
-	
+
 	eval {
 		alarm 5;
 		local @ARGV = ( $file );
