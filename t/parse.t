@@ -116,9 +116,6 @@ my $nested_dict =<<"HERE";
 HERE
 
 
-
-my $parse_fqname = $class . '::parse_plist';
-
 my $array_shortname  = 'array';
 my $dict_shortname   = 'dict';
 my $string_shortname = 'string';
@@ -132,7 +129,7 @@ foreach my $key ( sort keys %templates ) {
 		my $template = $templates{$key};
 
 		subtest 'array' => sub {
-			my $plist = &{$parse_fqname}( sprintf $template, $array );
+			my $plist = $method_ref->( sprintf $template, $array );
 
 			isa_ok( $plist, $array_type );
 			is(     $plist->type, $array_shortname, "Item is an $array_shortname type" );
@@ -145,8 +142,8 @@ foreach my $key ( sort keys %templates ) {
 			is( $elements[1]->value, 'Roscoe', "Roscoe $string_shortname is right" );
 			};
 
-		subtest dict => sub {
-			my $plist = &{$parse_fqname}( sprintf $template, $dict );
+		subtest 'dict' => sub {
+			my $plist = $method_ref->( sprintf $template, $dict );
 			isa_ok( $plist, $dict_type );
 			is( $plist->type, $dict_shortname, "item is a $dict_shortname type" );
 			isa_ok( $plist->value, $dict_type );
@@ -157,9 +154,9 @@ foreach my $key ( sort keys %templates ) {
 			is( $hash->{Mimi}->value, 'Roscoe', 'Mimi string has right value' );
 			};
 
-		subtest strings => sub {
+		subtest 'strings' => sub {
 			foreach my $string ( $string0_9, $string1_0 ) {
-				my $plist = &{$parse_fqname}( sprintf $template, $string );
+				my $plist = $method_ref->( sprintf $template, $string );
 
 				isa_ok( $plist, $string_type );
 				is( $plist->type, $string_shortname, 'type key has right value for string' );
@@ -168,7 +165,7 @@ foreach my $key ( sort keys %templates ) {
 			};
 
 		subtest 'nested dict' => sub {
-			my $plist = &{$parse_fqname}( sprintf $template, $nested_dict );
+			my $plist = $method_ref->( sprintf $template, $nested_dict );
 
 			isa_ok( $plist, $dict_type );
 			is( $plist->type, $dict_shortname, 'type key has right value for nested dict' );
@@ -184,7 +181,7 @@ foreach my $key ( sort keys %templates ) {
 			};
 
 		subtest 'empty string' => sub {
-			my $plist = &{$parse_fqname}( sprintf $template, $empty_string );
+			my $plist = $method_ref->( sprintf $template, $empty_string );
 
 			isa_ok( $plist, $string_type );
 			is( $plist->type, $string_shortname, 'type key has right value for string' );
