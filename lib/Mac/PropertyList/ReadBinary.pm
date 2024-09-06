@@ -138,8 +138,6 @@ sub _read_plist_trailer {
 	@hash{ qw( offset_size ref_size object_count top_object table_offset ) }
 		= unpack "x6 C C (x4 N)3", $buffer;
 
-	print Dumper( \%hash );
-
 	$self->{trailer} = \%hash;
 	}
 
