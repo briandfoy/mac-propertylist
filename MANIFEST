@@ -24,6 +24,7 @@ plists/com.unsanity.windowshadex.plist
 plists/comments.plist
 plists/the_perl_review.abcdp
 README.pod
+SECURITY.md
 t/array.t
 t/as_perl.t
 t/bad_plist.t
