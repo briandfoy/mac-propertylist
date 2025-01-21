@@ -310,7 +310,11 @@ sub _counted_header {
 
 sub _neg_integer {
     my($count) = @_;
-   	return pack('Cq>',  tagInteger + 3, $count);
+    if (havePack64) {
+        return pack('Cq>',  tagInteger + 3, $count);
+    } else {
+        return pack('CSSl>', tagInteger + 3, 65535, 65535, $count);
+    }
 }
 
 sub _pos_integer {
