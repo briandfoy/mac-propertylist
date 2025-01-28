@@ -211,7 +211,7 @@ my $type_readers = {
 			my( $high, $low ) = @values;
 
 			my $b = Math::BigInt->new($high)->blsft(32)->bior($low);
-			if( $b->bcmp(Math::BigInt->new(2)->bpow(63)) > 0) {
+			if( $b->bcmp(Math::BigInt->new(2)->bpow(63)) >= 0) {
 				$b -= Math::BigInt->new(2)->bpow(64);
 				}
 
@@ -227,7 +227,7 @@ my $type_readers = {
 				->blsft(32)->bior($high)
 				->blsft(32)->bior($low);
 
-			if( $b->bcmp(Math::BigInt->new(2)->bpow(127)) > 0) {
+			if( $b->bcmp(Math::BigInt->new(2)->bpow(127)) >= 0) {
 				$b -= Math::BigInt->new(2)->bpow(128);
 				}
 
