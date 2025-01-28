@@ -313,7 +313,8 @@ sub _neg_integer {
     if (havePack64) {
         return pack('Cq>',  tagInteger + 3, $count);
     } else {
-        return pack('CSSl>', tagInteger + 3, 65535, 65535, $count);
+        return _pack_int_64(Math::BigInt->new($count)->badd(
+                Math::BigInt->new('0x10000000000000000')));
     }
 }
 
@@ -322,13 +323,22 @@ sub _pos_integer {
 
     if ($count < 256) {
         return pack('CC',  tagInteger + 0, $count);
-    } elsif ($count < 65536) {
+    } elsif ($count <= 65535) {         # 0xFFFF
         return pack('CS>', tagInteger + 1, $count);
-    } elsif (havePack64 && ($count > 4294967295)) {
+    } elsif ($count <= 4294967295) {    # 0xFFFFFFFF
+        return pack('CN',  tagInteger + 2, $count);
+    } elsif (havePack64) {
         return pack('Cq>', tagInteger + 3, $count);
     } else {
-        return pack('CN',  tagInteger + 2, $count);
+        return _pack_int_64($count);
     }
+}
+
+sub _pack_int_64 {
+    my($val) = @_;
+    my $low = Math::BigInt->new($val)->bmod(Math::BigInt->new('0x100000000'));
+    my $high = Math::BigInt->new($val)->brsft(32);
+    return pack( 'CNN', tagInteger + 3, $high->numify, $low->numify);
 }
 
 package Mac::PropertyList::array;
@@ -405,9 +415,9 @@ sub _as_bplist_fragment {
     # Therefore all negative numbers must be written as 8-byte
     # integers.
 
-	my $method = $value < 0 ? '_neg_integer' : '_pos_integer';
-	my $sub = Mac::PropertyList::WriteBinary->can($method);
-	$sub->($value);
+    my $method = $value < 0 ? '_neg_integer' : '_pos_integer';
+    my $sub = Mac::PropertyList::WriteBinary->can($method);
+    $sub->($value);
 }
 
 package Mac::PropertyList::uid;
