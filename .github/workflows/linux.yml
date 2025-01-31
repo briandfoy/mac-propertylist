@@ -62,6 +62,8 @@ jobs:
                 os:
                     - ubuntu-22.04
                 perl-version:
+                    - '5.10-buster'
+                    - '5.12-buster'
                     - '5.14-buster'
                     - '5.16-buster'
                     - '5.18-buster'
@@ -122,7 +124,7 @@ jobs:
             - name: Install cpanm and multiple modules
               run: |
                 curl -L https://cpanmin.us | perl - App::cpanminus
-                cpanm --notest IO::Socket::SSL LWP::Protocol::https App::Cpan HTTP::Tiny ExtUtils::MakeMaker Test::Manifest Test::More
+                cpanm --notest IO::Socket::SSL LWP::Protocol::https App::Cpan HTTP::Tiny ExtUtils::MakeMaker Test::Manifest Test::More Math::BigInt
 # Install the dependencies, again not testing them. This installs the
 # module in the current directory, so we end up installing the module,
 # but that's not a big deal.
