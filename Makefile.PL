@@ -65,7 +65,7 @@ my %WriteMakefile = (
 		},
 
 	'PREREQ_PM'     => {
-		'Math::BigInt'  => '0',
+		'Math::BigInt'  => '2.003',
 		'MIME::Base64'  => '0',
 		'Time::Local'   => '0',
 		'Scalar::Util'  => '1.11',
