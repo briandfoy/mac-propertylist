@@ -62,8 +62,6 @@ jobs:
                 os:
                     - ubuntu-22.04
                 perl-version:
-                    - '5.10-buster'
-                    - '5.12-buster'
                     - '5.14-buster'
                     - '5.16-buster'
                     - '5.18-buster'
