@@ -7,6 +7,7 @@ container.t
 string.t
 array.t
 dict.t
+int64.t
 get_filehandle.t
 parse.t
 parse_plist_fh.t

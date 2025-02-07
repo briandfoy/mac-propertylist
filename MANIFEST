@@ -14,6 +14,10 @@ LICENSE
 Makefile.PL
 MANIFEST
 MANIFEST.SKIP
+plist.md
+plists/64bit-binary.plist
+plists/64bit-json.plist
+plists/64bit-xml.plist
 plists/binary.plist
 plists/binary2.plist
 plists/binary_uids.plist
@@ -35,6 +39,7 @@ t/dict.t
 t/false_key.t
 t/get_filehandle.t
 t/import.t
+t/int64.t
 t/load.t
 t/parse.t
 t/parse_plist_fh.t
