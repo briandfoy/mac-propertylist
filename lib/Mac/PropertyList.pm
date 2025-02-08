@@ -1,33 +1,83 @@
 use v5.10;
+use strict;
+use warnings;
 
 package Mac::PropertyList;
-use strict;
-
-use warnings;
-no warnings;
 
 use vars qw($ERROR);
 use Carp qw(croak carp);
 use Data::Dumper;
+use Scalar::Util qw(set_prototype);
 use XML::Entities;
+
+use Mac::PropertyList::array;
+use Mac::PropertyList::Boolean;
+use Mac::PropertyList::Container;
+use Mac::PropertyList::data;
+use Mac::PropertyList::date;
+use Mac::PropertyList::dict;
+use Mac::PropertyList::false;
+use Mac::PropertyList::integer;
+use Mac::PropertyList::Item;
+use Mac::PropertyList::LineListSource;
+use Mac::PropertyList::real;
+use Mac::PropertyList::Scalar;
+use Mac::PropertyList::Source;
+use Mac::PropertyList::string;
+use Mac::PropertyList::TextSource;
+use Mac::PropertyList::false;
+use Mac::PropertyList::true;
+use Mac::PropertyList::uid;
+use Mac::PropertyList::ustring;
 
 use Exporter qw(import);
 
-our @EXPORT_OK = qw(
+my @shortcuts = qw(
+	pl_array
+	pl_data
+	pl_date
+	pl_dict
+	pl_false
+	pl_integer
+	pl_real
+	pl_string
+	pl_true
+	pl_uid
+	);
+my @parsers = qw(
 	parse_plist
 	parse_plist_fh
 	parse_plist_file
-	plist_as_string
+	);
+my @creators = qw(
 	create_from_hash
 	create_from_array
 	create_from_string
 	);
 
-our %EXPORT_TAGS = (
-	'all' => \@EXPORT_OK,
+use vars qw(@EXPORT_OK %EXPORT_TAGS);
+
+@EXPORT_OK = (
+	@creators,
+	@parsers,
+	@shortcuts,
+	qw(
+		plist_as_string
+		)
 	);
 
+%EXPORT_TAGS = (
+	'all'       => \@EXPORT_OK,
+	'creators'  => \@creators,
+	'parsers'   => \@parsers,
+	'shortcuts' => \@shortcuts,
+	);
+
+our $MORE_ARGS_ERROR = 'Too many arguments for Mac::PropertyList::%s';
+our $ZERO_ARGS_ERROR = 'Not enough arguments for Mac::PropertyList::%s';
+
 our $VERSION = '1.603_02';
+
 
 =encoding utf8
 
@@ -125,6 +175,191 @@ There are several types of objects:
 Note that the Xcode property list editor abstracts the C<true> and
 C<false> objects as just C<Boolean>. They are separate tags in the
 plist format though.
+
+Construct these values by calling C<new> with the value:
+
+	my %hash = (
+		leopard  => Mac::PropertyList::integer->new(137),
+		cougar   => Mac::PropertyList::string->new('Dog Cow'),
+		);
+
+The elements in an array or the values in a dict need to know their
+type:
+
+	my $dict = Mac::PropertyList::dict->new(\%hash);
+
+There are also shortcuts for these:
+
+	my %hash = (
+		leopard  => pl_util(137),
+		cougar   => pl_string('Dog Cow'),
+		);
+
+	my $dict = pl_dict( \$hash );
+
+=cut
+
+=over 4
+
+=item * pl_dict( ARGS )
+
+A shortcut for C<Mac::PropertyList::dict->new(ARGS)>.
+
+=cut
+
+sub pl_dict {
+	Mac::PropertyList::dict->new(@_);
+	}
+
+=item * pl_array( ARGS )
+
+A shortcut for C<Mac::PropertyList::array->new(ARGS)>.
+
+=cut
+
+sub pl_array {
+	Mac::PropertyList::array->new(@_);
+	}
+
+=item * pl_data( DATA )
+
+A shortcut for C<Mac::PropertyList::data->new(DATA)>. This takes
+exactly one argument and will croak otherwise.
+
+=cut
+
+sub pl_data {
+	if( @_ > 1 ) {
+		croak  sprintf $MORE_ARGS_ERROR, 'pl_data';
+		}
+	elsif( @_ == 0 ) {
+		croak sprintf $ZERO_ARGS_ERROR, 'pl_data';
+		}
+
+	Mac::PropertyList::data->new($_[0]);
+}
+
+=item * pl_date(DATE)
+
+A shortcut for C<Mac::PropertyList::date->new(DATE)>. This takes
+exactly one argument and will croak otherwise.
+
+=cut
+
+sub pl_date {
+	if( @_ > 1 ) {
+		croak  sprintf $MORE_ARGS_ERROR, 'pl_data';
+		}
+	elsif( @_ == 0 ) {
+		croak sprintf $ZERO_ARGS_ERROR, 'pl_data';
+		}
+
+	Mac::PropertyList::date->new($_[0]);
+}
+
+=item * pl_false()
+
+A shortcut for C<Mac::PropertyList::false->new()>. This takes
+no arguments and will croak otherwise.
+
+=cut
+
+sub pl_false {
+	if( @_ > 0 ) {
+		croak  sprintf $MORE_ARGS_ERROR, 'pl_false';
+		}
+
+	Mac::PropertyList::false->new;
+}
+
+=item * pl_integer( INT )
+
+A shortcut for C<Mac::PropertyList::integer->new(INT)>. This takes
+exactly one argument and will croak otherwise.
+
+=cut
+
+sub pl_integer {
+	if( @_ > 1 ) {
+		croak  sprintf $MORE_ARGS_ERROR, 'pl_data';
+		}
+	elsif( @_ == 0 ) {
+		croak sprintf $ZERO_ARGS_ERROR, 'pl_data';
+		}
+
+	Mac::PropertyList::integer->new(@_);
+}
+=item * pl_real( NUM )
+
+A shortcut for C<Mac::PropertyList::real->new(NUM)>. This takes
+exactly one argument and will croak otherwise.
+
+=cut
+
+sub pl_real {
+	if( @_ > 1 ) {
+		croak  sprintf $MORE_ARGS_ERROR, 'pl_data';
+		}
+	elsif( @_ == 0 ) {
+		croak sprintf $ZERO_ARGS_ERROR, 'pl_data';
+		}
+
+	Mac::PropertyList::real->new(@_);
+}
+
+=item * pl_string(STRING)
+
+A shortcut for C<Mac::PropertyList::string->new(STRING)>. This takes
+exactly one argument and will croak otherwise.
+
+=cut
+
+sub pl_string {
+	if( @_ > 1 ) {
+		croak  sprintf $MORE_ARGS_ERROR, 'pl_string';
+		}
+	elsif( @_ == 0 ) {
+		croak sprintf $ZERO_ARGS_ERROR, 'pl_string';
+		}
+
+	Mac::PropertyList::string->new(@_);
+}
+
+=item * pl_true()
+
+A shortcut for C<Mac::PropertyList::true->new()>. This takes
+no arguments and will croak otherwise.
+
+=cut
+
+sub pl_true {
+	if( @_ > 0 ) {
+		croak sprintf $MORE_ARGS_ERROR, 'pl_true';
+		}
+
+	Mac::PropertyList::true->new;
+}
+
+=item * pl_uid(UID)
+
+A shortcut for C<Mac::PropertyList::uid->new(UID)>.
+
+=cut
+
+sub pl_uid {
+	if( @_ > 1 ) {
+		croak  sprintf $MORE_ARGS_ERROR, 'pl_uid';
+		}
+	elsif( @_ == 0 ) {
+		croak sprintf $ZERO_ARGS_ERROR, 'pl_uid';
+		}
+
+	Mac::PropertyList::uid->new(@_);
+}
+
+=back
+
+=head2 Methods
 
 =over 4
 
@@ -589,405 +824,6 @@ sub plist_as_perl { $_[0]->as_perl }
 =back
 
 =cut
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-package Mac::PropertyList::Source;
-sub new {
-	my $self = bless { buffer => [], source => $_[1] }, $_[0];
-	return $self;
-	}
-
-sub eof { (not @{$_[0]->{buffer}}) and $_[0]->source_eof }
-
-sub get_line {
-	my $self = CORE::shift;
-
-# I'm not particularly happy with what I wrote here, but that's why
-# you shouldn't write your own buffering code! I might have left over
-# text in the buffer. This could be stuff a higher level looked at and
-# put back with put_line. If there's text there, grab that.
-#
-# But here's the tricky part. If that next part of the text looks like
-# a "blank" line, grab the next next thing and append that.
-#
-# And, if there's nothing in the buffer, ask for more text from
-# get_source_line. Follow the same rules. IF you get back something that
-# looks like a blank line, ask for another and append it.
-#
-# This means that a returned line might have come partially from the
-# buffer and partially from a fresh read.
-#
-# At some point you should have something that doesn't look like a
-# blank line and the while() will break out. Return what you do.
-#
-# Previously, I wasn't appending to $_ so newlines were disappearing
-# as each next read replaced the value in $_. Yuck.
-
-	local $_ = '';
-	while (defined $_ && /^[\r\n\s]*$/) {
-		if( @{$self->{buffer}} ) {
-			$_ .= shift @{$self->{buffer}};
-			}
-		else {
-			$_ .= $self->get_source_line;
-			}
-		}
-
-	return $_;
-	}
-
-sub put_line { unshift @{$_[0]->{buffer}}, $_[1] }
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-package Mac::PropertyList::LineListSource;
-use base qw(Mac::PropertyList::Source);
-
-sub get_source_line { return shift @{$_->{source}} if @{$_->{source}} }
-
-sub source_eof { not @{$_[0]->{source}} }
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-package Mac::PropertyList::TextSource;
-use base qw(Mac::PropertyList::Source);
-
-sub get_source_line {
-	my $self = CORE::shift;
-	$self->{source} =~ s/(.*(\r|\n|$))//;
-	$1;
-	}
-
-sub source_eof { not $_[0]->{source} }
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-package Mac::PropertyList::Item;
-sub type_value { ( $_[0]->type, $_[0]->value ) }
-
-sub value {
-	my $ref = $_[0]->type;
-
-	do {
-		   if( $ref eq 'array' ) { wantarray ? @{ $_[0] } : $_[0] }
-		elsif( $ref eq 'dict'  ) { wantarray ? %{ $_[0] } : $_[0] }
-		else                     { ${ $_[0] } }
-		};
-	}
-
-sub type { my $r = ref $_[0] ? ref $_[0] : $_[0]; $r =~ s/.*:://; $r; }
-
-sub new {
-	bless $_[1], $_[0]
-	}
-
-sub write_open  { $_[0]->write_either(); }
-sub write_close { $_[0]->write_either('/'); }
-
-sub write_either {
-	my $slash = defined $_[1] ? '/' : '';
-
-	my $type = $_[0]->type;
-
-	"<$slash$type>";
-	}
-
-sub write_empty { my $type = $_[0]->type; "<$type/>"; }
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-package Mac::PropertyList::Container;
-use base qw(Mac::PropertyList::Item);
-
-sub new {
-	my $class = CORE::shift;
-	my $item  = CORE::shift;
-
-	if( ref $item ) {
-		return bless $item, $class;
-		}
-
-	my $empty = do {
-		   if( $class =~ m/array$/ ) { [] }
-		elsif( $class =~ m/dict$/  ) { {} }
-		};
-
-	$class->SUPER::new( $empty );
-	}
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-package Mac::PropertyList::array;
-use base qw(Mac::PropertyList::Container);
-
-sub shift   { CORE::shift @{ $_[0]->value } }
-sub unshift { }
-sub pop     { CORE::pop @{ $_[0]->value }   }
-sub push    { }
-sub splice  { }
-sub count   { return scalar @{ $_[0]->value } }
-sub _elements { @{ $_[0]->value } } # the raw, unprocessed elements
-sub values {
-	my @v = map { $_->value } $_[0]->_elements;
-	wantarray ? @v : \@v
-	}
-
-sub as_basic_data {
-	my $self = CORE::shift;
-	return
-		[ map
-		{
-		eval { $_->can('as_basic_data') } ? $_->as_basic_data : $_
-		} @$self
-		];
-	}
-
-sub write {
-	my $self  = CORE::shift;
-
-	my $string = $self->write_open . "\n";
-
-	foreach my $element ( @$self ) {
-		my $bit = $element->write;
-
-		$bit =~ s/^/\t/gm;
-
-		$string .= $bit . "\n";
-		}
-
-	$string .= $self->write_close;
-
-	return $string;
-	}
-
-sub as_perl {
-	my $self  = CORE::shift;
-
-	my @array = map { $_->as_perl } $self->_elements;
-
-	return \@array;
-	}
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-package Mac::PropertyList::dict;
-use base qw(Mac::PropertyList::Container);
-
-sub new {
-	$_[0]->SUPER::new( $_[1] );
-	}
-
-sub delete { delete ${ $_[0]->value }{$_[1]}         }
-sub exists { exists ${ $_[0]->value }{$_[1]} ? 1 : 0 }
-sub count  { scalar CORE::keys %{ $_[0]->value }     }
-
-sub value {
-	my $self = shift;
-	my $key  = shift;
-
-	do
-		{
-		if( defined $key ) {
-			my $hash = $self->SUPER::value;
-
-			if( exists $hash->{$key} ) { $hash->{$key}->value }
-			else                       { return }
-			}
-		else { $self->SUPER::value }
-		};
-
-	}
-
-sub keys   { my @k = CORE::keys %{ $_[0]->value }; wantarray ? @k : \@k; }
-sub values {
-	my @v = map { $_->value } CORE::values %{ $_[0]->value };
-	wantarray ? @v : \@v;
-	}
-
-sub as_basic_data {
-	my $self = shift;
-
-	my %dict = map {
-		my ($k, $v) = ($_, $self->{$_});
-		$k => eval { $v->can('as_basic_data') } ? $v->as_basic_data : $v
-		} CORE::keys %$self;
-
-	return \%dict;
-	}
-
-sub write_key   { "<key>$_[1]</key>" }
-
-sub write {
-	my $self  = shift;
-
-	my $string = $self->write_open . "\n";
-
-	foreach my $key ( $self->keys ) {
-		my $element = $self->{$key};
-
-		my $bit  = __PACKAGE__->write_key( $key ) . "\n";
-		   $bit .= $element->write . "\n";
-
-		$bit =~ s/^/\t/gm;
-
-		$string .= $bit;
-		}
-
-	$string .= $self->write_close;
-
-	return $string;
-	}
-
-sub as_perl {
-	my $self  = CORE::shift;
-
-	my %dict = map {
-		my $v = $self->value($_);
-		$v = $v->as_perl if eval { $v->can( 'as_perl' ) };
-		$_, $v
-		} $self->keys;
-
-	return \%dict;
-	}
-
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-package Mac::PropertyList::Scalar;
-use base qw(Mac::PropertyList::Item);
-
-sub new { my $copy = $_[1]; $_[0]->SUPER::new( \$copy ) }
-
-sub as_basic_data { $_[0]->value }
-
-sub write { $_[0]->write_open . $_[0]->value . $_[0]->write_close }
-
-sub as_perl { $_[0]->value }
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-package Mac::PropertyList::date;
-use base qw(Mac::PropertyList::Scalar);
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-package Mac::PropertyList::real;
-use base qw(Mac::PropertyList::Scalar);
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-package Mac::PropertyList::integer;
-use base qw(Mac::PropertyList::Scalar);
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-package Mac::PropertyList::uid;
-use base qw(Mac::PropertyList::Scalar);
-
-# The following is conservative, since the actual largest unsigned
-# integer is ~0, which is 0xFFFFFFFFFFFFFFFF on many (most?) modern
-# Perls; but it is consistent with Mac::PropertyList::ReadBinary.
-# This is really just future-proofing though, since it appears from
-# CFBinaryPList.c that a UID is carried as a hard-coded uint32_t.
-use constant LONGEST_HEX_REPRESENTABLE_AS_NATIVE => 8;	# 4 bytes
-
-# Instantiate with hex string. The string will be padded on the left
-# with zero if its length is odd. It is this string which will be
-# returned by value(). Presence of a non-hex character causes an
-# exception. We default the argument to '00'.
-sub new {
-	my ( $class, $value ) = @_;
-	$value = '00' unless defined $value;
-	Carp::croak( 'uid->new() argument must be hexadecimal' )
-		if $value =~ m/ [[:^xdigit:]] /smx;
-	substr $value, 0, 0, '0'
-		if length( $value ) % 2;
-	return $class->SUPER::new( $value );
-	}
-
-# Without argument, this is an accessor returning the value as an unsigned
-# integer, either a native Perl value or a Math::BigInt as needed.
-# With argument, this is a mutator setting the value to the hex
-# representation of the argument, which must be an unsigned integer,
-# either native Perl of Math::BigInt object. If called as static method
-# instantiates a new object.
-sub integer {
-	my ( $self, $integer ) = @_;
-	if ( @_ < 2 ) {
-		my $value = $self->value();
-		return length( $value ) > LONGEST_HEX_REPRESENTABLE_AS_NATIVE ?
-			Math::BigInt->from_hex( $value ) :
-			hex $value;
-		}
-	else {
-		Carp::croak( 'uid->integer() argument must be unsigned' )
-			if $integer < 0;
-		my $value = ref $integer ?
-			$integer->to_hex() :
-			sprintf '%x', $integer;
-		if ( ref $self ) {
-			substr $value, 0, 0, '0'
-				if length( $value ) % 2;
-			${ $self } = $value;
-			}
-		else {
-			$self = $self->new( $value );
-			}
-		return $self;
-		}
-	}
-
-# This is how plutil represents a UID in XML.
-sub write {
-	my $self = shift;
-	my $dict = Mac::PropertyList::dict->new( {
-			'CF$UID' => Mac::PropertyList::integer->new(
-				$self->integer ),
-			}
-		);
-	return $dict->write();
-	}
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-package Mac::PropertyList::string;
-use base qw(Mac::PropertyList::Scalar);
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-package Mac::PropertyList::ustring;
-use base qw(Mac::PropertyList::Scalar);
-
-# XXX need to do some fancy unicode checking here
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-package Mac::PropertyList::data;
-use base qw(Mac::PropertyList::Scalar);
-
-sub write {
-	my $self  = shift;
-
-	my $type  = $self->type;
-	my $value = $self->value;
-
-	require MIME::Base64;
-
-	my $string = MIME::Base64::encode_base64($value);
-
-	$self->write_open . $string . $self->write_close;
-	}
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-package Mac::PropertyList::Boolean;
-use base qw(Mac::PropertyList::Item);
-
-sub new {
-	my $class = shift;
-
-	my( $type ) = $class =~ m/.*::(.*)/g;
-
-	$class->either( $type );
-	}
-
-sub either { my $copy = $_[1]; bless \$copy, $_[0]  }
-
-sub write  { $_[0]->write_empty }
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-package Mac::PropertyList::true;
-use base qw(Mac::PropertyList::Boolean);
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-package Mac::PropertyList::false;
-use base qw(Mac::PropertyList::Boolean);
-
 
 =head1 SOURCE AVAILABILITY
 
