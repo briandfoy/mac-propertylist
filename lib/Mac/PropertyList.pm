@@ -197,8 +197,6 @@ There are also shortcuts for these:
 
 	my $dict = pl_dict( \$hash );
 
-=cut
-
 =over 4
 
 =item * pl_dict( ARGS )
@@ -289,7 +287,8 @@ sub pl_integer {
 
 	Mac::PropertyList::integer->new(@_);
 }
-=item * pl_real( NUM )
+
+=item * pl_real(NUM)
 
 A shortcut for C<Mac::PropertyList::real->new(NUM)>. This takes
 exactly one argument and will croak otherwise.
@@ -298,10 +297,10 @@ exactly one argument and will croak otherwise.
 
 sub pl_real {
 	if( @_ > 1 ) {
-		croak  sprintf $MORE_ARGS_ERROR, 'pl_data';
+		croak  sprintf $MORE_ARGS_ERROR, 'pl_real';
 		}
 	elsif( @_ == 0 ) {
-		croak sprintf $ZERO_ARGS_ERROR, 'pl_data';
+		croak sprintf $ZERO_ARGS_ERROR, 'pl_real';
 		}
 
 	Mac::PropertyList::real->new(@_);
