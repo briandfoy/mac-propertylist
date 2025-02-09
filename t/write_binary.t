@@ -81,7 +81,7 @@ sub testrep {
         pack('C x6 CC x4N x4N x4N',
              8,    # Offset table: offset of only object
              1, 1, # Byte sizes of offsets and of object IDs
-             1,    # Number of objectThomas Cinnamon Raisin mini-bagel - 1 (240 cal, 49 g carb)
+             1,    # Number of object
              0,    # ID of root (only) object
              8 + length($frag)  # Start offset of offset table
         );
