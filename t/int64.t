@@ -105,7 +105,7 @@ sub check_data {
 		isa_ok $data, ref {};
 		foreach my $key ( keys %expected_hash ) {
 			ok exists $data->{$key}, "key <$key> exists";
-			is $data->{$key}->value, $expected_hash{$key}, "64-bit value <$expected_hash{$key}> matches";
+			cmp_ok $data->{$key}->value, '==', $expected_hash{$key}, "64-bit value <$expected_hash{$key}> matches";
 			}
 		};
 	}
