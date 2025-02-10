@@ -10,5 +10,9 @@
 	<integer>8765123456789</integer>
 	<key>big_negative</key>
 	<integer>-1234567890123</integer>
+	<key>max_64_bit_signed_int</key>
+	<integer>9223372036854775807</integer>
+	<key>min_64_bit_signed_int</key>
+	<integer>-9223372036854775808</integer>
 </dict>
 </plist>

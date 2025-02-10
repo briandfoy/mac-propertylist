@@ -28,6 +28,8 @@ my %expected_hash = (
 	trillions    => '8765123456789',
 	quadrillions => '1298765123456789',
 	big_negative => '-1234567890123',
+	max_64_bit_signed_int	=> '9223372036854775807',
+	min_64_bit_signed_int	=> '-9223372036854775808',
 	);
 
 subtest 'sanity' => sub {
@@ -103,7 +105,7 @@ sub check_data {
 		isa_ok $data, ref {};
 		foreach my $key ( keys %expected_hash ) {
 			ok exists $data->{$key}, "key <$key> exists";
-			is $data->{$key}->value, $expected_hash{$key}, "64-bit value <$expected_hash{$key}> matches";
+			cmp_ok $data->{$key}->value, '==', $expected_hash{$key}, "64-bit value <$expected_hash{$key}> matches";
 			}
 		};
 	}
