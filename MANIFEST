@@ -46,6 +46,7 @@ t/parse-timings.t
 t/pod.t
 t/pod_coverage.t
 t/read_binary.t
+t/round_trip_binary.t
 t/scalar.t
 t/string.t
 t/test_manifest
