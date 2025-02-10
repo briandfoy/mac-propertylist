@@ -14,6 +14,7 @@ parse_plist_fh.t
 bad_plist.t
 decode_entities.t
 write.t
+parse-timings.t
 false_key.t
 basic_types.t
 read_binary.t
