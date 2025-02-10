@@ -14,7 +14,6 @@ LICENSE
 Makefile.PL
 MANIFEST
 MANIFEST.SKIP
-plist.md
 plists/64bit-binary.plist
 plists/64bit-json.plist
 plists/64bit-xml.plist
