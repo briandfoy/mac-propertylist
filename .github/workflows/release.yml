@@ -1,5 +1,5 @@
 # brian's standard GitHub Actions release config for Perl 5 modules
-# version 20241125.002
+# version 20250226.001
 # https://github.com/briandfoy/github_workflows
 # https://github.com/features/actions
 # This file is licensed under the Artistic License 2.0
@@ -64,7 +64,7 @@ jobs:
         strategy:
             matrix:
                 os:
-                    - ubuntu-20.04
+                    - ubuntu-24.04
                 perl-version:
                     - 'latest'
         container:
@@ -96,7 +96,7 @@ jobs:
 # but that's not a big deal.
             - name: Install dependencies
               run: |
-                cpanm --notest --installdeps --with-suggests --with-recommends . ${{ vars.EXTRA_CPAN_MODULES }}
+                cpanm --notest --installdeps --with-suggests --with-recommends .
 # This makes the distribution and tests it, but assumes by the time we
 # got here, everything else was already tested.
             - name: Create distro
