@@ -1,5 +1,8 @@
 Revision history for Perl module Mac::PropertyList
 
+1.603_05 2025-07-21T20:31:59Z
+	* trial release for proper HTML entity writing (GH #35)
+
 1.603_02 2025-02-07T20:50:01Z
 	* test some 64-bit changes
 
