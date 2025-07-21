@@ -21,10 +21,10 @@ plists.t - try to load all the non-JSON plist files in plists/
 	% prove
 
 	# run a single test
-	% perl -Ilib t/plists.t
+	% perl -Ilib t/parse-timings.t
 
 	# run a single test
-	% prove t/plists.t
+	% prove t/parse-timings.t
 
 =head1 AUTHORS
 
