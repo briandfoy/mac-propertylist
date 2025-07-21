@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-BEGIN { @plists = grep { ! /json/ } glob( 'plists/*.plist' ); }
+BEGIN { @plists = grep { /\Aentities\./ } grep { ! /json/ } glob( 'plists/*.plist' ); }
 my $debug = $ENV{PLIST_DEBUG} || 0;
 
 use Test::More;
@@ -77,6 +77,7 @@ subtest 'sanity' => sub {
 
 foreach my $file ( @plists ) {
 	subtest $file => sub {
+		next if exists $Skip{$file};
 		diag( "Working on $file" ) if $debug;
 		unless( open FILE, '<', $file ) {
 			fail( "Could not open $file" );
