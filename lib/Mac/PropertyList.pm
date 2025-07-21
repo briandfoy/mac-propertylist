@@ -9,7 +9,8 @@ no warnings;
 use vars qw($ERROR);
 use Carp qw(croak carp);
 use Data::Dumper;
-use XML::Entities;
+use HTML::Entities;
+use XML::Entities qw(decode_entities);
 
 use Exporter qw(import);
 
@@ -809,7 +810,9 @@ sub as_basic_data {
 	return \%dict;
 	}
 
-sub write_key   { "<key>$_[1]</key>" }
+sub write_key   {
+	"<key>$_[1]</key>"
+	}
 
 sub write {
 	my $self  = shift;
@@ -853,7 +856,7 @@ sub new { my $copy = $_[1]; $_[0]->SUPER::new( \$copy ) }
 
 sub as_basic_data { $_[0]->value }
 
-sub write { $_[0]->write_open . $_[0]->value . $_[0]->write_close }
+sub write { $_[0]->write_open . HTML::Entities::encode_entities($_[0]->value) . $_[0]->write_close }
 
 sub as_perl { $_[0]->value }
 
@@ -961,7 +964,7 @@ sub write {
 
 	my $string = MIME::Base64::encode_base64($value);
 
-	$self->write_open . $string . $self->write_close;
+	$self->write_open . HTML::Entities::encode_entities($string) . $self->write_close;
 	}
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
