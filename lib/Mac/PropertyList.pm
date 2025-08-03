@@ -819,7 +819,7 @@ sub write {
 
 	my $string = $self->write_open . "\n";
 
-	foreach my $key ( $self->keys ) {
+	foreach my $key ( sort { $a cmp $b } $self->keys ) {
 		my $element = $self->{$key};
 
 		my $bit  = __PACKAGE__->write_key( $key ) . "\n";
