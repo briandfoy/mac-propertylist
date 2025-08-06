@@ -967,20 +967,6 @@ use base qw(Mac::PropertyList::Scalar);
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 package Mac::PropertyList::data;
 use base qw(Mac::PropertyList::Scalar);
-use HTML::Entities;
-%HTML::Entities::char2entity = %{
-    # XML::Entities::Data::char2entity('all');
-	# We explicitly do not want *all* here. 'all' in the XML::Entities module
-	# is JUST PLAIN WRONG, as these are HTML entities that are NOT part of XML.
-
-	{
-		'&' => '&amp;',
-		'<' => '&lt;',
-        '>' => '&gt;',
-        "'" => "&apos;",
-        '"' => '&quot;',
-	}
-};
 
 sub write {
 	my $self  = shift;
@@ -992,7 +978,7 @@ sub write {
 
 	my $string = MIME::Base64::encode_base64($value);
 
-	$self->write_open . HTML::Entities::encode_entities($string) . $self->write_close;
+	$self->write_open . $string . $self->write_close;
 	}
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
