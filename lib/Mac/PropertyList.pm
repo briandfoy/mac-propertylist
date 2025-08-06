@@ -767,6 +767,20 @@ sub as_perl {
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 package Mac::PropertyList::dict;
 use base qw(Mac::PropertyList::Container);
+use HTML::Entities;
+%HTML::Entities::char2entity = %{
+    # XML::Entities::Data::char2entity('all');
+	# We explicitly do not want *all* here. 'all' in the XML::Entities module
+	# is JUST PLAIN WRONG, as these are HTML entities that are NOT part of XML.
+
+	{
+		'&' => '&amp;',
+		'<' => '&lt;',
+        '>' => '&gt;',
+        "'" => "&apos;",
+        '"' => '&quot;',
+	}
+};
 
 sub new {
 	$_[0]->SUPER::new( $_[1] );
@@ -811,7 +825,7 @@ sub as_basic_data {
 	}
 
 sub write_key   {
-	"<key>$_[1]</key>"
+	'<key>' . HTML::Entities::encode_entities($_[1]) . '</key>'
 	}
 
 sub write {
