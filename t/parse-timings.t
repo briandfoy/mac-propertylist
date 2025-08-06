@@ -75,6 +75,7 @@ subtest 'sanity' => sub {
 		exit 1;
 	};
 
+my %Skip;
 foreach my $file ( @plists ) {
 	subtest $file => sub {
 		next if exists $Skip{$file};
