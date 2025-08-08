@@ -486,7 +486,7 @@ sub read_dict {
 		my $key;
 		while (not defined $key) {
 			if (s[^\s*<key>(.*?)</key>][]s) {
-				$key = $1;
+				$key = HTML::Entities::decode($1);
 				# Bring this back if you want this behavior:
 				# croak "Key is empty string!" if $key eq '';
 				}
