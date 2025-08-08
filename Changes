@@ -5,7 +5,7 @@ Revision history for Perl module Mac::PropertyList
 	* keys in dicts are now sorted on output, like plutil (Jess Robinson, GH #36)
 
 1.604 2025-07-23T23:09:47Z
-	* encode entities in writing (GH #35)
+	* encode entities in writing (GH #35) (turns out I did this wrong)
 
 1.603_05 2025-07-21T20:31:59Z
 	* trial release for proper HTML entity writing (GH #35)
