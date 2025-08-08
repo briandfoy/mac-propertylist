@@ -12,6 +12,22 @@ use Data::Dumper;
 use HTML::Entities;
 use XML::Entities qw(decode_entities);
 
+BEGIN {
+	%HTML::Entities::char2entity = %{
+		# XML::Entities::Data::char2entity('all');
+		# We explicitly do not want *all* here. 'all' in the XML::Entities module
+		# is JUST PLAIN WRONG, as these are HTML entities that are NOT part of XML.
+
+		{
+			'&' => '&amp;',
+			'<' => '&lt;',
+			'>' => '&gt;',
+			"'" => "&apos;",
+			'"' => '&quot;',
+		}
+	};
+}
+
 use Exporter qw(import);
 
 our @EXPORT_OK = qw(
@@ -767,20 +783,6 @@ sub as_perl {
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 package Mac::PropertyList::dict;
 use base qw(Mac::PropertyList::Container);
-use HTML::Entities;
-%HTML::Entities::char2entity = %{
-    # XML::Entities::Data::char2entity('all');
-	# We explicitly do not want *all* here. 'all' in the XML::Entities module
-	# is JUST PLAIN WRONG, as these are HTML entities that are NOT part of XML.
-
-	{
-		'&' => '&amp;',
-		'<' => '&lt;',
-        '>' => '&gt;',
-        "'" => "&apos;",
-        '"' => '&quot;',
-	}
-};
 
 sub new {
 	$_[0]->SUPER::new( $_[1] );
@@ -865,20 +867,6 @@ sub as_perl {
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 package Mac::PropertyList::Scalar;
 use base qw(Mac::PropertyList::Item);
-use HTML::Entities;
-%HTML::Entities::char2entity = %{
-    # XML::Entities::Data::char2entity('all');
-	# We explicitly do not want *all* here. 'all' in the XML::Entities module
-	# is JUST PLAIN WRONG, as these are HTML entities that are NOT part of XML.
-
-	{
-		'&' => '&amp;',
-		'<' => '&lt;',
-        '>' => '&gt;',
-        "'" => "&apos;",
-        '"' => '&quot;',
-	}
-};
 
 sub new { my $copy = $_[1]; $_[0]->SUPER::new( \$copy ) }
 
