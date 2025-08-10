@@ -1,12 +1,12 @@
 # brian's standard Appveyor config for Perl 5 modules
 # https://github.com/briandfoy/brians_perl_modules_appveyor_config
 # This file is licensed under the Artistic License 2.0
-# version 20230308
+# version 20250812
 ---
 image:
   - Visual Studio 2019
   - Visual Studio 2022
-  - ubuntu2004
+  - Ubuntu2204
 
 environment:
   PERL5LIB: /home/appveyor/perl5/lib/perl5
