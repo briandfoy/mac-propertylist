@@ -10,7 +10,7 @@ use vars qw($ERROR);
 use Carp qw(croak carp);
 use Data::Dumper;
 use HTML::Entities;
-use XML::Entities qw(decode_entities);
+use XML::Entities;
 
 BEGIN {
 	%HTML::Entities::char2entity = %{
