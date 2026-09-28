@@ -231,7 +231,7 @@ my $type_readers = {
 				$b -= Math::BigInt->new(2)->bpow(128);
 				}
 
-			@values = ( $b );
+			@values = ( $b->bstr );
 			}
 
 		return Mac::PropertyList::integer->new( $values[0] );
