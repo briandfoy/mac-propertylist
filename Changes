@@ -1,5 +1,8 @@
 Revision history for Perl module Mac::PropertyList
 
+1.607 2026-10-05T16:54:59Z
+	* promote to user version (#38)
+
 1.606_01 2026-09-28T12:59:48Z
 	* try fix for Math::BigInt from David B. Evans (macports)
 
