@@ -215,7 +215,7 @@ my $type_readers = {
 				$b -= Math::BigInt->new(2)->bpow(64);
 				}
 
-			@values = ( $b );
+			@values = ( $b->bstr );
 			}
 		elsif( $power_of_2 == 4 ) { # 128 bits
 		    # 128 bits aren't part of the public API, but apparently
