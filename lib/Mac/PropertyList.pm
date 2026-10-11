@@ -44,7 +44,7 @@ our %EXPORT_TAGS = (
 	'all' => \@EXPORT_OK,
 	);
 
-our $VERSION = '1.607';
+our $VERSION = '1.607_01';
 
 =encoding utf8
 
