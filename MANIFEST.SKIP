@@ -78,5 +78,8 @@ CHANGES\s\d
 Dockerfile
 plists.md
 
-.downstream.json
-cpan_tester_reports
+^\.downstream\.json
+^cpan_tester_reports/
+^AGENTS\.md
+^CLAUDE\.md
+^\.claude
